@@ -18,10 +18,11 @@ const mockTeams = Array.from({ length: 58 }, (_, i) => {
 });
 
 async function pushData() {
-  console.log("🚀 Pushing data directly to Supabase REST API...");
+  console.log("🚀 Pushing 58 teams to Supabase REST API...");
 
   try {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/teams`, {
+    // 1. Push Teams Table
+    const resTeams = await fetch(`${SUPABASE_URL}/rest/v1/teams`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -32,12 +33,44 @@ async function pushData() {
       body: JSON.stringify(mockTeams)
     });
 
-    if (res.ok) {
-      console.log("✅ Successfully pushed 58 teams to Supabase cloud database!");
+    if (resTeams.ok) {
+      console.log("✅ Successfully pushed 58 teams to 'teams' table!");
     } else {
-      const errText = await res.text();
-      console.log("Response note:", res.status, errText);
+      console.log("Teams note:", resTeams.status, await resTeams.text());
     }
+
+    // 2. Push Judging Portal State Table
+    const masterStatePayload = {
+      id: "robofest_master_state",
+      state_data: {
+        initialized: true,
+        teams: mockTeams,
+        attendance: {},
+        judges: [],
+        round1: {},
+        round2: {},
+        round3: { matches: {} }
+      },
+      updated_at: new Date().toISOString()
+    };
+
+    const resState = await fetch(`${SUPABASE_URL}/rest/v1/judging_portal_state`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "apikey": SUPABASE_KEY,
+        "Authorization": `Bearer ${SUPABASE_KEY}`,
+        "Prefer": "resolution=merge-duplicates"
+      },
+      body: JSON.stringify([masterStatePayload])
+    });
+
+    if (resState.ok) {
+      console.log("✅ Successfully pushed master state to 'judging_portal_state' table!");
+    } else {
+      console.log("State note:", resState.status, await resState.text());
+    }
+
   } catch (err) {
     console.error("Fetch error:", err.message);
   }
