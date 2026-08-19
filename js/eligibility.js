@@ -94,7 +94,9 @@ function saveEligibilityForm(e) {
   
   document.getElementById('modal-eligibility').classList.add('hidden');
   if (typeof renderBotCheckView === 'function') renderBotCheckView();
-  renderTeamsTable();
-  renderDashboardStats();
-  populateScoringTeamSelects();
+  if (typeof renderBotCheckInspectorCard === 'function') renderBotCheckInspectorCard(teamId);
+  if (typeof renderTeamsTable === 'function') renderTeamsTable();
+  if (typeof renderDashboardStats === 'function') renderDashboardStats();
+  if (typeof populateScoringTeamSelects === 'function') populateScoringTeamSelects();
+  if (typeof renderParticipantsView === 'function') renderParticipantsView();
 }

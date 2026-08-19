@@ -389,6 +389,9 @@ function updateAttendanceStatus(teamId, status) {
   saveStore();
   renderAttendanceTable();
   renderDashboardStats();
+  renderTeamsTable();
+  populateScoringTeamSelects();
+  renderParticipantsView();
 }
 
 function updateAttendanceMembers(teamId, count) {
@@ -397,6 +400,9 @@ function updateAttendanceMembers(teamId, count) {
   }
   storeState.attendance[teamId].membersPresent = parseInt(count, 10);
   saveStore();
+  renderAttendanceTable();
+  renderDashboardStats();
+  renderParticipantsView();
 }
 
 /* ==========================================================================
@@ -953,6 +959,8 @@ function submitRunScore(round) {
   renderDashboardStats();
   populateScoringTeamSelects();
   renderLeaderboards();
+  renderBracket();
+  renderTeamsTable();
   renderParticipantsView();
 
   alert(`Score saved for ${teamId}! Final Time: ${formatMsToDisplay(finalMs)}`);
@@ -1115,6 +1123,10 @@ function handleMatchDecisionSubmit(e) {
   if (match) {
     match.winner = winnerId;
     match.reason = reason;
+  }
+
+  if (typeof updateBracketAdvancement === 'function') {
+    updateBracketAdvancement();
   }
 
   saveStore();
