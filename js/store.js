@@ -66,32 +66,81 @@ function resetStore() {
 }
 
 function seedDefaultTeams() {
-  const colleges = ["SRMIST", "VIT Vellore", "IIT Madras", "NIT Trichy", "SSN College", "SASTRA Univ", "PSG Tech", "Anna University"];
-  const botNames = [
-    "ViperBot", "Apex Rover", "TitanX", "Cyclone 2.0", "Phantom Rider", 
-    "Shadow Crawler", "Blaze X", "Storm Breaker", "Velocity Prime", "Iron Clad",
-    "Omega Trail", "Nebula", "Xeno Drive", "Hyperion", "Pulse Rover",
-    "Aero Crawler", "Thunder Bolt", "Vortex 9", "Stinger", "Torque Force"
+  const officialCsvList = [
+    { name: "SRM School TEAM13", inst: "SRM School", leader: "3" },
+    { name: "SRM School TEAM12", inst: "SRM School", leader: "4" },
+    { name: "SRM School TEAM14", inst: "SRM School", leader: "4" },
+    { name: "SRM School TEAM11", inst: "SRM School", leader: "1" },
+    { name: "SRM School TEAM15", inst: "SRM School", leader: "2" },
+    { name: "Python Riders", inst: "SRMIST", leader: "A Mukilan" },
+    { name: "Bodhians", inst: "Bodhi International", leader: "Robin" },
+    { name: "IMEC - 3", inst: "RoboFest Participant", leader: "R V V S D Prabhu Ram" },
+    { name: "IMEC - 2", inst: "Aditya University", leader: "N Veda Santhosh" },
+    { name: "IMEC-1", inst: "RoboFest Participant", leader: "M khusal" },
+    { name: "Bodhispark", inst: "Bodhi International", leader: "narvin" },
+    { name: "Bodhibots", inst: "Bodhi International", leader: "Dharsan" },
+    { name: "Robotitans", inst: "RoboFest Participant", leader: "bodhischoolsvga" },
+    { name: "Nura Robotics", inst: "RoboFest Participant", leader: "Tamizharasan K" },
+    { name: "Bionary VITC", inst: "RoboFest Participant", leader: "Shashanka Shekhar Nayak" },
+    { name: "NEXORA", inst: "RoboFest Participant", leader: "Sivanesh D" },
+    { name: "ROBOTIC RANGERS", inst: "RoboFest Participant", leader: "Gayathri" },
+    { name: "Eric Rc hobbies", inst: "RoboFest Participant", leader: "Eric Samuel" },
+    { name: "Gravity", inst: "VIT University", leader: "ashwinkumar.vm2024" },
+    { name: "Ds Robotics", inst: "RoboFest Participant", leader: "Yuvanesh Balaji" },
+    { name: "Akatsuki", inst: "KIET Group of Institutions", leader: "Devesh Kumar" },
+    { name: "NitroBot", inst: "RoboFest Participant", leader: "Amogh Betageri" },
+    { name: "LATENCY ZERO", inst: "DSCE Bangalore", leader: "Selva Ganapathi" },
+    { name: "Satecbot", inst: "RoboFest Participant", leader: "Mohammed Ashraf Roshan s" },
+    { name: "TORQUE TITANS", inst: "RoboFest Participant", leader: "JEEVAN VK" },
+    { name: "Draco bots", inst: "RoboFest Participant", leader: "Vignesh S" },
+    { name: "Draxis", inst: "RoboFest Participant", leader: "Vedanth" },
+    { name: "Pathfinders", inst: "VIT University", leader: "Muthiah Karthik" },
+    { name: "Valthukal valthukal", inst: "RoboFest Participant", leader: "sidharthan.b02" },
+    { name: "Vector Evasions", inst: "RoboFest Participant", leader: "K JAHNAVI" },
+    { name: "Stealth Strikers", inst: "RoboFest Participant", leader: "Alankritha" },
+    { name: "heisenberg", inst: "Sairam Vidyalaya", leader: "MUKUNTHAN A" },
+    { name: "Apex Point", inst: "RoboFest Participant", leader: "Midun Surya T" },
+    { name: "Cyber spirits", inst: "VIT University", leader: "Rahul" },
+    { name: "MechaTech", inst: "RoboFest Participant", leader: "Akshith seemala" },
+    { name: "Robo blitz league", inst: "RoboFest Participant", leader: "Roma Ram" },
+    { name: "Ghost Rider", inst: "RoboFest Participant", leader: "Abhav Krishna S" },
+    { name: "Titan", inst: "RoboFest Participant", leader: "G L Thanwin" },
+    { name: "LPL Squad", inst: "RoboFest Participant", leader: "S Levin Ronald" },
+    { name: "Zenvaa Technologies", inst: "RoboFest Participant", leader: "V M Avinash" },
+    { name: "The Glitch kings", inst: "RoboFest Participant", leader: "saranyamithunya" },
+    { name: "Rohith’s Race", inst: "RoboFest Participant", leader: "aashrithat" },
+    { name: "Angry Bird", inst: "Bloomingdale International", leader: "Havinthika AS" },
+    { name: "Route Rangers", inst: "SSN College of Engineering", leader: "Kishore Ram S" },
+    { name: "Voltage vipers", inst: "RoboFest Participant", leader: "Lakshith" },
+    { name: "Tokyo Drifters", inst: "SSN College of Engineering", leader: "PRANAV TV" },
+    { name: "RTJ AUTOBOYS", inst: "RoboFest Participant", leader: "S.Rohith" },
+    { name: "YHSC BOT CREATORS VELS", inst: "RoboFest Participant", leader: "Sarvesh S" },
+    { name: "Samurai blue", inst: "RoboFest Participant", leader: "Hariram" },
+    { name: "Techno Titans", inst: "RoboFest Participant", leader: "Lithura Anbukrishnan" },
+    { name: "Thunderstrike", inst: "RoboFest Participant", leader: "tharshan ms" },
+    { name: "Solo Protocol", inst: "RoboFest Participant", leader: "Siri.V" },
+    { name: "Velocity Vortex", inst: "RoboFest Participant", leader: "SAI MIRA BASKARAN" },
+    { name: "Track OFF", inst: "RoboFest Participant", leader: "M Mohammed Anwar" },
+    { name: "Odyssey sciences", inst: "RoboFest Participant", leader: "Sai srinivas" },
+    { name: "RODIX", inst: "RoboFest Participant", leader: "dixittharunraja" },
+    { name: "Drift Dynamix", inst: "RoboFest Participant", leader: "KV Keshav" },
+    { name: "Shadowx", inst: "RoboFest Participant", leader: "AryaPatel" }
   ];
 
   storeState.teams = [];
   storeState.attendance = {};
 
-  for (let i = 1; i <= 58; i++) {
-    const botNum = String(i).padStart(3, '0');
-    const botId = `BOT-${botNum}`;
-    const botName = botNames[(i - 1) % botNames.length] + ` #${i}`;
-    const college = colleges[(i - 1) % colleges.length];
-    
-    // Default 50 passed eligibility, 8 pending
-    const passed = i <= 50;
+  officialCsvList.forEach((item, idx) => {
+    const num = String(idx + 1).padStart(3, '0');
+    const botId = `BOT-${num}`;
+    const passed = true;
 
     storeState.teams.push({
       id: botId,
-      name: botName,
-      institution: college,
-      members: [`Lead ${i}`, `Member ${i}A`],
-      arena: i % 2 === 1 ? 'A' : 'B',
+      name: item.name,
+      institution: item.inst,
+      members: [item.leader || `Lead ${idx + 1}`, `Member 2`],
+      arena: idx % 2 === 0 ? 'A' : 'B',
       eligibility: {
         dimensions: passed,
         weight: passed,
@@ -104,22 +153,18 @@ function seedDefaultTeams() {
         teamMembers: passed,
         dedicatedTxRx: passed,
         passed: passed,
-        notes: passed ? "All 10 tech inspection checks verified" : "Pending tech check"
+        notes: "Official CSV Imported Team — Pre-verified"
       }
     });
 
-    // Default attendance: first 45 Present, 8 Late, 5 Absent
-    let attStatus = 'Present';
-    if (i > 45 && i <= 53) attStatus = 'Late';
-    if (i > 53) attStatus = 'Absent';
-
     storeState.attendance[botId] = {
-      status: attStatus,
-      checkInTime: attStatus !== 'Absent' ? (Date.now() - (i * 60000)) : null,
-      membersPresent: attStatus === 'Absent' ? 0 : 2,
-      notes: attStatus === 'Late' ? 'Arrived at desk post 09:30 AM' : 'Standard check-in'
+      status: 'Present',
+      checkInTime: Date.now() - (idx * 30000),
+      membersPresent: 2,
+      notes: 'Official registration desk check-in'
     };
-  }
+  });
+
   saveStore();
 }
 

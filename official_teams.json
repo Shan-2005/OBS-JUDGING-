@@ -1,0 +1,1162 @@
+[
+  {
+    "id": "BOT-001",
+    "rawUuid": "b7f7d229-9f70-4f38-93b7-a6f4ff54192f",
+    "name": "SRM School TEAM13",
+    "institution": "SRM School",
+    "leaderName": "3",
+    "leaderEmail": "3",
+    "leaderPhone": "success",
+    "members": [
+      "3",
+      "Member 2",
+      "Member 3"
+    ],
+    "arena": "A",
+    "eligibility": {
+      "passed": false,
+      "checkedAt": null,
+      "notes": ""
+    }
+  },
+  {
+    "id": "BOT-002",
+    "rawUuid": "f2be4747-4bd7-4aa3-bb8f-ab4e89f4abde",
+    "name": "SRM School TEAM12",
+    "institution": "SRM School",
+    "leaderName": "4",
+    "leaderEmail": "4",
+    "leaderPhone": "success",
+    "members": [
+      "4",
+      "Member 2",
+      "Member 3"
+    ],
+    "arena": "B",
+    "eligibility": {
+      "passed": false,
+      "checkedAt": null,
+      "notes": ""
+    }
+  },
+  {
+    "id": "BOT-003",
+    "rawUuid": "ce3ebcbe-3f05-412b-a8b7-e1414688d67e",
+    "name": "SRM School TEAM14",
+    "institution": "SRM School",
+    "leaderName": "4",
+    "leaderEmail": "4",
+    "leaderPhone": "success",
+    "members": [
+      "4",
+      "Member 2",
+      "Member 3"
+    ],
+    "arena": "A",
+    "eligibility": {
+      "passed": false,
+      "checkedAt": null,
+      "notes": ""
+    }
+  },
+  {
+    "id": "BOT-004",
+    "rawUuid": "674e3753-2ef1-4019-b2d9-f68de3f641ab",
+    "name": "SRM School TEAM11",
+    "institution": "SRM School",
+    "leaderName": "1",
+    "leaderEmail": "1",
+    "leaderPhone": "success",
+    "members": [
+      "1",
+      "Member 2",
+      "Member 3"
+    ],
+    "arena": "B",
+    "eligibility": {
+      "passed": false,
+      "checkedAt": null,
+      "notes": ""
+    }
+  },
+  {
+    "id": "BOT-005",
+    "rawUuid": "38e9bb8f-3126-49c8-932b-f0b147c97fd1",
+    "name": "SRM School TEAM15",
+    "institution": "SRM School",
+    "leaderName": "2",
+    "leaderEmail": "2",
+    "leaderPhone": "success",
+    "members": [
+      "2",
+      "Member 2",
+      "Member 3"
+    ],
+    "arena": "A",
+    "eligibility": {
+      "passed": false,
+      "checkedAt": null,
+      "notes": ""
+    }
+  },
+  {
+    "id": "BOT-006",
+    "rawUuid": "76eb802c-ce6c-46aa-a3d8-b3fc15686bd7",
+    "name": "Python Riders",
+    "institution": "SRMIST",
+    "leaderName": "A Mukilan",
+    "leaderEmail": "ar8173@srmist.edu.in",
+    "leaderPhone": "+919944583116",
+    "members": [
+      "A Mukilan",
+      "Member 2",
+      "Member 3"
+    ],
+    "arena": "B",
+    "eligibility": {
+      "passed": false,
+      "checkedAt": null,
+      "notes": ""
+    }
+  },
+  {
+    "id": "BOT-007",
+    "rawUuid": "f8874994-20b1-4edb-a7b1-06149d243671",
+    "name": "Bodhians",
+    "institution": "Bodhi International",
+    "leaderName": "Robin",
+    "leaderEmail": "appsinboxs@gmail.com",
+    "leaderPhone": "+919940263639",
+    "members": [
+      "Robin",
+      "Member 2",
+      "Member 3"
+    ],
+    "arena": "A",
+    "eligibility": {
+      "passed": false,
+      "checkedAt": null,
+      "notes": ""
+    }
+  },
+  {
+    "id": "BOT-008",
+    "rawUuid": "e4daac06-3618-40f0-ad5d-b932f2190999",
+    "name": "IMEC - 3",
+    "institution": "RoboFest Participant",
+    "leaderName": "R V V S D Prabhu Ram",
+    "leaderEmail": "reddyprabhuram25@gmail.com",
+    "leaderPhone": "+919398572803",
+    "members": [
+      "R V V S D Prabhu Ram",
+      "Member 2",
+      "Member 3"
+    ],
+    "arena": "B",
+    "eligibility": {
+      "passed": false,
+      "checkedAt": null,
+      "notes": ""
+    }
+  },
+  {
+    "id": "BOT-009",
+    "rawUuid": "03a1a0af-8117-4452-8032-e62d588e481c",
+    "name": "IMEC - 2",
+    "institution": "Aditya University",
+    "leaderName": "N Veda Santhosh",
+    "leaderEmail": "24b11ec199@adityauniversity.in",
+    "leaderPhone": "+918367630087",
+    "members": [
+      "N Veda Santhosh",
+      "Member 2",
+      "Member 3"
+    ],
+    "arena": "A",
+    "eligibility": {
+      "passed": false,
+      "checkedAt": null,
+      "notes": ""
+    }
+  },
+  {
+    "id": "BOT-010",
+    "rawUuid": "2d9a433f-3e58-4cf1-bf11-e0d4b082251b",
+    "name": "IMEC-1",
+    "institution": "RoboFest Participant",
+    "leaderName": "M khusal",
+    "leaderEmail": "khusalkumar26@gmail.com",
+    "leaderPhone": "+918074678911",
+    "members": [
+      "M khusal",
+      "Member 2",
+      "Member 3"
+    ],
+    "arena": "B",
+    "eligibility": {
+      "passed": false,
+      "checkedAt": null,
+      "notes": ""
+    }
+  },
+  {
+    "id": "BOT-011",
+    "rawUuid": "effd6827-5b30-4874-8516-da5124898e30",
+    "name": "Bodhispark",
+    "institution": "Bodhi International",
+    "leaderName": "narvin",
+    "leaderEmail": "finance.bodhischool@gmail.com",
+    "leaderPhone": "+919790841231",
+    "members": [
+      "narvin",
+      "Member 2",
+      "Member 3"
+    ],
+    "arena": "A",
+    "eligibility": {
+      "passed": false,
+      "checkedAt": null,
+      "notes": ""
+    }
+  },
+  {
+    "id": "BOT-012",
+    "rawUuid": "f5b78204-03c1-4197-82ef-e4f0481fc412",
+    "name": "Bodhibots",
+    "institution": "Bodhi International",
+    "leaderName": "Dharsan",
+    "leaderEmail": "rajan4j@gmail.com",
+    "leaderPhone": "+919444323322",
+    "members": [
+      "Dharsan",
+      "Member 2",
+      "Member 3"
+    ],
+    "arena": "B",
+    "eligibility": {
+      "passed": false,
+      "checkedAt": null,
+      "notes": ""
+    }
+  },
+  {
+    "id": "BOT-013",
+    "rawUuid": "d8cdf228-03ab-45fe-b06d-6c64c928a920",
+    "name": "Robotitans",
+    "institution": "RoboFest Participant",
+    "leaderName": "bodhischoolsvga",
+    "leaderEmail": "bodhischoolsvga@gmail.com",
+    "leaderPhone": "+919940263639",
+    "members": [
+      "bodhischoolsvga",
+      "Member 2",
+      "Member 3"
+    ],
+    "arena": "A",
+    "eligibility": {
+      "passed": false,
+      "checkedAt": null,
+      "notes": ""
+    }
+  },
+  {
+    "id": "BOT-014",
+    "rawUuid": "dcf78ccf-a7c2-4653-a2f5-93ee78a5b638",
+    "name": "Nura Robotics",
+    "institution": "RoboFest Participant",
+    "leaderName": "Tamizharasan K",
+    "leaderEmail": "tamizharasank6030@gmail.com",
+    "leaderPhone": "+918438686030",
+    "members": [
+      "Tamizharasan K",
+      "Member 2",
+      "Member 3"
+    ],
+    "arena": "B",
+    "eligibility": {
+      "passed": false,
+      "checkedAt": null,
+      "notes": ""
+    }
+  },
+  {
+    "id": "BOT-015",
+    "rawUuid": "5e8fb205-5569-4e68-a3e2-661b218aeca6",
+    "name": "Bionary VITC",
+    "institution": "RoboFest Participant",
+    "leaderName": "Shashanka Shekhar Nayak",
+    "leaderEmail": "shashankashekharnayak2006@gmail.com",
+    "leaderPhone": "+919631207662",
+    "members": [
+      "Shashanka Shekhar Nayak",
+      "Member 2",
+      "Member 3"
+    ],
+    "arena": "A",
+    "eligibility": {
+      "passed": false,
+      "checkedAt": null,
+      "notes": ""
+    }
+  },
+  {
+    "id": "BOT-016",
+    "rawUuid": "c9e266f9-9c0f-4918-8285-3f2454b02d93",
+    "name": "NEXORA",
+    "institution": "RoboFest Participant",
+    "leaderName": "Sivanesh D",
+    "leaderEmail": "sivanesh20160999@gmail.com",
+    "leaderPhone": "+919884850863",
+    "members": [
+      "Sivanesh D",
+      "Member 2",
+      "Member 3"
+    ],
+    "arena": "B",
+    "eligibility": {
+      "passed": false,
+      "checkedAt": null,
+      "notes": ""
+    }
+  },
+  {
+    "id": "BOT-017",
+    "rawUuid": "6e8ac36b-3885-4c5c-b61f-fe36976f3b17",
+    "name": "ROBOTIC RANGERS",
+    "institution": "RoboFest Participant",
+    "leaderName": "Gayathri",
+    "leaderEmail": "p8350949@gmail.com",
+    "leaderPhone": "+918015512041",
+    "members": [
+      "Gayathri",
+      "Member 2",
+      "Member 3"
+    ],
+    "arena": "A",
+    "eligibility": {
+      "passed": false,
+      "checkedAt": null,
+      "notes": ""
+    }
+  },
+  {
+    "id": "BOT-018",
+    "rawUuid": "0d3f7fcc-8e48-4cc4-9819-228b1584b191",
+    "name": "Eric Rc hobbies",
+    "institution": "RoboFest Participant",
+    "leaderName": "Eric Samuel",
+    "leaderEmail": "edison.holyangels@gmail.com",
+    "leaderPhone": "+919930353542",
+    "members": [
+      "Eric Samuel",
+      "Member 2",
+      "Member 3"
+    ],
+    "arena": "B",
+    "eligibility": {
+      "passed": false,
+      "checkedAt": null,
+      "notes": ""
+    }
+  },
+  {
+    "id": "BOT-019",
+    "rawUuid": "820ff153-789c-4f77-8dac-778f432627a8",
+    "name": "Gravity",
+    "institution": "VIT University",
+    "leaderName": "ashwinkumar.vm2024",
+    "leaderEmail": "ashwinkumar.vm2024@vitstudent.ac.in",
+    "leaderPhone": "+918072069403",
+    "members": [
+      "ashwinkumar.vm2024",
+      "Member 2",
+      "Member 3"
+    ],
+    "arena": "A",
+    "eligibility": {
+      "passed": false,
+      "checkedAt": null,
+      "notes": ""
+    }
+  },
+  {
+    "id": "BOT-020",
+    "rawUuid": "a99d2e36-a73a-4ed3-a0c6-f6986695fbfc",
+    "name": "Ds Robotics",
+    "institution": "RoboFest Participant",
+    "leaderName": "Yuvanesh Balaji",
+    "leaderEmail": "yuvniconnect@gmail.com",
+    "leaderPhone": "+919944583134",
+    "members": [
+      "Yuvanesh Balaji",
+      "Member 2",
+      "Member 3"
+    ],
+    "arena": "B",
+    "eligibility": {
+      "passed": false,
+      "checkedAt": null,
+      "notes": ""
+    }
+  },
+  {
+    "id": "BOT-021",
+    "rawUuid": "ae043049-8b6e-4a90-b61f-4d4bc5fbe75f",
+    "name": "Akatsuki",
+    "institution": "KIET Group of Institutions",
+    "leaderName": "Devesh Kumar",
+    "leaderEmail": "devesh.25007064@kiet.edu",
+    "leaderPhone": "+919457518737",
+    "members": [
+      "Devesh Kumar",
+      "Member 2",
+      "Member 3"
+    ],
+    "arena": "A",
+    "eligibility": {
+      "passed": false,
+      "checkedAt": null,
+      "notes": ""
+    }
+  },
+  {
+    "id": "BOT-022",
+    "rawUuid": "18a2eee3-8bbb-4010-a831-1fad3b636ba6",
+    "name": "NitroBot",
+    "institution": "RoboFest Participant",
+    "leaderName": "Amogh Betageri",
+    "leaderEmail": "amoghbetageri@gmail.com",
+    "leaderPhone": "+919148066418",
+    "members": [
+      "Amogh Betageri",
+      "Member 2",
+      "Member 3"
+    ],
+    "arena": "B",
+    "eligibility": {
+      "passed": false,
+      "checkedAt": null,
+      "notes": ""
+    }
+  },
+  {
+    "id": "BOT-023",
+    "rawUuid": "4d4b06df-b788-4bf7-a575-a381f4c722c4",
+    "name": "LATENCY ZERO",
+    "institution": "DSCE Bangalore",
+    "leaderName": "Selva Ganapathi",
+    "leaderEmail": "1ds25ri403@dsce.edu.in",
+    "leaderPhone": "+917892176933",
+    "members": [
+      "Selva Ganapathi",
+      "Member 2",
+      "Member 3"
+    ],
+    "arena": "A",
+    "eligibility": {
+      "passed": false,
+      "checkedAt": null,
+      "notes": ""
+    }
+  },
+  {
+    "id": "BOT-024",
+    "rawUuid": "ec34f825-71c4-4e30-bcf6-01b9477610b2",
+    "name": "Satecbot",
+    "institution": "RoboFest Participant",
+    "leaderName": "Mohammed Ashraf Roshan s",
+    "leaderEmail": "ashrafroshan046@gmail.com",
+    "leaderPhone": "+918870247995",
+    "members": [
+      "Mohammed Ashraf Roshan s",
+      "Member 2",
+      "Member 3"
+    ],
+    "arena": "B",
+    "eligibility": {
+      "passed": false,
+      "checkedAt": null,
+      "notes": ""
+    }
+  },
+  {
+    "id": "BOT-025",
+    "rawUuid": "1a07a88b-4500-42ac-9fb3-c349b9f26313",
+    "name": "TORQUE TITANS",
+    "institution": "RoboFest Participant",
+    "leaderName": "JEEVAN VK",
+    "leaderEmail": "jeevanvk.22@gmail.com",
+    "leaderPhone": "+919444992572",
+    "members": [
+      "JEEVAN VK",
+      "Member 2",
+      "Member 3"
+    ],
+    "arena": "A",
+    "eligibility": {
+      "passed": false,
+      "checkedAt": null,
+      "notes": ""
+    }
+  },
+  {
+    "id": "BOT-026",
+    "rawUuid": "7eaa2acf-5450-4689-a09d-95769e1be9d6",
+    "name": "Draco bots",
+    "institution": "RoboFest Participant",
+    "leaderName": "Vignesh S",
+    "leaderEmail": "gokulban1624@gmail.com",
+    "leaderPhone": "+918438079969",
+    "members": [
+      "Vignesh S",
+      "Member 2",
+      "Member 3"
+    ],
+    "arena": "B",
+    "eligibility": {
+      "passed": false,
+      "checkedAt": null,
+      "notes": ""
+    }
+  },
+  {
+    "id": "BOT-027",
+    "rawUuid": "72ce0f8a-bd8c-45db-9a12-550e0788d487",
+    "name": "Draxis",
+    "institution": "RoboFest Participant",
+    "leaderName": "Vedanth",
+    "leaderEmail": "vedanth.k.engr@gmail.com",
+    "leaderPhone": "+918248849332",
+    "members": [
+      "Vedanth",
+      "Member 2",
+      "Member 3"
+    ],
+    "arena": "A",
+    "eligibility": {
+      "passed": false,
+      "checkedAt": null,
+      "notes": ""
+    }
+  },
+  {
+    "id": "BOT-028",
+    "rawUuid": "279c558f-aa8a-4b78-8e40-d840fc2cb797",
+    "name": "Pathfinders",
+    "institution": "VIT University",
+    "leaderName": "Muthiah Karthik",
+    "leaderEmail": "muthiahkarthik.s2024@vitstudent.ac.in",
+    "leaderPhone": "+918838296344",
+    "members": [
+      "Muthiah Karthik",
+      "Member 2",
+      "Member 3"
+    ],
+    "arena": "B",
+    "eligibility": {
+      "passed": false,
+      "checkedAt": null,
+      "notes": ""
+    }
+  },
+  {
+    "id": "BOT-029",
+    "rawUuid": "ef697471-24f6-4deb-9aa3-b33f47d03c06",
+    "name": "Valthukal valthukal",
+    "institution": "RoboFest Participant",
+    "leaderName": "sidharthan.b02",
+    "leaderEmail": "sidharthan.b02@gmail.com",
+    "leaderPhone": "+918807613485",
+    "members": [
+      "sidharthan.b02",
+      "Member 2",
+      "Member 3"
+    ],
+    "arena": "A",
+    "eligibility": {
+      "passed": false,
+      "checkedAt": null,
+      "notes": ""
+    }
+  },
+  {
+    "id": "BOT-030",
+    "rawUuid": "8c32d124-d1fa-4363-b0c0-aeecb92fc7d1",
+    "name": "Vector Evasions",
+    "institution": "RoboFest Participant",
+    "leaderName": "K JAHNAVI",
+    "leaderEmail": "nharitha3@gmail.com",
+    "leaderPhone": "+919176661155",
+    "members": [
+      "K JAHNAVI",
+      "Member 2",
+      "Member 3"
+    ],
+    "arena": "B",
+    "eligibility": {
+      "passed": false,
+      "checkedAt": null,
+      "notes": ""
+    }
+  },
+  {
+    "id": "BOT-031",
+    "rawUuid": "f1d52f2e-a25f-472a-a05f-ff623c8b418d",
+    "name": "Stealth Strikers",
+    "institution": "RoboFest Participant",
+    "leaderName": "Alankritha",
+    "leaderEmail": "aluridhu@gmail.com",
+    "leaderPhone": "+919952965326",
+    "members": [
+      "Alankritha",
+      "Member 2",
+      "Member 3"
+    ],
+    "arena": "A",
+    "eligibility": {
+      "passed": false,
+      "checkedAt": null,
+      "notes": ""
+    }
+  },
+  {
+    "id": "BOT-032",
+    "rawUuid": "80749192-1bb1-42d1-a8da-3534a764d9ee",
+    "name": "heisenberg",
+    "institution": "Sairam Vidyalaya",
+    "leaderName": "MUKUNTHAN A",
+    "leaderEmail": "mpv26ha010@sairamvidyalaya.edu.in",
+    "leaderPhone": "+918148563287",
+    "members": [
+      "MUKUNTHAN A",
+      "Member 2",
+      "Member 3"
+    ],
+    "arena": "B",
+    "eligibility": {
+      "passed": false,
+      "checkedAt": null,
+      "notes": ""
+    }
+  },
+  {
+    "id": "BOT-033",
+    "rawUuid": "e2f01b5d-8a80-4f7a-bf1b-026049317593",
+    "name": "Apex Point",
+    "institution": "RoboFest Participant",
+    "leaderName": "Midun Surya T",
+    "leaderEmail": "25ec409@skcet.ac.in",
+    "leaderPhone": "+919791247646",
+    "members": [
+      "Midun Surya T",
+      "Member 2",
+      "Member 3"
+    ],
+    "arena": "A",
+    "eligibility": {
+      "passed": false,
+      "checkedAt": null,
+      "notes": ""
+    }
+  },
+  {
+    "id": "BOT-034",
+    "rawUuid": "18ba8546-a445-4d2d-84d3-c3745e9b3707",
+    "name": "Cyber spirits",
+    "institution": "VIT University",
+    "leaderName": "Rahul",
+    "leaderEmail": "kavitharahul838@gmail.com",
+    "leaderPhone": "+919840732205",
+    "members": [
+      "Rahul",
+      "Member 2",
+      "Member 3"
+    ],
+    "arena": "B",
+    "eligibility": {
+      "passed": false,
+      "checkedAt": null,
+      "notes": ""
+    }
+  },
+  {
+    "id": "BOT-035",
+    "rawUuid": "20da7341-bcfd-4b8b-9994-bcce2737b6f8",
+    "name": "MechaTech",
+    "institution": "RoboFest Participant",
+    "leaderName": "Akshith seemala",
+    "leaderEmail": "arutisan@gmail.com",
+    "leaderPhone": "+919176614076",
+    "members": [
+      "Akshith seemala",
+      "Member 2",
+      "Member 3"
+    ],
+    "arena": "A",
+    "eligibility": {
+      "passed": false,
+      "checkedAt": null,
+      "notes": ""
+    }
+  },
+  {
+    "id": "BOT-036",
+    "rawUuid": "1274eae9-298a-449c-94ed-74a071c30925",
+    "name": "Robo blitz league",
+    "institution": "RoboFest Participant",
+    "leaderName": "Roma Ram",
+    "leaderEmail": "divcs89@gmail.com",
+    "leaderPhone": "+919789030290",
+    "members": [
+      "Roma Ram",
+      "Member 2",
+      "Member 3"
+    ],
+    "arena": "B",
+    "eligibility": {
+      "passed": false,
+      "checkedAt": null,
+      "notes": ""
+    }
+  },
+  {
+    "id": "BOT-037",
+    "rawUuid": "21d278aa-9d41-474c-9917-89cefc17a8b2",
+    "name": "Ghost Rider",
+    "institution": "RoboFest Participant",
+    "leaderName": "Abhav Krishna S",
+    "leaderEmail": "shyam.sukumaran@gmail.com",
+    "leaderPhone": "+919962646354",
+    "members": [
+      "Abhav Krishna S",
+      "Member 2",
+      "Member 3"
+    ],
+    "arena": "A",
+    "eligibility": {
+      "passed": false,
+      "checkedAt": null,
+      "notes": ""
+    }
+  },
+  {
+    "id": "BOT-038",
+    "rawUuid": "f847740c-eea4-4945-ae68-31353867dd4b",
+    "name": "Titan",
+    "institution": "RoboFest Participant",
+    "leaderName": "G L Thanwin",
+    "leaderEmail": "vvd.3976@velsvidyashram.ac.in",
+    "leaderPhone": "+919884362227",
+    "members": [
+      "G L Thanwin",
+      "Member 2",
+      "Member 3"
+    ],
+    "arena": "B",
+    "eligibility": {
+      "passed": false,
+      "checkedAt": null,
+      "notes": ""
+    }
+  },
+  {
+    "id": "BOT-039",
+    "rawUuid": "dce89ad5-a6c1-4bb1-9fc7-347aac3cb8d0",
+    "name": "LPL Squad",
+    "institution": "RoboFest Participant",
+    "leaderName": "S Levin Ronald",
+    "leaderEmail": "slevinronald@gmail.com",
+    "leaderPhone": "+919884481829",
+    "members": [
+      "S Levin Ronald",
+      "Member 2",
+      "Member 3"
+    ],
+    "arena": "A",
+    "eligibility": {
+      "passed": false,
+      "checkedAt": null,
+      "notes": ""
+    }
+  },
+  {
+    "id": "BOT-040",
+    "rawUuid": "a4751c80-859b-43e3-acb1-b775d1469cdd",
+    "name": "Zenvaa Technologies",
+    "institution": "RoboFest Participant",
+    "leaderName": "V M Avinash",
+    "leaderEmail": "0521avinash@gmail.com",
+    "leaderPhone": "+919245205200",
+    "members": [
+      "V M Avinash",
+      "Member 2",
+      "Member 3"
+    ],
+    "arena": "B",
+    "eligibility": {
+      "passed": false,
+      "checkedAt": null,
+      "notes": ""
+    }
+  },
+  {
+    "id": "BOT-041",
+    "rawUuid": "5c1377e0-9952-42c6-a0f0-af8ba35e6f05",
+    "name": "The Glitch kings",
+    "institution": "RoboFest Participant",
+    "leaderName": "saranyamithunya",
+    "leaderEmail": "saranyamithunya@gmail.com",
+    "leaderPhone": "+917305332659",
+    "members": [
+      "saranyamithunya",
+      "Member 2",
+      "Member 3"
+    ],
+    "arena": "A",
+    "eligibility": {
+      "passed": false,
+      "checkedAt": null,
+      "notes": ""
+    }
+  },
+  {
+    "id": "BOT-042",
+    "rawUuid": "8770f0be-c5b5-40bf-899b-d514b2b2a3c9",
+    "name": "Rohith’s Race",
+    "institution": "RoboFest Participant",
+    "leaderName": "aashrithat",
+    "leaderEmail": "aashrithat@gmail.com",
+    "leaderPhone": "+918056221884",
+    "members": [
+      "aashrithat",
+      "Member 2",
+      "Member 3"
+    ],
+    "arena": "B",
+    "eligibility": {
+      "passed": false,
+      "checkedAt": null,
+      "notes": ""
+    }
+  },
+  {
+    "id": "BOT-043",
+    "rawUuid": "a4555318-37f3-4086-8247-958525084cb8",
+    "name": "Angry Bird",
+    "institution": "Bloomingdale International",
+    "leaderName": "Havinthika AS",
+    "leaderEmail": "bisdesign_facilitator4@bloomingdale.edu.in",
+    "leaderPhone": "+919629361818",
+    "members": [
+      "Havinthika AS",
+      "Member 2",
+      "Member 3"
+    ],
+    "arena": "A",
+    "eligibility": {
+      "passed": false,
+      "checkedAt": null,
+      "notes": ""
+    }
+  },
+  {
+    "id": "BOT-044",
+    "rawUuid": "88c363b1-b6f2-4e11-9e27-039372d5e799",
+    "name": "Route Rangers",
+    "institution": "SSN College of Engineering",
+    "leaderName": "Kishore Ram S",
+    "leaderEmail": "kishoreram2410104@ssn.edu.in",
+    "leaderPhone": "+919445927575",
+    "members": [
+      "Kishore Ram S",
+      "Member 2",
+      "Member 3"
+    ],
+    "arena": "B",
+    "eligibility": {
+      "passed": false,
+      "checkedAt": null,
+      "notes": ""
+    }
+  },
+  {
+    "id": "BOT-045",
+    "rawUuid": "b75271dc-3df4-4d49-ad53-da807ece7a77",
+    "name": "Voltage vipers",
+    "institution": "RoboFest Participant",
+    "leaderName": "Lakshith",
+    "leaderEmail": "sarvan.ece@gmail.com",
+    "leaderPhone": "+919789091132",
+    "members": [
+      "Lakshith",
+      "Member 2",
+      "Member 3"
+    ],
+    "arena": "A",
+    "eligibility": {
+      "passed": false,
+      "checkedAt": null,
+      "notes": ""
+    }
+  },
+  {
+    "id": "BOT-046",
+    "rawUuid": "632961b3-8f20-426c-b3c5-823c36b46349",
+    "name": "Tokyo Drifters",
+    "institution": "SSN College of Engineering",
+    "leaderName": "PRANAV TV",
+    "leaderEmail": "pranav2410513@ssn.edu.in",
+    "leaderPhone": "+918056257593",
+    "members": [
+      "PRANAV TV",
+      "Member 2",
+      "Member 3"
+    ],
+    "arena": "B",
+    "eligibility": {
+      "passed": false,
+      "checkedAt": null,
+      "notes": ""
+    }
+  },
+  {
+    "id": "BOT-047",
+    "rawUuid": "7161860d-0f8c-4df6-a123-960e871b6a00",
+    "name": "RTJ AUTOBOYS",
+    "institution": "RoboFest Participant",
+    "leaderName": "S.Rohith",
+    "leaderEmail": "shreeingame@gmail.com",
+    "leaderPhone": "+919677106952",
+    "members": [
+      "S.Rohith",
+      "Member 2",
+      "Member 3"
+    ],
+    "arena": "A",
+    "eligibility": {
+      "passed": false,
+      "checkedAt": null,
+      "notes": ""
+    }
+  },
+  {
+    "id": "BOT-048",
+    "rawUuid": "74ea5c99-8a9a-4417-bf89-98fba5836599",
+    "name": "YHSC BOT CREATORS VELS",
+    "institution": "RoboFest Participant",
+    "leaderName": "Sarvesh S",
+    "leaderEmail": "harshinishree4321@gmail.com",
+    "leaderPhone": "+919952660193",
+    "members": [
+      "Sarvesh S",
+      "Member 2",
+      "Member 3"
+    ],
+    "arena": "B",
+    "eligibility": {
+      "passed": false,
+      "checkedAt": null,
+      "notes": ""
+    }
+  },
+  {
+    "id": "BOT-049",
+    "rawUuid": "2272f063-1690-44fe-9fd9-8a6b3f3696d7",
+    "name": "Samurai blue",
+    "institution": "RoboFest Participant",
+    "leaderName": "Hariram",
+    "leaderEmail": "animax0070707@gmail.com",
+    "leaderPhone": "+919941006862",
+    "members": [
+      "Hariram",
+      "Member 2",
+      "Member 3"
+    ],
+    "arena": "A",
+    "eligibility": {
+      "passed": false,
+      "checkedAt": null,
+      "notes": ""
+    }
+  },
+  {
+    "id": "BOT-050",
+    "rawUuid": "4d8196c0-3ee1-4021-b159-70c7daef9ac1",
+    "name": "Techno Titans",
+    "institution": "RoboFest Participant",
+    "leaderName": "Lithura Anbukrishnan",
+    "leaderEmail": "kanimozhi1982@gmail.com",
+    "leaderPhone": "+919994087377",
+    "members": [
+      "Lithura Anbukrishnan",
+      "Member 2",
+      "Member 3"
+    ],
+    "arena": "B",
+    "eligibility": {
+      "passed": false,
+      "checkedAt": null,
+      "notes": ""
+    }
+  },
+  {
+    "id": "BOT-051",
+    "rawUuid": "bb979e95-8ac7-47d8-afbb-8db61b23ba02",
+    "name": "Thunderstrike",
+    "institution": "RoboFest Participant",
+    "leaderName": "tharshan ms",
+    "leaderEmail": "smuniapp@gmail.com",
+    "leaderPhone": "+919092222524",
+    "members": [
+      "tharshan ms",
+      "Member 2",
+      "Member 3"
+    ],
+    "arena": "A",
+    "eligibility": {
+      "passed": false,
+      "checkedAt": null,
+      "notes": ""
+    }
+  },
+  {
+    "id": "BOT-052",
+    "rawUuid": "255a561d-3ddc-481d-8ac4-c67d6d9bafe9",
+    "name": "Solo Protocol",
+    "institution": "RoboFest Participant",
+    "leaderName": "Siri.V",
+    "leaderEmail": "bhagyasiriv672@gmail.com",
+    "leaderPhone": "+919059104812",
+    "members": [
+      "Siri.V",
+      "Member 2",
+      "Member 3"
+    ],
+    "arena": "B",
+    "eligibility": {
+      "passed": false,
+      "checkedAt": null,
+      "notes": ""
+    }
+  },
+  {
+    "id": "BOT-053",
+    "rawUuid": "516c9107-49d9-42fa-ac73-bd020acf6242",
+    "name": "Velocity Vortex",
+    "institution": "RoboFest Participant",
+    "leaderName": "SAI MIRA BASKARAN",
+    "leaderEmail": "dsarala83@gmail.com",
+    "leaderPhone": "+919841416015",
+    "members": [
+      "SAI MIRA BASKARAN",
+      "Member 2",
+      "Member 3"
+    ],
+    "arena": "A",
+    "eligibility": {
+      "passed": false,
+      "checkedAt": null,
+      "notes": ""
+    }
+  },
+  {
+    "id": "BOT-054",
+    "rawUuid": "fc867c75-885e-480b-8f94-2a5ec22b995c",
+    "name": "Track OFF",
+    "institution": "RoboFest Participant",
+    "leaderName": "M Mohammed Anwar",
+    "leaderEmail": "mohammedanwar6mars.16@gmail.com",
+    "leaderPhone": "+919539356429",
+    "members": [
+      "M Mohammed Anwar",
+      "Member 2",
+      "Member 3"
+    ],
+    "arena": "B",
+    "eligibility": {
+      "passed": false,
+      "checkedAt": null,
+      "notes": ""
+    }
+  },
+  {
+    "id": "BOT-055",
+    "rawUuid": "542842f6-bb97-4c4a-9fe5-6c8f24bccdf8",
+    "name": "Odyssey sciences",
+    "institution": "RoboFest Participant",
+    "leaderName": "Sai srinivas",
+    "leaderEmail": "ssssaisrini@gmail.com",
+    "leaderPhone": "+919791094009",
+    "members": [
+      "Sai srinivas",
+      "Member 2",
+      "Member 3"
+    ],
+    "arena": "A",
+    "eligibility": {
+      "passed": false,
+      "checkedAt": null,
+      "notes": ""
+    }
+  },
+  {
+    "id": "BOT-056",
+    "rawUuid": "93055d80-50bb-471e-b670-c408bd564fc8",
+    "name": "RODIX",
+    "institution": "RoboFest Participant",
+    "leaderName": "dixittharunraja",
+    "leaderEmail": "dixittharunraja@gmail.com",
+    "leaderPhone": "+919597527581",
+    "members": [
+      "dixittharunraja",
+      "Member 2",
+      "Member 3"
+    ],
+    "arena": "B",
+    "eligibility": {
+      "passed": false,
+      "checkedAt": null,
+      "notes": ""
+    }
+  },
+  {
+    "id": "BOT-057",
+    "rawUuid": "9bfff846-c681-4343-9d29-b0fd833df9a1",
+    "name": "Drift Dynamix",
+    "institution": "RoboFest Participant",
+    "leaderName": "KV Keshav",
+    "leaderEmail": "kv.keshav2011@gmail.com",
+    "leaderPhone": "+919840165017",
+    "members": [
+      "KV Keshav",
+      "Member 2",
+      "Member 3"
+    ],
+    "arena": "A",
+    "eligibility": {
+      "passed": false,
+      "checkedAt": null,
+      "notes": ""
+    }
+  },
+  {
+    "id": "BOT-058",
+    "rawUuid": "0f7cd369-311d-44fc-968c-724e56993d0c",
+    "name": "Shadowx",
+    "institution": "RoboFest Participant",
+    "leaderName": "AryaPatel",
+    "leaderEmail": "aryapatel0311@gmail.com",
+    "leaderPhone": "+918460518625",
+    "members": [
+      "AryaPatel",
+      "Member 2",
+      "Member 3"
+    ],
+    "arena": "B",
+    "eligibility": {
+      "passed": false,
+      "checkedAt": null,
+      "notes": ""
+    }
+  }
+]
