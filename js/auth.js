@@ -19,6 +19,7 @@ function getActiveJudgeArena() {
 function checkJudgeAuth() {
   const header = document.querySelector('.app-header');
   const main = document.querySelector('.app-main');
+  const modal = document.getElementById('modal-judge-auth');
 
   if (!isJudgeAuthenticated()) {
     if (header) header.style.display = 'none';
@@ -26,8 +27,12 @@ function checkJudgeAuth() {
     showJudgeAuthModal();
     return false;
   } else {
-    if (header) header.style.display = '';
-    if (main) main.style.display = '';
+    if (header) header.style.display = 'flex';
+    if (main) main.style.display = 'block';
+    if (modal) {
+      modal.classList.add('hidden');
+      modal.style.display = 'none';
+    }
     updateJudgeHeaderBadge();
     return true;
   }
@@ -37,28 +42,45 @@ function showJudgeAuthModal(requestedTab = 'dashboard') {
   const modal = document.getElementById('modal-judge-auth');
   if (!modal) return;
   modal.setAttribute('data-requested-tab', requestedTab);
-  document.getElementById('inp-judge-username').value = '';
-  document.getElementById('inp-judge-password').value = '';
-  document.getElementById('auth-error-msg').textContent = '';
-  document.getElementById('auth-error-msg').classList.add('hidden');
+  const uInp = document.getElementById('inp-judge-username');
+  const pInp = document.getElementById('inp-judge-password');
+  const errorMsg = document.getElementById('auth-error-msg');
+  if (uInp) uInp.value = '';
+  if (pInp) pInp.value = '';
+  if (errorMsg) {
+    errorMsg.textContent = '';
+    errorMsg.classList.add('hidden');
+    errorMsg.style.display = 'none';
+  }
   modal.classList.remove('hidden');
-  setTimeout(() => document.getElementById('inp-judge-username').focus(), 100);
+  modal.style.display = 'flex';
+  setTimeout(() => {
+    if (uInp) uInp.focus();
+  }, 100);
 }
 
 function handleJudgeLoginSubmit(e) {
-  e.preventDefault();
-  const username = document.getElementById('inp-judge-username').value.trim().toLowerCase();
-  const password = document.getElementById('inp-judge-password').value;
+  if (e) e.preventDefault();
+  const usernameEl = document.getElementById('inp-judge-username');
+  const passwordEl = document.getElementById('inp-judge-password');
   const errorMsg = document.getElementById('auth-error-msg');
+
+  if (!usernameEl || !passwordEl) return;
+
+  const username = usernameEl.value.trim().toLowerCase();
+  const password = passwordEl.value;
 
   const account = JUDGE_ACCOUNTS.find(
     a => a.username.toLowerCase() === username && a.password === password
   );
 
   if (!account) {
-    errorMsg.textContent = "❌ Invalid username or password. Please re-enter.";
-    errorMsg.classList.remove('hidden');
-    document.getElementById('inp-judge-password').value = '';
+    if (errorMsg) {
+      errorMsg.textContent = "❌ Invalid username or password. Please re-enter.";
+      errorMsg.classList.remove('hidden');
+      errorMsg.style.display = 'block';
+    }
+    passwordEl.value = '';
     return;
   }
 
@@ -67,18 +89,23 @@ function handleJudgeLoginSubmit(e) {
   sessionStorage.setItem('active_judge_name', account.name);
   sessionStorage.setItem('active_judge_arena', account.arena);
 
-  document.getElementById('modal-judge-auth').classList.add('hidden');
+  const modal = document.getElementById('modal-judge-auth');
+  if (modal) {
+    modal.classList.add('hidden');
+    modal.style.display = 'none';
+  }
 
   // Reveal interface
   const header = document.querySelector('.app-header');
   const main = document.querySelector('.app-main');
-  if (header) header.style.display = '';
-  if (main) main.style.display = '';
+  if (header) header.style.display = 'flex';
+  if (main) main.style.display = 'block';
 
   updateJudgeHeaderBadge();
   enforceJudgeNavVisibility();
 
-  const reqTab = document.getElementById('modal-judge-auth').getAttribute('data-requested-tab') || 'dashboard';
+  let reqTab = (modal && modal.getAttribute('data-requested-tab')) || 'dashboard';
+  if (reqTab === 'participants') reqTab = 'dashboard';
   if (typeof switchTab === 'function') switchTab(reqTab);
 }
 

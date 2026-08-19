@@ -30,6 +30,10 @@
   --radius-lg: 20px;
 }
 
+.hidden {
+  display: none !important;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
