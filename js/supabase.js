@@ -41,6 +41,8 @@ function updateCloudSyncBadge(online) {
 }
 
 let lastSyncedLocalState = "";
+let lastLocalSaveTimestamp = 0;
+let syncDebounceTimer = null;
 
 function setupRealtimeSubscriptions() {
   if (!supabaseClient) return;
@@ -48,14 +50,16 @@ function setupRealtimeSubscriptions() {
   try {
     realTimeChannel = supabaseClient.channel('public:obs_state')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'judging_portal_state' }, payload => {
+        // Ignore real-time echoes for 2.5 seconds after local edit to prevent Supabase round-trip loop glitching
+        if (Date.now() - lastLocalSaveTimestamp < 2500) {
+          return;
+        }
+
         if (payload.new && payload.new.state_data) {
           const cloudStr = JSON.stringify(payload.new.state_data);
-          if (cloudStr === lastSyncedLocalState) {
-            // Ignore self-echo to prevent UI flickering/glitching on local save
-            return;
-          }
           const localStr = JSON.stringify(storeState);
-          if (cloudStr !== localStr) {
+
+          if (cloudStr !== localStr && cloudStr !== lastSyncedLocalState) {
             storeState = payload.new.state_data;
             lastSyncedLocalState = cloudStr;
             saveStoreLocallyOnly();
@@ -94,28 +98,33 @@ async function fetchInitialState() {
   }
 }
 
-async function syncDataToCloud() {
-  if (!supabaseClient || !isCloudOnline) return;
+function syncDataToCloud() {
+  lastLocalSaveTimestamp = Date.now();
+  if (syncDebounceTimer) clearTimeout(syncDebounceTimer);
 
-  try {
-    lastSyncedLocalState = JSON.stringify(storeState);
+  syncDebounceTimer = setTimeout(async () => {
+    if (!supabaseClient || !isCloudOnline) return;
 
-    // 1. Sync full master state
-    const masterPayload = {
-      id: 'robofest_master_state',
-      state_data: storeState,
-      updated_at: new Date().toISOString()
-    };
+    try {
+      lastSyncedLocalState = JSON.stringify(storeState);
 
-    await supabaseClient
-      .from('judging_portal_state')
-      .upsert(masterPayload);
+      // 1. Sync full master state
+      const masterPayload = {
+        id: 'robofest_master_state',
+        state_data: storeState,
+        updated_at: new Date().toISOString()
+      };
 
-    // 2. Push participants & teams details to Supabase teams table
-    await pushParticipantsToSupabase();
-  } catch (err) {
-    console.warn("Cloud sync network error:", err);
-  }
+      await supabaseClient
+        .from('judging_portal_state')
+        .upsert(masterPayload);
+
+      // 2. Push participants & teams details to Supabase teams table
+      await pushParticipantsToSupabase();
+    } catch (err) {
+      console.warn("Cloud sync network error:", err);
+    }
+  }, 500);
 }
 
 async function pushParticipantsToSupabase() {
