@@ -21,6 +21,8 @@ function checkJudgeAuth() {
   const main = document.querySelector('.app-main');
   const modal = document.getElementById('modal-judge-auth');
 
+  if (!modal) return true;
+
   if (!isJudgeAuthenticated()) {
     if (header) header.style.display = 'none';
     if (main) main.style.display = 'none';
@@ -91,7 +93,8 @@ function handleJudgeLoginSubmit(e) {
 
   const modal = document.getElementById('modal-judge-auth');
   if (modal) {
-    modal.remove(); // fully destroy — no leftover backdrop
+    modal.classList.add('hidden');
+    modal.style.display = 'none';
   }
 
   // Reveal interface
@@ -217,5 +220,5 @@ document.addEventListener('DOMContentLoaded', () => {
   const partForm = document.getElementById('form-participant-gate');
   if (partForm) partForm.addEventListener('submit', handleParticipantGateSubmit);
 
-  updateJudgeHeaderBadge();
+  checkJudgeAuth();
 });
