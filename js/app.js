@@ -747,6 +747,11 @@ function renderCallOrderView() {
    ========================================================================== */
 
 function renderParticipantsView() {
+  if (typeof renderTeamRosterGrid === 'function') {
+    renderTeamRosterGrid('page-team-roster');
+    renderTeamRosterGrid('admin-team-roster');
+  }
+
   const arenaAList = document.getElementById('part-arenaA-list');
   const arenaBList = document.getElementById('part-arenaB-list');
 
