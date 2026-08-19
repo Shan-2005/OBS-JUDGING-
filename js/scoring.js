@@ -92,8 +92,54 @@ function updateScoreSummary(round) {
  */
 function getRankedLeaderboard(roundKey) {
   const runs = storeState[roundKey] || {};
+  const teams = storeState.teams || [];
+
+  let baseTeams = teams;
+  if (roundKey === 'round2') {
+    const r1Ranked = (typeof getRankedLeaderboardRaw === 'function') ? getRankedLeaderboardRaw('round1') : [];
+    if (r1Ranked.length > 0) {
+      const top25Ids = r1Ranked.slice(0, 25).map(r => r.teamId);
+      baseTeams = teams.filter(t => top25Ids.includes(t.id));
+      if (baseTeams.length === 0) baseTeams = teams;
+    }
+  }
+
+  const list = baseTeams.map((team, idx) => {
+    const run = runs[team.id];
+    return {
+      teamId: team.id,
+      teamName: team.name,
+      institution: team.institution || 'RoboFest Participant',
+      arena: (run && run.arena) ? run.arena : (team.arena || (idx % 2 === 0 ? 'A' : 'B')),
+      hasRun: !!run,
+      rawTimeMs: run ? run.rawTimeMs : null,
+      penaltySeconds: run ? (run.penaltySeconds || 0) : 0,
+      skippedObstacles: (run && run.penalties) ? (run.penalties.p_skip || 0) : 0,
+      finalTimeMs: run ? run.finalTimeMs : null,
+      disqualified: run ? run.disqualified : false,
+      dqReason: run ? run.dqReason : '',
+      timestamp: run ? run.timestamp : 0
+    };
+  });
+
+  const validRuns = list.filter(r => r.hasRun && !r.disqualified);
+  const dqRuns = list.filter(r => r.hasRun && r.disqualified);
+  const pendingTeams = list.filter(r => !r.hasRun);
+
+  validRuns.sort((a, b) => {
+    if (a.finalTimeMs !== b.finalTimeMs) return a.finalTimeMs - b.finalTimeMs;
+    if (a.penaltySeconds !== b.penaltySeconds) return a.penaltySeconds - b.penaltySeconds;
+    if (a.skippedObstacles !== b.skippedObstacles) return a.skippedObstacles - b.skippedObstacles;
+    return 0;
+  });
+
+  return [...validRuns, ...dqRuns, ...pendingTeams];
+}
+
+function getRankedLeaderboardRaw(roundKey) {
+  const runs = storeState[roundKey] || {};
   const teamMap = {};
-  storeState.teams.forEach(t => { teamMap[t.id] = t; });
+  (storeState.teams || []).forEach(t => { teamMap[t.id] = t; });
 
   const list = Object.keys(runs).map(teamId => {
     const run = runs[teamId];
@@ -113,21 +159,13 @@ function getRankedLeaderboard(roundKey) {
     };
   });
 
-  // Separate DQ and valid runs
   const validRuns = list.filter(r => !r.disqualified);
   const dqRuns = list.filter(r => r.disqualified);
 
-  // Sort valid runs according to official tie-break order
   validRuns.sort((a, b) => {
-    if (a.finalTimeMs !== b.finalTimeMs) {
-      return a.finalTimeMs - b.finalTimeMs;
-    }
-    if (a.penaltySeconds !== b.penaltySeconds) {
-      return a.penaltySeconds - b.penaltySeconds;
-    }
-    if (a.skippedObstacles !== b.skippedObstacles) {
-      return a.skippedObstacles - b.skippedObstacles;
-    }
+    if (a.finalTimeMs !== b.finalTimeMs) return a.finalTimeMs - b.finalTimeMs;
+    if (a.penaltySeconds !== b.penaltySeconds) return a.penaltySeconds - b.penaltySeconds;
+    if (a.skippedObstacles !== b.skippedObstacles) return a.skippedObstacles - b.skippedObstacles;
     return 0;
   });
 

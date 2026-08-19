@@ -44,36 +44,54 @@ function preparePrintSheets(targetRound = 'all') {
   // 1. Populate Round 1 Table
   const printR1Tbody = document.getElementById('print-r1-tbody');
   if (printR1Tbody) {
-    printR1Tbody.innerHTML = r1List.map((r, idx) => `
-      <tr>
-        <td><strong>#${idx + 1}</strong></td>
-        <td><strong>${r.teamId}</strong></td>
-        <td>${r.teamName}</td>
-        <td>${r.institution || '--'}</td>
-        <td>Arena ${r.arena}</td>
-        <td>${(r.rawTimeMs / 1000).toFixed(3)}s</td>
-        <td>+${r.penaltySeconds.toFixed(2)}s</td>
-        <td><strong>${(r.finalTimeMs / 1000).toFixed(3)}s</strong></td>
-        <td>${r.disqualified ? 'DISQUALIFIED (' + (r.dqReason || '') + ')' : (idx < 25 ? 'TOP 25 QUALIFIED' : 'ELIMINATED')}</td>
-      </tr>
-    `).join('');
+    printR1Tbody.innerHTML = r1List.map((r, idx) => {
+      const rawStr = r.hasRun ? `${(r.rawTimeMs / 1000).toFixed(3)}s` : '--';
+      const penStr = r.hasRun ? `+${r.penaltySeconds.toFixed(2)}s` : '--';
+      const finalStr = r.hasRun ? `${(r.finalTimeMs / 1000).toFixed(3)}s` : '--';
+      let statusStr = 'PENDING RUN';
+      if (r.hasRun) {
+        statusStr = r.disqualified ? `DISQUALIFIED (${r.dqReason || ''})` : (idx < 25 ? 'TOP 25 QUALIFIED' : 'COMPLETED');
+      }
+      return `
+        <tr>
+          <td><strong>#${idx + 1}</strong></td>
+          <td><strong>${r.teamId}</strong></td>
+          <td>${r.teamName}</td>
+          <td>${r.institution || '--'}</td>
+          <td>Arena ${r.arena}</td>
+          <td>${rawStr}</td>
+          <td>${penStr}</td>
+          <td><strong>${finalStr}</strong></td>
+          <td>${statusStr}</td>
+        </tr>
+      `;
+    }).join('');
   }
 
   // 2. Populate Round 2 Table
   const printR2Tbody = document.getElementById('print-r2-tbody');
   if (printR2Tbody) {
-    printR2Tbody.innerHTML = r2List.map((r, idx) => `
-      <tr>
-        <td><strong>Seed #${idx + 1}</strong></td>
-        <td><strong>${r.teamId}</strong></td>
-        <td>${r.teamName}</td>
-        <td>${r.institution || '--'}</td>
-        <td>${(r.rawTimeMs / 1000).toFixed(3)}s</td>
-        <td>+${r.penaltySeconds.toFixed(2)}s</td>
-        <td><strong>${(r.finalTimeMs / 1000).toFixed(3)}s</strong></td>
-        <td>${r.disqualified ? 'DISQUALIFIED (' + (r.dqReason || '') + ')' : (idx < 9 ? 'TOP 9 ADVANCED' : 'ELIMINATED')}</td>
-      </tr>
-    `).join('');
+    printR2Tbody.innerHTML = r2List.map((r, idx) => {
+      const rawStr = r.hasRun ? `${(r.rawTimeMs / 1000).toFixed(3)}s` : '--';
+      const penStr = r.hasRun ? `+${r.penaltySeconds.toFixed(2)}s` : '--';
+      const finalStr = r.hasRun ? `${(r.finalTimeMs / 1000).toFixed(3)}s` : '--';
+      let statusStr = 'PENDING R2 RUN';
+      if (r.hasRun) {
+        statusStr = r.disqualified ? `DISQUALIFIED (${r.dqReason || ''})` : (idx < 9 ? 'TOP 9 ADVANCED' : 'COMPLETED');
+      }
+      return `
+        <tr>
+          <td><strong>Seed #${idx + 1}</strong></td>
+          <td><strong>${r.teamId}</strong></td>
+          <td>${r.teamName}</td>
+          <td>${r.institution || '--'}</td>
+          <td>${rawStr}</td>
+          <td>${penStr}</td>
+          <td><strong>${finalStr}</strong></td>
+          <td>${statusStr}</td>
+        </tr>
+      `;
+    }).join('');
   }
 
   // 3. Populate Round 3 Podium Table
