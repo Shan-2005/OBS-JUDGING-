@@ -181,29 +181,34 @@ document.addEventListener('DOMContentLoaded', () => {
 function switchTab(tabId) {
   const hasParticipantsTab = !!document.getElementById('view-participants');
 
-  // Security Guard: Restrict judging tabs to authenticated judges only
-  if (typeof isJudgeAuthenticated === 'function' && !isJudgeAuthenticated()) {
-    const targetTab = (tabId === 'participants' || !tabId) ? 'dashboard' : tabId;
-    showJudgeAuthModal(targetTab);
+  // Default targetTab based on page type
+  if (hasParticipantsTab && (!tabId || tabId === 'participants')) {
+    tabId = 'participants';
+  } else if (!tabId) {
+    tabId = 'dashboard';
+  }
+
+  // Security Guard: Restrict judging tabs to authenticated judges only (participants view is public)
+  const isJudgeTab = tabId !== 'participants';
+  if (isJudgeTab && typeof isJudgeAuthenticated === 'function' && !isJudgeAuthenticated()) {
+    showJudgeAuthModal(tabId);
 
     document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
     document.querySelectorAll('.tab-view').forEach(v => v.classList.remove('active'));
 
-    if (hasParticipantsTab && tabId === 'participants') {
+    if (hasParticipantsTab) {
       const pBtn = document.querySelector(`.nav-btn[data-tab="participants"]`);
       const pView = document.getElementById(`view-participants`);
       if (pBtn) pBtn.classList.add('active');
       if (pView) pView.classList.add('active');
       if (typeof renderParticipantsView === 'function') renderParticipantsView();
-      return;
     } else {
-      // Default to dashboard state behind auth modal
       const dBtn = document.querySelector(`.nav-btn[data-tab="dashboard"]`);
       const dView = document.getElementById(`view-dashboard`);
       if (dBtn) dBtn.classList.add('active');
       if (dView) dView.classList.add('active');
-      return;
     }
+    return;
   }
 
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -245,7 +250,7 @@ function handleHashRouting() {
       switchTab(hash);
     }
   } else {
-    switchTab('dashboard');
+    switchTab(hasParticipantsTab ? 'participants' : 'dashboard');
   }
 }
 
