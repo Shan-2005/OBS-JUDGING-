@@ -42,10 +42,12 @@ document.addEventListener('DOMContentLoaded', () => {
   safeListen('att-filter-select', 'change', renderAttendanceTable);
   safeListen('btn-mark-all-present', 'click', () => {
     storeState.teams.forEach(t => {
+      const rSize = t.rosterSize || 1;
       storeState.attendance[t.id] = {
         status: 'Present',
         checkInTime: Date.now(),
-        membersPresent: 2,
+        membersPresent: rSize,
+        maxMembers: rSize,
         notes: 'Marked present via batch'
       };
     });
@@ -372,7 +374,10 @@ function renderAttendanceTable() {
         <td>${t.institution}</td>
         <td><span class="badge badge-info">Arena ${t.arena || 'A'}</span></td>
         <td>
-          <input type="number" min="0" max="4" value="${att.membersPresent}" class="num-input sm" onchange="updateAttendanceMembers('${t.id}', this.value)">
+          <div style="display:flex;align-items:center;gap:4px;">
+            <input type="number" min="0" max="${t.rosterSize || 5}" value="${att.membersPresent !== undefined ? att.membersPresent : (t.rosterSize || 1)}" class="num-input sm" onchange="updateAttendanceMembers('${t.id}', this.value)" style="width:52px;">
+            <span class="text-muted" style="font-size:12px;">/ ${t.rosterSize || 1}</span>
+          </div>
         </td>
         <td>${statusBadge}</td>
         <td class="checkin-time-cell">${timeStr}</td>
