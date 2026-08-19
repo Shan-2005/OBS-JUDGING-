@@ -17,6 +17,7 @@ function initSupabase() {
       console.log("Supabase Client connected successfully!");
       updateCloudSyncBadge(true);
       setupRealtimeSubscriptions();
+      fetchInitialState();
     } catch (err) {
       console.warn("Supabase init error:", err);
       updateCloudSyncBadge(false);
@@ -24,9 +25,6 @@ function initSupabase() {
   } else {
     updateCloudSyncBadge(false);
   }
-
-  // Poll state from cloud every 3 seconds for active sync across all judges
-  setInterval(pollStateFromCloud, 3000);
 }
 
 function updateCloudSyncBadge(online) {
@@ -42,6 +40,8 @@ function updateCloudSyncBadge(online) {
   }
 }
 
+let lastSyncedLocalState = "";
+
 function setupRealtimeSubscriptions() {
   if (!supabaseClient) return;
 
@@ -49,9 +49,18 @@ function setupRealtimeSubscriptions() {
     realTimeChannel = supabaseClient.channel('public:obs_state')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'judging_portal_state' }, payload => {
         if (payload.new && payload.new.state_data) {
-          storeState = payload.new.state_data;
-          saveStoreLocallyOnly();
-          if (typeof refreshAllViews === 'function') refreshAllViews();
+          const cloudStr = JSON.stringify(payload.new.state_data);
+          if (cloudStr === lastSyncedLocalState) {
+            // Ignore self-echo to prevent UI flickering/glitching on local save
+            return;
+          }
+          const localStr = JSON.stringify(storeState);
+          if (cloudStr !== localStr) {
+            storeState = payload.new.state_data;
+            lastSyncedLocalState = cloudStr;
+            saveStoreLocallyOnly();
+            if (typeof refreshAllViews === 'function') refreshAllViews();
+          }
         }
       })
       .subscribe();
@@ -60,10 +69,37 @@ function setupRealtimeSubscriptions() {
   }
 }
 
+async function fetchInitialState() {
+  if (!supabaseClient || !isCloudOnline) return;
+  try {
+    const { data } = await supabaseClient
+      .from('judging_portal_state')
+      .select('state_data')
+      .eq('id', 'robofest_master_state')
+      .single();
+
+    if (data && data.state_data) {
+      const cloudStr = JSON.stringify(data.state_data);
+      const localStr = JSON.stringify(storeState);
+      if (cloudStr !== localStr) {
+        storeState = data.state_data;
+        lastSyncedLocalState = cloudStr;
+        saveStoreLocallyOnly();
+        if (typeof refreshAllViews === 'function') refreshAllViews();
+        console.log("✅ Successfully initialized local store from Supabase master state!");
+      }
+    }
+  } catch (err) {
+    console.warn("Failed to load initial state from Supabase, using local storage:", err);
+  }
+}
+
 async function syncDataToCloud() {
   if (!supabaseClient || !isCloudOnline) return;
 
   try {
+    lastSyncedLocalState = JSON.stringify(storeState);
+
     // 1. Sync full master state
     const masterPayload = {
       id: 'robofest_master_state',

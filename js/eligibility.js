@@ -7,15 +7,25 @@ const CHECKLIST_KEYS = [
   'wiredControl', 'wirelessControl', 'bannedParts', 'teamMembers', 'dedicatedTxRx'
 ];
 
-function openEligibilityModal(teamId) {
+function openEligibilityModal(teamId, roundKey) {
   const team = storeState.teams.find(t => t.id === teamId);
   if (!team) return;
 
-  document.getElementById('elig-modal-team-name').textContent = team.name;
-  document.getElementById('elig-modal-bot-id').textContent = team.id;
-  document.getElementById('form-eligibility').dataset.teamId = team.id;
+  if (!roundKey) {
+    const roundSelect = document.getElementById('botcheck-round-select');
+    roundKey = roundSelect ? roundSelect.value : 'r1';
+  }
 
-  const elig = team.eligibility || {};
+  document.getElementById('elig-modal-team-name').textContent = `${team.name} (${roundKey.toUpperCase()} Tech Inspection)`;
+  document.getElementById('elig-modal-bot-id').textContent = team.id;
+  
+  const form = document.getElementById('form-eligibility');
+  form.dataset.teamId = team.id;
+  form.dataset.roundKey = roundKey;
+
+  const eligKey = `eligibility_${roundKey}`;
+  const elig = team[eligKey] || {};
+  
   CHECKLIST_KEYS.forEach(key => {
     const chk = document.getElementById(`chk-${key}`);
     if (chk) chk.checked = !!elig[key];
@@ -55,7 +65,9 @@ function updateEligibilityModalBanner() {
 
 function saveEligibilityForm(e) {
   e.preventDefault();
-  const teamId = document.getElementById('form-eligibility').dataset.teamId;
+  const form = document.getElementById('form-eligibility');
+  const teamId = form.dataset.teamId;
+  const roundKey = form.dataset.roundKey || 'r1';
   const team = storeState.teams.find(t => t.id === teamId);
   if (!team) return;
 
@@ -72,10 +84,16 @@ function saveEligibilityForm(e) {
   elig.passed = passedCount === CHECKLIST_KEYS.length;
   elig.notes = document.getElementById('chk-notes').value || '';
 
-  team.eligibility = elig;
+  // Save to round-specific key and legacy compatibility key
+  team[`eligibility_${roundKey}`] = elig;
+  if (roundKey === 'r1') {
+    team.eligibility = elig;
+  }
+  
   saveStore();
   
   document.getElementById('modal-eligibility').classList.add('hidden');
+  if (typeof renderBotCheckView === 'function') renderBotCheckView();
   renderTeamsTable();
   renderDashboardStats();
   populateScoringTeamSelects();

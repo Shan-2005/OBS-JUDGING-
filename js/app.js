@@ -54,9 +54,24 @@ document.addEventListener('DOMContentLoaded', () => {
     renderDashboardStats();
   });
 
+  safeListen('btn-mark-all-absent', 'click', () => {
+    if (confirm("Reset attendance status to ABSENT for all 58 teams?")) {
+      storeState.attendance = {};
+      saveStore();
+      renderAttendanceTable();
+      renderDashboardStats();
+    }
+  });
+
   // 2. BOT CHECK INSPECTION LISTENERS
   safeListen('botcheck-team-select', 'change', (e) => {
     renderBotCheckInspectorCard(e.target.value);
+  });
+  safeListen('botcheck-round-select', 'change', () => {
+    renderBotCheckView();
+    const selectEl = document.getElementById('botcheck-team-select');
+    const selVal = selectEl ? selectEl.value : '';
+    renderBotCheckInspectorCard(selVal);
   });
 
   // 3. JUDGE MANAGEMENT LISTENERS
@@ -248,6 +263,11 @@ function switchSubTab(subId) {
 }
 
 function refreshAllViews() {
+  const activeElId = document.activeElement ? document.activeElement.id : null;
+  const activeElVal = document.activeElement ? document.activeElement.value : null;
+  const activeElSelStart = (document.activeElement && typeof document.activeElement.selectionStart === 'number') ? document.activeElement.selectionStart : null;
+  const activeElSelEnd = (document.activeElement && typeof document.activeElement.selectionEnd === 'number') ? document.activeElement.selectionEnd : null;
+
   renderDashboardStats();
   renderAttendanceTable();
   renderBotCheckView();
@@ -261,6 +281,26 @@ function refreshAllViews() {
   renderBracket();
   renderLeaderboards();
   renderParticipantsView();
+
+  const activePartTeamId = sessionStorage.getItem('participant_team_id');
+  if (activePartTeamId && typeof renderPersonalizedTeamDashboard === 'function') {
+    renderPersonalizedTeamDashboard(activePartTeamId);
+  }
+
+  if (activeElId) {
+    const el = document.getElementById(activeElId);
+    if (el) {
+      el.focus();
+      if (activeElVal !== null && el.value !== activeElVal) {
+        el.value = activeElVal;
+      }
+      if (activeElSelStart !== null && activeElSelEnd !== null) {
+        try {
+          el.setSelectionRange(activeElSelStart, activeElSelEnd);
+        } catch (e) {}
+      }
+    }
+  }
 }
 
 function renderDashboardStats() {
@@ -269,10 +309,15 @@ function renderDashboardStats() {
   const eligible = storeState.teams.filter(t => t.eligibility && t.eligibility.passed).length;
   const judgesCount = (storeState.judges || []).length;
 
-  document.getElementById('dash-total-teams').textContent = total;
-  document.getElementById('dash-present-teams').textContent = `${present} / ${total}`;
-  document.getElementById('dash-eligible-teams').textContent = `${eligible} / ${total}`;
-  document.getElementById('dash-judges-count').textContent = judgesCount;
+  const totalEl = document.getElementById('dash-total-teams');
+  const presentEl = document.getElementById('dash-present-teams');
+  const eligibleEl = document.getElementById('dash-eligible-teams');
+  const judgesEl = document.getElementById('dash-judges-count');
+
+  if (totalEl) totalEl.textContent = total;
+  if (presentEl) presentEl.textContent = `${present} / ${total}`;
+  if (eligibleEl) eligibleEl.textContent = `${eligible} / ${total}`;
+  if (judgesEl) judgesEl.textContent = judgesCount;
 }
 
 /* ==========================================================================
@@ -283,8 +328,10 @@ function renderAttendanceTable() {
   const tbody = document.getElementById('att-tbody');
   if (!tbody) return;
 
-  const query = document.getElementById('att-search').value.toLowerCase();
-  const filter = document.getElementById('att-filter-select').value;
+  const searchEl = document.getElementById('att-search');
+  const filterEl = document.getElementById('att-filter-select');
+  const query = searchEl ? searchEl.value.toLowerCase() : '';
+  const filter = filterEl ? filterEl.value : 'all';
 
   const filtered = storeState.teams.filter(t => {
     const matchesSearch = t.name.toLowerCase().includes(query) ||
@@ -353,13 +400,21 @@ function updateAttendanceMembers(teamId, count) {
 
 function renderBotCheckView() {
   const select = document.getElementById('botcheck-team-select');
+  const roundSelect = document.getElementById('botcheck-round-select');
+  const roundKey = roundSelect ? roundSelect.value : 'r1';
+
   if (select) {
+    const currentVal = select.value;
     select.innerHTML = `<option value="">-- Choose Team to Inspect --</option>` +
       storeState.teams.map(t => {
-        const passed = t.eligibility && t.eligibility.passed;
+        const elig = t[`eligibility_${roundKey}`] || {};
+        const passed = elig.passed;
         const icon = passed ? '[OK]' : '[..]';
         return `<option value="${t.id}">${icon} ${t.id} — ${t.name} (${t.institution})</option>`;
       }).join('');
+    if (currentVal) {
+      select.value = currentVal;
+    }
   }
 
   renderBotCheckLogTable();
@@ -377,11 +432,13 @@ function renderBotCheckInspectorCard(teamId) {
   const team = storeState.teams.find(t => t.id === teamId);
   if (!team) return;
 
-  const elig = team.eligibility || {};
+  const roundSelect = document.getElementById('botcheck-round-select');
+  const roundKey = roundSelect ? roundSelect.value : 'r1';
+  const elig = team[`eligibility_${roundKey}`] || {};
 
   container.innerHTML = `
     <div class="inspector-header mb-3">
-      <h4>Inspection Certificate for ${team.id} (${team.name})</h4>
+      <h4>Inspection Certificate for ${team.id} (${team.name}) - ${roundKey.toUpperCase()}</h4>
       <span class="badge ${elig.passed ? 'badge-success' : 'badge-danger'}">
         ${elig.passed ? 'VERIFIED PASSED' : 'INSPECTION PENDING / FAILED'}
       </span>
@@ -403,7 +460,7 @@ function renderBotCheckInspectorCard(teamId) {
     </div>
 
     <div class="actions mt-3 text-right">
-      <button class="btn btn-primary lg" onclick="openEligibilityModal('${team.id}')">
+      <button class="btn btn-primary lg" onclick="openEligibilityModal('${team.id}', '${roundKey}')">
         📋 Edit Tech Inspection Form
       </button>
     </div>
@@ -423,8 +480,12 @@ function renderBotCheckLogTable() {
   const tbody = document.getElementById('botcheck-log-tbody');
   if (!tbody) return;
 
+  const roundSelect = document.getElementById('botcheck-round-select');
+  const roundKey = roundSelect ? roundSelect.value : 'r1';
+
   tbody.innerHTML = storeState.teams.map(t => {
-    const passed = t.eligibility && t.eligibility.passed;
+    const elig = t[`eligibility_${roundKey}`] || {};
+    const passed = elig.passed;
     return `
       <tr>
         <td><strong>${t.id}</strong></td>
@@ -435,7 +496,7 @@ function renderBotCheckLogTable() {
           </span>
         </td>
         <td>
-          <button class="btn btn-outline sm" onclick="openEligibilityModal('${t.id}')">Inspect</button>
+          <button class="btn btn-outline sm" onclick="openEligibilityModal('${t.id}', '${roundKey}')">Inspect</button>
         </td>
       </tr>
     `;
@@ -667,7 +728,7 @@ function renderParticipantsView() {
     }).join('');
   }
 
-  const standingsTbody = document.getElementById('part-standings-tbody');
+  const standingsTbody = document.getElementById('part-standings-tbody') || document.getElementById('part-leaderboard-body');
   if (standingsTbody) {
     const r1List = getRankedLeaderboard('round1');
     standingsTbody.innerHTML = r1List.slice(0, 25).map((r, idx) => `
@@ -692,8 +753,10 @@ function renderTeamsTable() {
   const tbody = document.getElementById('teams-tbody');
   if (!tbody) return;
 
-  const query = document.getElementById('team-search').value.toLowerCase();
-  const filter = document.getElementById('team-elig-filter').value;
+  const searchEl = document.getElementById('team-search');
+  const filterEl = document.getElementById('team-elig-filter');
+  const query = searchEl ? searchEl.value.toLowerCase() : '';
+  const filter = filterEl ? filterEl.value : 'all';
 
   const filtered = storeState.teams.filter(t => {
     const matchesSearch = t.name.toLowerCase().includes(query) ||
@@ -799,17 +862,43 @@ function populateScoringTeamSelects() {
   const r1Select = document.getElementById('r1-team-select');
   const r2Select = document.getElementById('r2-team-select');
 
-  const eligible = storeState.teams.filter(t => t.eligibility && t.eligibility.passed);
+  // R1 eligible: Present (Present/Late) AND passed eligibility_r1
+  const r1Eligible = storeState.teams.filter(t => {
+    const att = storeState.attendance[t.id] || { status: 'Absent' };
+    const isPresent = att.status === 'Present' || att.status === 'Late';
+    const passedTech = t.eligibility_r1 && t.eligibility_r1.passed;
+    return isPresent && passedTech;
+  });
+
   if (r1Select) {
+    const currentVal = r1Select.value;
     r1Select.innerHTML = `<option value="">-- Select Eligible Team --</option>` +
-      eligible.map(t => `<option value="${t.id}">${t.id} — ${t.name} (${t.institution}) [Arena ${t.arena}]</option>`).join('');
+      r1Eligible.map(t => `<option value="${t.id}">${t.id} — ${t.name} (${t.institution}) [Arena ${t.arena}]</option>`).join('');
+    if (currentVal && r1Eligible.some(t => t.id === currentVal)) {
+      r1Select.value = currentVal;
+    }
   }
 
+  // R2 eligible: Present (Present/Late) AND passed eligibility_r2 AND placed in R1 Top 25
   const r1Ranked = getRankedLeaderboard('round1');
   const top25 = r1Ranked.filter(r => !r.disqualified).slice(0, 25);
+  
+  const r2Eligible = top25.filter(r => {
+    const t = storeState.teams.find(team => team.id === r.teamId);
+    if (!t) return false;
+    const att = storeState.attendance[t.id] || { status: 'Absent' };
+    const isPresent = att.status === 'Present' || att.status === 'Late';
+    const passedTech = t.eligibility_r2 && t.eligibility_r2.passed;
+    return isPresent && passedTech;
+  });
+
   if (r2Select) {
+    const currentVal = r2Select.value;
     r2Select.innerHTML = `<option value="">-- Select R2 Qualified Team (Top 25) --</option>` +
-      top25.map((r, i) => `<option value="${r.teamId}">#${i+1} ${r.teamId} — ${r.teamName}</option>`).join('');
+      r2Eligible.map((r, i) => `<option value="${r.teamId}">#${i+1} ${r.teamId} — ${r.teamName}</option>`).join('');
+    if (currentVal && r2Eligible.some(r => r.teamId === currentVal)) {
+      r2Select.value = currentVal;
+    }
   }
 }
 

@@ -38,6 +38,13 @@ function loadStore() {
       storeState = JSON.parse(raw);
       if (!storeState.judges) storeState.judges = defaultState.judges;
       if (!storeState.attendance) storeState.attendance = {};
+      if (!storeState.round1) storeState.round1 = {};
+      if (!storeState.round2) storeState.round2 = {};
+      if (!storeState.round3) storeState.round3 = JSON.parse(JSON.stringify(defaultState.round3));
+      if (!storeState.round3.matches) storeState.round3.matches = JSON.parse(JSON.stringify(defaultState.round3.matches));
+      if (!storeState.teams || storeState.teams.length === 0) {
+        seedDefaultTeams();
+      }
     } else {
       seedDefaultTeams();
     }
@@ -133,7 +140,21 @@ function seedDefaultTeams() {
   officialCsvList.forEach((item, idx) => {
     const num = String(idx + 1).padStart(3, '0');
     const botId = `BOT-${num}`;
-    const passed = false;
+    
+    const emptyEligibility = {
+      dimensions: false,
+      weight: false,
+      voltage: false,
+      driveType: false,
+      bodyOrigin: false,
+      wiredControl: false,
+      wirelessControl: false,
+      bannedParts: false,
+      teamMembers: false,
+      dedicatedTxRx: false,
+      passed: false,
+      notes: "Tech check pending"
+    };
 
     storeState.teams.push({
       id: botId,
@@ -141,20 +162,11 @@ function seedDefaultTeams() {
       institution: item.inst,
       members: [item.leader || `Lead ${idx + 1}`, `Member 2`],
       arena: idx % 2 === 0 ? 'A' : 'B',
-      eligibility: {
-        dimensions: passed,
-        weight: passed,
-        voltage: passed,
-        driveType: passed,
-        bodyOrigin: passed,
-        wiredControl: passed,
-        wirelessControl: passed,
-        bannedParts: passed,
-        teamMembers: passed,
-        dedicatedTxRx: passed,
-        passed: passed,
-        notes: "Tech check pending"
-      }
+      eligibility_r1: JSON.parse(JSON.stringify(emptyEligibility)),
+      eligibility_r2: JSON.parse(JSON.stringify(emptyEligibility)),
+      eligibility_r3: JSON.parse(JSON.stringify(emptyEligibility)),
+      // Legacy compatibility
+      eligibility: JSON.parse(JSON.stringify(emptyEligibility))
     });
   });
 

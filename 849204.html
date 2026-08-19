@@ -171,8 +171,9 @@
           <h2><i class="fa-solid fa-clipboard-user"></i> Team Attendance & Desk Check-In</h2>
           <p>Track reporting status, arrival timestamp, and registered member counts for matchday.</p>
         </div>
-        <div class="header-actions">
+        <div class="header-actions" style="display:flex;gap:8px;">
           <button id="btn-mark-all-present" class="btn btn-outline">Select All Present</button>
+          <button id="btn-mark-all-absent" class="btn btn-danger-ghost" style="border: 1px solid var(--accent-red); color: var(--accent-red); background: transparent;">Select All Absent</button>
         </div>
       </div>
 
@@ -223,12 +224,21 @@
 
       <div class="botcheck-layout">
         <div class="glass-card">
-          <h3>Select Team for Technical Inspection</h3>
-          <div class="form-group mt-3">
-            <label for="botcheck-team-select">Registered Teams:</label>
-            <select id="botcheck-team-select" class="form-select lg">
-              <option value="">-- Choose Team to Inspect --</option>
-            </select>
+          <div class="form-group mt-3" style="display:flex;gap:12px;">
+            <div style="flex:1;">
+              <label for="botcheck-team-select">Registered Teams:</label>
+              <select id="botcheck-team-select" class="form-select lg">
+                <option value="">-- Choose Team to Inspect --</option>
+              </select>
+            </div>
+            <div style="width:150px;">
+              <label for="botcheck-round-select">Inspection Round:</label>
+              <select id="botcheck-round-select" class="form-select lg">
+                <option value="r1" selected>Round 1</option>
+                <option value="r2">Round 2</option>
+                <option value="r3">Round 3</option>
+              </select>
+            </div>
           </div>
 
           <div id="botcheck-inspector-card" class="inspector-card mt-4">

@@ -4,10 +4,20 @@
 
 function syncRound3SeedsFromR2() {
   const r2Ranked = getRankedLeaderboard('round2');
-  const validRanked = r2Ranked.filter(r => !r.disqualified);
+  const validRanked = r2Ranked.filter(r => {
+    if (r.disqualified) return false;
+    const team = storeState.teams.find(t => t.id === r.teamId);
+    if (!team) return false;
+    
+    const att = storeState.attendance[team.id] || { status: 'Absent' };
+    const isPresent = att.status === 'Present' || att.status === 'Late';
+    const passedTech3 = team.eligibility_r3 && team.eligibility_r3.passed;
+    
+    return isPresent && passedTech3;
+  });
   
   if (validRanked.length < 9) {
-    alert(`Notice: Only ${validRanked.length} teams have valid Round 2 runs. Seeding requires top 9.`);
+    alert(`Notice: Only ${validRanked.length} teams have valid Round 2 runs, are Present, and passed Round 3 Tech Check. Seeding requires top 9.`);
   }
 
   // Populate seeds 1 to 9
