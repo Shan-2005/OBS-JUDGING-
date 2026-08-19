@@ -437,16 +437,26 @@ function renderBotCheckView() {
   const roundSelect = document.getElementById('botcheck-round-select');
   const roundKey = roundSelect ? roundSelect.value : 'r1';
 
+  // Only teams marked Present or Late in attendance check-in can undergo Bot Check
+  const presentTeams = storeState.teams.filter(t => {
+    const att = storeState.attendance[t.id] || { status: 'Absent' };
+    return att.status === 'Present' || att.status === 'Late';
+  });
+
   if (select) {
     const currentVal = select.value;
-    select.innerHTML = `<option value="">-- Choose Team to Inspect --</option>` +
-      storeState.teams.map(t => {
-        const elig = t[`eligibility_${roundKey}`] || {};
-        const passed = elig.passed;
-        const icon = passed ? '[OK]' : '[..]';
-        return `<option value="${t.id}">${icon} ${t.id} — ${t.name} (${t.institution})</option>`;
-      }).join('');
-    if (currentVal) {
+    if (presentTeams.length === 0) {
+      select.innerHTML = `<option value="">-- No Present Teams (Mark Attendance First) --</option>`;
+    } else {
+      select.innerHTML = `<option value="">-- Select Present Team to Inspect --</option>` +
+        presentTeams.map(t => {
+          const elig = t[`eligibility_${roundKey}`] || {};
+          const passed = elig.passed;
+          const statusTxt = passed ? '✅ VERIFIED PASSED' : '⏳ PENDING INSPECTION';
+          return `<option value="${t.id}">${t.id} — ${t.name} (${statusTxt})</option>`;
+        }).join('');
+    }
+    if (currentVal && presentTeams.some(t => t.id === currentVal)) {
       select.value = currentVal;
     }
   }
@@ -906,29 +916,49 @@ function populateScoringTeamSelects() {
   const r1Select = document.getElementById('r1-team-select');
   const r2Select = document.getElementById('r2-team-select');
 
+  // Round 1 Eligible: Attendance Present/Late AND passed Round 1 Bot Inspection
+  const r1Eligible = (storeState.teams || []).filter(t => {
+    const att = storeState.attendance[t.id] || { status: 'Absent' };
+    const isPresent = att.status === 'Present' || att.status === 'Late';
+    const passedTech = t.eligibility_r1 && t.eligibility_r1.passed;
+    return isPresent && passedTech;
+  });
+
   if (r1Select) {
     const currentVal = r1Select.value;
-    const teams = storeState.teams || [];
-    r1Select.innerHTML = `<option value="">-- Select Team to Score --</option>` +
-      teams.map(t => {
-        const passedTech = t.eligibility_r1 && t.eligibility_r1.passed;
-        return `<option value="${t.id}">${t.id} — ${t.name} (Arena ${t.arena || 'A'})${passedTech ? ' [Tech Passed]' : ''}</option>`;
-      }).join('');
-    if (currentVal && teams.some(t => t.id === currentVal)) {
+    if (r1Eligible.length === 0) {
+      r1Select.innerHTML = `<option value="">-- No Eligible Teams (Complete Bot Inspection First) --</option>`;
+    } else {
+      r1Select.innerHTML = `<option value="">-- Select Inspected Team to Score --</option>` +
+        r1Eligible.map(t => `<option value="${t.id}">${t.id} — ${t.name} [Arena ${t.arena || 'A'}]</option>`).join('');
+    }
+    if (currentVal && r1Eligible.some(t => t.id === currentVal)) {
       r1Select.value = currentVal;
     }
   }
 
-  // R2 eligible: Top 25 from Round 1
+  // Round 2 Eligible: Attendance Present/Late AND passed Round 2 Bot Inspection AND in R1 Top 25
   const r1Ranked = typeof getRankedLeaderboard === 'function' ? getRankedLeaderboard('round1') : [];
   const top25 = r1Ranked.filter(r => !r.disqualified).slice(0, 25);
   
+  const r2Eligible = top25.filter(r => {
+    const t = storeState.teams.find(team => team.id === r.teamId);
+    if (!t) return false;
+    const att = storeState.attendance[t.id] || { status: 'Absent' };
+    const isPresent = att.status === 'Present' || att.status === 'Late';
+    const passedTech = t.eligibility_r2 && t.eligibility_r2.passed;
+    return isPresent && passedTech;
+  });
+
   if (r2Select) {
     const currentVal = r2Select.value;
-    const list = top25.length > 0 ? top25 : (storeState.teams || []).slice(0, 25).map((t, idx) => ({ teamId: t.id, teamName: t.name }));
-    r2Select.innerHTML = `<option value="">-- Choose R2 Qualified Team --</option>` +
-      list.map((r, i) => `<option value="${r.teamId}">#${i+1} ${r.teamId} — ${r.teamName}</option>`).join('');
-    if (currentVal && list.some(r => r.teamId === currentVal)) {
+    if (r2Eligible.length === 0) {
+      r2Select.innerHTML = `<option value="">-- No R2 Inspected & Qualified Teams --</option>`;
+    } else {
+      r2Select.innerHTML = `<option value="">-- Select R2 Qualified Team (Top 25) --</option>` +
+        r2Eligible.map((r, i) => `<option value="${r.teamId}">#${i+1} ${r.teamId} — ${r.teamName}</option>`).join('');
+    }
+    if (currentVal && r2Eligible.some(r => r.teamId === currentVal)) {
       r2Select.value = currentVal;
     }
   }
