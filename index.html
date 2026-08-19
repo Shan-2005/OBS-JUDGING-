@@ -55,23 +55,23 @@
         </div>
       </div>
 
-      <!-- ALL TEAMS ROSTER — Shown at page top so participants can find their Bot ID -->
+      <!-- PERSONALIZED TEAM CARD (Rendered via JS - APPEARS FIRST AT TOP) -->
+      <div id="participant-personalized-card" class="mb-4">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <!-- ALL TEAMS ROSTER — Placed down below personalized team card -->
       <div class="glass-card full-width mb-4">
         <div class="table-toolbar" style="margin-bottom:12px;">
           <div>
             <h4 style="margin:0;"><i class="fa-solid fa-list-check"></i> All 58 Registered Teams</h4>
-            <p class="text-muted" style="font-size:12px;margin:4px 0 0;">Click your team name to load your personalized dashboard instantly.</p>
+            <p class="text-muted" style="font-size:12px;margin:4px 0 0;">Click any team to view their personalized schedule and inspection details.</p>
           </div>
           <input type="text" id="page-roster-search" class="form-input search-input" placeholder="Filter teams..." style="max-width:220px;" oninput="renderTeamRosterGrid('page-team-roster', this.value)">
         </div>
         <div id="page-team-roster" class="team-roster-grid">
           <!-- Populated by JS -->
         </div>
-      </div>
-
-      <!-- PERSONALIZED TEAM CARD (Rendered via JS) -->
-      <div id="participant-personalized-card" class="mb-4">
-        <!-- Rendered dynamically -->
       </div>
 
       <div class="participant-grid">

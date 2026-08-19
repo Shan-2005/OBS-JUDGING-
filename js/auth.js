@@ -200,15 +200,18 @@ function changeParticipantTeam() {
 function initParticipantsView() {
   if (typeof renderTeamRosterGrid === 'function') {
     renderTeamRosterGrid('page-team-roster');
+    renderTeamRosterGrid('admin-team-roster');
     renderTeamRosterGrid('gate-team-roster');
   }
 
   const savedId = sessionStorage.getItem('participant_team_id');
-  if (savedId) {
-    if (typeof renderPersonalizedTeamDashboard === 'function') {
-      renderPersonalizedTeamDashboard(savedId);
-    }
-  } else {
+  const initialTeamId = savedId || (storeState.teams && storeState.teams[0] ? storeState.teams[0].id : 'BOT-001');
+
+  if (typeof renderPersonalizedTeamDashboard === 'function') {
+    renderPersonalizedTeamDashboard(initialTeamId);
+  }
+
+  if (!savedId && typeof showParticipantTeamGate === 'function') {
     showParticipantTeamGate();
   }
 }

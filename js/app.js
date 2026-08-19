@@ -158,7 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Participant Search Handler
   const btnPartSearch = document.getElementById('btn-part-search-team');
   const inpPartSearch = document.getElementById('part-team-search-inp');
-  if (btnPartSearch && inpPartSearch) {
+  if (inpPartSearch) {
     const doLookup = () => {
       const q = inpPartSearch.value.trim();
       if (!q) return;
@@ -167,9 +167,17 @@ document.addEventListener('DOMContentLoaded', () => {
         renderPersonalizedTeamDashboard(team ? team.id : q);
       }
     };
-    btnPartSearch.addEventListener('click', doLookup);
+    if (btnPartSearch) btnPartSearch.addEventListener('click', doLookup);
     inpPartSearch.addEventListener('keyup', (e) => {
       if (e.key === 'Enter') doLookup();
+    });
+    inpPartSearch.addEventListener('input', () => {
+      const q = inpPartSearch.value.trim();
+      if (!q) return;
+      if (typeof searchParticipantTeam === 'function' && typeof renderPersonalizedTeamDashboard === 'function') {
+        const team = searchParticipantTeam(q);
+        if (team) renderPersonalizedTeamDashboard(team.id);
+      }
     });
   }
 
