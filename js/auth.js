@@ -5,11 +5,7 @@
 // ─── JUDGE CREDENTIALS ─────────────────────────────────────────────────────
 // Add more judge accounts as needed
 const JUDGE_ACCOUNTS = [
-  { username: "headjudge",  password: "Robo@2026",    name: "Head Referee",    arena: "All" },
-  { username: "judgeA",     password: "ArenaA@2026",  name: "Arena A Judge",   arena: "A" },
-  { username: "judgeB",     password: "ArenaB@2026",  name: "Arena B Judge",   arena: "B" },
-  { username: "techinspect",password: "TechObs@2026", name: "Tech Inspector",  arena: "All" },
-  { username: "admin",      password: "Admin@2026",   name: "Admin / Organiser", arena: "All" }
+  { username: "obsrace26", password: "motoroil", name: "Officiating Judge", arena: "All" }
 ];
 
 // ─── AUTH STATE ─────────────────────────────────────────────────────────────
