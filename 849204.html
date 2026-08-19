@@ -1427,13 +1427,81 @@
     </div>
   </div>
 
+  <!-- SELF-CONTAINED AUTH GATE — runs immediately, no external dependencies -->
   <script>
-    // Run auth check after all scripts load
-    document.addEventListener('DOMContentLoaded', () => {
-      if (typeof checkJudgeAuth === 'function') {
-        checkJudgeAuth();
+    (function() {
+      var CREDS = { username: 'obsrace26', password: 'motoroil' };
+
+      function isAuthed() {
+        return sessionStorage.getItem('judge_authenticated') === 'true';
       }
-    });
+
+      function showModal() {
+        var m = document.getElementById('modal-judge-auth');
+        if (m) { m.style.display = 'flex'; m.style.zIndex = '99999'; }
+        var header = document.querySelector('.app-header');
+        var main = document.querySelector('.app-main');
+        if (header) header.style.display = 'none';
+        if (main) main.style.display = 'none';
+      }
+
+      function hideModalAndReveal() {
+        var m = document.getElementById('modal-judge-auth');
+        if (m) m.style.display = 'none';
+        var header = document.querySelector('.app-header');
+        var main = document.querySelector('.app-main');
+        if (header) { header.style.display = 'flex'; header.removeAttribute('hidden'); }
+        if (main) { main.style.display = 'block'; main.removeAttribute('hidden'); }
+        sessionStorage.setItem('judge_authenticated', 'true');
+        // Trigger the rest of the app
+        if (typeof updateJudgeHeaderBadge === 'function') updateJudgeHeaderBadge();
+        if (typeof enforceJudgeNavVisibility === 'function') enforceJudgeNavVisibility();
+        if (typeof switchTab === 'function') switchTab('dashboard');
+      }
+
+      function doLogin() {
+        var u = (document.getElementById('inp-judge-username') || {}).value || '';
+        var p = (document.getElementById('inp-judge-password') || {}).value || '';
+        var err = document.getElementById('auth-error-msg');
+        u = u.trim().toLowerCase();
+
+        if (u === CREDS.username && p === CREDS.password) {
+          hideModalAndReveal();
+        } else {
+          if (err) {
+            err.textContent = '❌ Invalid username or password.';
+            err.style.display = 'block';
+            err.style.color = '#ef476f';
+            err.style.marginTop = '8px';
+            err.style.fontSize = '13px';
+          }
+          var pEl = document.getElementById('inp-judge-password');
+          if (pEl) pEl.value = '';
+        }
+      }
+
+      // Wire up form immediately when DOM is ready
+      document.addEventListener('DOMContentLoaded', function() {
+        // Show or hide gate
+        if (!isAuthed()) {
+          showModal();
+        } else {
+          hideModalAndReveal();
+        }
+
+        // Attach submit handler directly
+        var form = document.getElementById('form-judge-auth');
+        if (form) {
+          form.onsubmit = function(e) { e.preventDefault(); doLogin(); return false; };
+        }
+
+        // Also wire button click directly as fallback
+        var btn = document.querySelector('#form-judge-auth button[type="submit"]');
+        if (btn) {
+          btn.onclick = function(e) { e.preventDefault(); doLogin(); return false; };
+        }
+      });
+    })();
   </script>
 </body>
 </html>
