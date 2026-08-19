@@ -125,6 +125,26 @@ document.addEventListener('DOMContentLoaded', () => {
   // Match decision form submit
   document.getElementById('form-match-result').addEventListener('submit', handleMatchDecisionSubmit);
 
+  // Participant Search Handler
+  const btnPartSearch = document.getElementById('btn-part-search-team');
+  const inpPartSearch = document.getElementById('part-team-search-inp');
+  if (btnPartSearch && inpPartSearch) {
+    const doLookup = () => {
+      const q = inpPartSearch.value.trim();
+      if (!q) return;
+      const team = searchParticipantTeam(q);
+      if (team) {
+        renderPersonalizedTeamDashboard(team.id);
+      } else {
+        renderPersonalizedTeamDashboard(q);
+      }
+    };
+    btnPartSearch.addEventListener('click', doLookup);
+    inpPartSearch.addEventListener('keyup', (e) => {
+      if (e.key === 'Enter') doLookup();
+    });
+  }
+
   // Initial View Render
   refreshAllViews();
 });

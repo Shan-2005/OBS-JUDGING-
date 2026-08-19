@@ -19,7 +19,10 @@
         <h1>ROBOFEST 2.0</h1>
         <span>OBSTACLE RACE PORTAL</span>
       </div>
-      <span id="cloud-sync-status-badge" class="badge badge-success ml-2">☁️ Supabase Cloud Synced</span>
+      <span id="cloud-sync-status-badge" class="badge badge-success ml-2">☁️ Supabase Real-time Active</span>
+      <div id="judge-session-badge" class="ml-3">
+        <!-- Judge Login / Session Badge dynamic -->
+      </div>
     </div>
     
     <nav class="nav-tabs">
@@ -379,8 +382,24 @@
     <section id="view-participants" class="tab-view">
       <div class="participant-view-header">
         <div class="public-badge">📺 PUBLIC PARTICIPANT & SPECTATOR DISPLAY</div>
-        <h2>ROBOFEST 2.0 OBSTACLE RACE — LIVE ARENA SCHEDULE & STANDINGS</h2>
-        <p>Live update stream for participating teams and audience screens.</p>
+        <h2>ROBOFEST 2.0 OBSTACLE RACE — PARTICIPANT PORTAL</h2>
+        <p>Search your Bot ID to view your personalized schedule, timing results, next round qualification, and call order status.</p>
+      </div>
+
+      <!-- PARTICIPANT TEAM LOOKUP BAR -->
+      <div class="glass-card full-width mb-4">
+        <div class="participant-lookup-box">
+          <label>🔍 Enter Your Bot ID or Team Name:</label>
+          <div class="d-flex gap-2 mt-2">
+            <input type="text" id="part-team-search-inp" placeholder="e.g. BOT-001 or ViperBot" class="form-input lg flex-grow">
+            <button id="btn-part-search-team" class="btn btn-primary lg">Lookup Team Info</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- PERSONALIZED TEAM CARD (Rendered via JS) -->
+      <div id="participant-personalized-card" class="mb-4">
+        <!-- Rendered dynamically -->
       </div>
 
       <div class="participant-grid">
@@ -850,6 +869,32 @@
 
   <!-- MODALS -->
 
+  <!-- JUDGE AUTHENTICATION LOCK MODAL -->
+  <div id="modal-judge-auth" class="modal-overlay hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>🔒 Judge Portal Security Login</h3>
+      </div>
+      <div class="modal-body">
+        <form id="form-judge-auth">
+          <div id="auth-error-msg" class="alert alert-danger hidden mb-3"></div>
+          <div class="form-group">
+            <label>Judge Credential Passcode *</label>
+            <input type="password" id="inp-passcode" class="form-input lg" required placeholder="Enter Official Judge Passcode">
+            <small class="text-muted">Default Passcode: <code>ROBOFEST2026</code></small>
+          </div>
+          <div class="form-group mt-3">
+            <label>Officiating Judge / Referee Name *</label>
+            <input type="text" id="inp-judge-login-name" class="form-input lg" required placeholder="e.g. Dr. A. Sharma">
+          </div>
+          <div class="modal-footer mt-4">
+            <button type="submit" class="btn btn-primary lg btn-block">🔓 Unlock Judging Console</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
   <!-- ADD/EDIT JUDGE MODAL -->
   <div id="modal-judge" class="modal-overlay hidden">
     <div class="modal-card">
@@ -1201,6 +1246,8 @@
   <script src="js/bracket.js"></script>
   <script src="js/callorder.js"></script>
   <script src="js/export.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/participant_lookup.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>

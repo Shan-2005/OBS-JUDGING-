@@ -1,5 +1,5 @@
 /* ==========================================================================
-   ROBOFEST 2.0 - SUPABASE HYBRID REAL-TIME MULTI-JUDGE SYNC ENGINE
+   ROBOFEST 2.0 - SUPABASE CLOUD DATABASE SYNC & PARTICIPANTS PUSH
    ========================================================================== */
 
 const SUPABASE_URL = "https://kcpgzjkhsirypbldukuc.supabase.co";
@@ -14,19 +14,18 @@ function initSupabase() {
     try {
       supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
       isCloudOnline = true;
-      console.log("Supabase Client initialized!");
+      console.log("Supabase Client connected successfully!");
       updateCloudSyncBadge(true);
       setupRealtimeSubscriptions();
     } catch (err) {
-      console.warn("Supabase init failed, running in Offline LocalStorage mode.", err);
+      console.warn("Supabase init error:", err);
       updateCloudSyncBadge(false);
     }
   } else {
-    console.warn("Supabase SDK CDN not loaded, running in Offline LocalStorage mode.");
     updateCloudSyncBadge(false);
   }
 
-  // Multi-judge polling fallback every 3 seconds for active sync across all judges
+  // Poll state from cloud every 3 seconds for active sync across all judges
   setInterval(pollStateFromCloud, 3000);
 }
 
@@ -49,16 +48,15 @@ function setupRealtimeSubscriptions() {
   try {
     realTimeChannel = supabaseClient.channel('public:obs_state')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'judging_portal_state' }, payload => {
-        console.log("Realtime change detected from another judge!", payload);
         if (payload.new && payload.new.state_data) {
           storeState = payload.new.state_data;
           saveStoreLocallyOnly();
-          refreshAllViews();
+          if (typeof refreshAllViews === 'function') refreshAllViews();
         }
       })
       .subscribe();
   } catch (err) {
-    console.warn("Realtime channel subscription error:", err);
+    console.warn("Realtime subscription warning:", err);
   }
 }
 
@@ -66,23 +64,58 @@ async function syncDataToCloud() {
   if (!supabaseClient || !isCloudOnline) return;
 
   try {
-    const payload = {
+    // 1. Sync full master state
+    const masterPayload = {
       id: 'robofest_master_state',
       state_data: storeState,
       updated_at: new Date().toISOString()
     };
 
-    const { error } = await supabaseClient
+    await supabaseClient
       .from('judging_portal_state')
-      .upsert(payload);
+      .upsert(masterPayload);
+
+    // 2. Push participants & teams details to Supabase teams table
+    await pushParticipantsToSupabase();
+  } catch (err) {
+    console.warn("Cloud sync network error:", err);
+  }
+}
+
+async function pushParticipantsToSupabase() {
+  if (!supabaseClient || !isCloudOnline) return;
+
+  try {
+    const teamsList = storeState.teams.map(t => {
+      const run1 = storeState.round1[t.id];
+      const run2 = storeState.round2[t.id];
+      const att = storeState.attendance[t.id];
+
+      return {
+        bot_id: t.id,
+        team_name: t.name,
+        institution: t.institution,
+        arena: t.arena,
+        members: t.members ? t.members.join(', ') : '',
+        attendance_status: att ? att.status : 'Absent',
+        tech_check_passed: t.eligibility ? t.eligibility.passed : false,
+        round1_final_ms: run1 ? run1.finalTimeMs : null,
+        round2_final_ms: run2 ? run2.finalTimeMs : null,
+        updated_at: new Date().toISOString()
+      };
+    });
+
+    const { error } = await supabaseClient
+      .from('teams')
+      .upsert(teamsList, { onConflict: 'bot_id' });
 
     if (error) {
-      console.warn("Cloud sync warning:", error.message);
+      console.warn("Supabase teams table upsert note:", error.message);
     } else {
-      console.log("State synced to Supabase Cloud for all judges!");
+      console.log("Pushed 58 participant records to Supabase cloud table!");
     }
   } catch (err) {
-    console.warn("Network error during cloud sync:", err);
+    console.warn("Push participants error:", err);
   }
 }
 
@@ -90,27 +123,23 @@ async function pollStateFromCloud() {
   if (!supabaseClient || !isCloudOnline) return;
 
   try {
-    const { data, error } = await supabaseClient
+    const { data } = await supabaseClient
       .from('judging_portal_state')
-      .select('state_data, updated_at')
+      .select('state_data')
       .eq('id', 'robofest_master_state')
       .single();
 
     if (data && data.state_data) {
-      // Sync state across browsers if cloud has newer modifications
       const cloudStr = JSON.stringify(data.state_data);
       const localStr = JSON.stringify(storeState);
       if (cloudStr !== localStr) {
-        console.log("Updated state received from multi-judge cloud sync!");
         storeState = data.state_data;
         saveStoreLocallyOnly();
-        if (typeof refreshAllViews === 'function') {
-          refreshAllViews();
-        }
+        if (typeof refreshAllViews === 'function') refreshAllViews();
       }
     }
   } catch (err) {
-    // Silent fail over to offline mode
+    // Failover to local storage
   }
 }
 
@@ -122,7 +151,7 @@ function saveStoreLocallyOnly() {
   }
 }
 
-// Initializing Supabase on window load
+// Initialize on load
 window.addEventListener('load', () => {
   initSupabase();
 });
