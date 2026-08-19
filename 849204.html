@@ -228,7 +228,7 @@
 
       <div class="botcheck-layout">
         <div class="glass-card">
-          <div class="form-group mt-3" style="display:flex;gap:12px;">
+          <div class="form-group mt-3 botcheck-select-group" style="display:flex;gap:12px;">
             <div style="flex:1;">
               <label for="botcheck-team-select">Registered Teams:</label>
               <select id="botcheck-team-select" class="form-select lg">
@@ -1003,6 +1003,11 @@
       <div class="modal-body">
         <p class="text-sm text-muted">To be completed before a bot is allowed onto the arena. A single 'No' = Not permitted to compete.</p>
         
+        <div class="d-flex gap-2 mb-3 mt-2 flex-wrap">
+          <button type="button" onclick="passAllEligibilityChecklist()" class="btn btn-success sm flex-grow"><i class="fa-solid fa-check-double"></i> ⚡ Pass All 10 Rules</button>
+          <button type="button" onclick="resetEligibilityChecklist()" class="btn btn-danger-ghost sm"><i class="fa-solid fa-rotate-left"></i> Reset</button>
+        </div>
+
         <form id="form-eligibility">
           <div class="checklist-grid">
             

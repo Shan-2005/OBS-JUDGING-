@@ -100,3 +100,19 @@ function saveEligibilityForm(e) {
   if (typeof populateScoringTeamSelects === 'function') populateScoringTeamSelects();
   if (typeof renderParticipantsView === 'function') renderParticipantsView();
 }
+
+function passAllEligibilityChecklist() {
+  CHECKLIST_KEYS.forEach(key => {
+    const chk = document.getElementById(`chk-${key}`);
+    if (chk) chk.checked = true;
+  });
+  updateEligibilityModalBanner();
+}
+
+function resetEligibilityChecklist() {
+  CHECKLIST_KEYS.forEach(key => {
+    const chk = document.getElementById(`chk-${key}`);
+    if (chk) chk.checked = false;
+  });
+  updateEligibilityModalBanner();
+}
