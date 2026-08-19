@@ -273,13 +273,15 @@ function switchSubTab(subId) {
 }
 
 function refreshAllViews() {
-  const activeElId = document.activeElement ? document.activeElement.id : null;
-  const activeElVal = document.activeElement ? document.activeElement.value : null;
-  const activeElSelStart = (document.activeElement && typeof document.activeElement.selectionStart === 'number') ? document.activeElement.selectionStart : null;
-  const activeElSelEnd = (document.activeElement && typeof document.activeElement.selectionEnd === 'number') ? document.activeElement.selectionEnd : null;
+  const activeEl = document.activeElement;
+  const isEditingAttendance = activeEl && activeEl.closest && activeEl.closest('#att-tbody');
+  const activeElId = activeEl ? activeEl.id : null;
+  const activeElVal = activeEl ? activeEl.value : null;
 
   renderDashboardStats();
-  renderAttendanceTable();
+  if (!isEditingAttendance) {
+    renderAttendanceTable();
+  }
   renderBotCheckView();
   renderJudgesTable();
   renderTeamsTable();
@@ -303,11 +305,6 @@ function refreshAllViews() {
       el.focus();
       if (activeElVal !== null && el.value !== activeElVal) {
         el.value = activeElVal;
-      }
-      if (activeElSelStart !== null && activeElSelEnd !== null) {
-        try {
-          el.setSelectionRange(activeElSelStart, activeElSelEnd);
-        } catch (e) {}
       }
     }
   }
@@ -389,8 +386,11 @@ function updateAttendanceStatus(teamId, status) {
   if (!storeState.attendance[teamId]) {
     storeState.attendance[teamId] = { status: 'Absent', checkInTime: null, membersPresent: 0, notes: '' };
   }
+  if (storeState.attendance[teamId].status === status) {
+    return; // Prevent duplicate triggers and cloud sync feedback loops
+  }
   storeState.attendance[teamId].status = status;
-  storeState.attendance[teamId].checkInTime = status !== 'Absent' ? Date.now() : null;
+  storeState.attendance[teamId].checkInTime = status !== 'Absent' ? (storeState.attendance[teamId].checkInTime || Date.now()) : null;
   saveStore();
 
   const row = document.querySelector(`#att-tbody tr[data-team-id="${teamId}"]`);
@@ -416,10 +416,13 @@ function updateAttendanceStatus(teamId, status) {
 }
 
 function updateAttendanceMembers(teamId, count) {
+  const val = parseInt(count, 10);
   if (!storeState.attendance[teamId]) {
-    storeState.attendance[teamId] = { status: 'Present', checkInTime: Date.now(), membersPresent: parseInt(count, 10), notes: '' };
+    storeState.attendance[teamId] = { status: 'Present', checkInTime: Date.now(), membersPresent: val, notes: '' };
+  } else {
+    if (storeState.attendance[teamId].membersPresent === val) return;
+    storeState.attendance[teamId].membersPresent = val;
   }
-  storeState.attendance[teamId].membersPresent = parseInt(count, 10);
   saveStore();
   renderDashboardStats();
   renderParticipantsView();
