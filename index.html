@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RoboFest 2.0 — Obstacle Race Judging & Management Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@500;700;800&family=Rajdhani:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+  <!-- TOP NAVIGATION HEADER -->
+  <header class="app-header">
+    <div class="header-brand">
+      <div class="logo-icon">⚡</div>
+      <div class="brand-text">
+        <h1>ROBOFEST 2.0</h1>
+        <span>OBSTACLE RACE PORTAL</span>
+      </div>
+      <span id="cloud-sync-status-badge" class="badge badge-success ml-2">☁️ Supabase Cloud Synced</span>
+    </div>
+    
+    <nav class="nav-tabs">
+      <button class="nav-btn active" data-tab="dashboard">
+        <span class="icon">📊</span> Dashboard
+      </button>
+      <button class="nav-btn" data-tab="attendance">
+        <span class="icon">📌</span> Attendance
+      </button>
+      <button class="nav-btn" data-tab="botcheck">
+        <span class="icon">🤖</span> Bot Check
+      </button>
+      <button class="nav-btn" data-tab="judges">
+        <span class="icon">👨‍⚖️</span> Add Judges
+      </button>
+      <button class="nav-btn" data-tab="teams">
+        <span class="icon">👥</span> Teams
+      </button>
+      <button class="nav-btn" data-tab="round1">
+        <span class="icon">⏱️</span> Round 1
+      </button>
+      <button class="nav-btn" data-tab="round2">
+        <span class="icon">⚡</span> Round 2
+      </button>
+      <button class="nav-btn" data-tab="round3">
+        <span class="icon">🏆</span> R3 Bracket
+      </button>
+      <button class="nav-btn" data-tab="leaderboard">
+        <span class="icon">🥇</span> Leaderboard
+      </button>
+      <button class="nav-btn highlight" data-tab="participants">
+        <span class="icon">📺</span> Participants View
+      </button>
+    </nav>
+
+    <div class="header-actions">
+      <button id="btn-quick-seed" class="btn btn-outline" title="Populate 58 sample teams">
+        ⚡ Seed Teams
+      </button>
+      <button id="btn-print-sheets" class="btn btn-primary" title="Print Official Judge Sheets">
+        🖨️ Print Sheets
+      </button>
+      <button id="btn-reset-data" class="btn btn-danger-ghost" title="Reset all portal data">
+        🗑️
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT CONTAINER -->
+  <main class="app-main">
+    
+    <!-- DASHBOARD VIEW -->
+    <section id="view-dashboard" class="tab-view active">
+      <div class="dashboard-hero">
+        <div class="hero-title">
+          <h2>Official Matchday Judging System</h2>
+          <p>Standardized scoring, real-time time trials, bot inspection & participant display manager.</p>
+        </div>
+        <div class="quick-status-badge">
+          <span class="pulse-dot"></span> Arena System Online
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">🏎️</div>
+          <div class="stat-info">
+            <span class="stat-label">Total Teams</span>
+            <span class="stat-value" id="dash-total-teams">0</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">📌</div>
+          <div class="stat-info">
+            <span class="stat-label">Teams Present</span>
+            <span class="stat-value" id="dash-present-teams">0</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">🤖</div>
+          <div class="stat-info">
+            <span class="stat-label">Bot Checks Passed</span>
+            <span class="stat-value" id="dash-eligible-teams">0</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">👨‍⚖️</div>
+          <div class="stat-info">
+            <span class="stat-label">Judges Active</span>
+            <span class="stat-value" id="dash-judges-count">0</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dashboard-sections">
+        <div class="glass-card">
+          <h3>⚡ Quick Action Hub</h3>
+          <div class="action-grid">
+            <button class="action-tile" onclick="switchTab('attendance')">
+              <span class="tile-icon">📌</span>
+              <span class="tile-title">Attendance Check-in</span>
+              <span class="tile-sub">Mark team arrival & member counts</span>
+            </button>
+            <button class="action-tile" onclick="switchTab('botcheck')">
+              <span class="tile-icon">🤖</span>
+              <span class="tile-title">Bot Tech Inspection</span>
+              <span class="tile-sub">10-point bot compliance check</span>
+            </button>
+            <button class="action-tile" onclick="switchTab('judges')">
+              <span class="tile-icon">👨‍⚖️</span>
+              <span class="tile-title">Manage Referees & Judges</span>
+              <span class="tile-sub">Assign arenas & roles</span>
+            </button>
+            <button class="action-tile" onclick="switchTab('participants')">
+              <span class="tile-icon">📺</span>
+              <span class="tile-title">Participants Live Display</span>
+              <span class="tile-sub">Public viewing schedule & leaderboards</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="glass-card">
+          <h3>📜 Infraction & Penalty Reference</h3>
+          <div class="penalty-ref-table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Infraction</th>
+                  <th>Penalty Seconds</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>Wheel touches boundary line</td><td><span class="badge badge-warning">+5 sec / wheel</span></td></tr>
+                <tr><td>Hand touch (team member touches bot)</td><td><span class="badge badge-warning">+5 sec / touch</span></td></tr>
+                <tr><td>Bot goes out of track (no ground contact)</td><td><span class="badge badge-warning">+10 sec flat</span></td></tr>
+                <tr><td>Bot goes out of track (with ground contact)</td><td><span class="badge badge-danger">+20 sec (+5s/wheel)</span></td></tr>
+                <tr><td>Obstacle skipped</td><td><span class="badge badge-danger">+25 sec / obstacle</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 1. ATTENDANCE PAGE -->
+    <section id="view-attendance" class="tab-view">
+      <div class="section-header">
+        <div>
+          <h2>📌 Team Attendance & Desk Check-In</h2>
+          <p>Track reporting status, arrival timestamp, and registered member counts for matchday.</p>
+        </div>
+        <div class="header-actions">
+          <button id="btn-mark-all-present" class="btn btn-outline">Select All Present</button>
+        </div>
+      </div>
+
+      <div class="glass-card full-width">
+        <div class="table-toolbar">
+          <input type="text" id="att-search" placeholder="Search team by ID, name or institute..." class="search-input">
+          <div class="filter-group">
+            <label>Attendance Filter:</label>
+            <select id="att-filter-select" class="form-select">
+              <option value="all">All Teams</option>
+              <option value="Present">Present Only</option>
+              <option value="Late">Late Arrival Only</option>
+              <option value="Absent">Absent Only</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="data-table" id="att-table">
+            <thead>
+              <tr>
+                <th>Bot ID</th>
+                <th>Team Name</th>
+                <th>Institution</th>
+                <th>Assigned Arena</th>
+                <th>Members Present</th>
+                <th>Status</th>
+                <th>Check-In Time</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="att-tbody">
+              <!-- Dynamic -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. BOT CHECK PAGE -->
+    <section id="view-botcheck" class="tab-view">
+      <div class="section-header">
+        <div>
+          <h2>🤖 Bot Technical Inspection (10 Pre-Match Checks)</h2>
+          <p>Official technical inspection desk. Every bot must meet all 10 specifications before match entry.</p>
+        </div>
+      </div>
+
+      <div class="botcheck-layout">
+        <div class="glass-card">
+          <h3>Select Team for Technical Inspection</h3>
+          <div class="form-group mt-3">
+            <label for="botcheck-team-select">Registered Teams:</label>
+            <select id="botcheck-team-select" class="form-select lg">
+              <option value="">-- Choose Team to Inspect --</option>
+            </select>
+          </div>
+
+          <div id="botcheck-inspector-card" class="inspector-card mt-4">
+            <!-- Inspection Card Rendered via JS -->
+            <p class="text-muted text-center">Select a team above to start technical inspection.</p>
+          </div>
+        </div>
+
+        <div class="glass-card">
+          <h3>📋 Tech Inspection Summary Log</h3>
+          <div class="table-responsive mt-3">
+            <table class="data-table sm">
+              <thead>
+                <tr>
+                  <th>Bot ID</th>
+                  <th>Team Name</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="botcheck-log-tbody">
+                <!-- Dynamic -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. JUDGE ADD PAGE -->
+    <section id="view-judges" class="tab-view">
+      <div class="section-header">
+        <div>
+          <h2>👨‍⚖️ Officiating Judges & Referees Management</h2>
+          <p>Add and assign judges to specific arenas, lanes, and round officiating duties.</p>
+        </div>
+        <button id="btn-open-judge-modal" class="btn btn-primary">+ Add New Judge</button>
+      </div>
+
+      <div class="glass-card full-width">
+        <div class="table-responsive">
+          <table class="data-table" id="judges-table">
+            <thead>
+              <tr>
+                <th>Judge ID</th>
+                <th>Full Name</th>
+                <th>Official Role</th>
+                <th>Assigned Arena</th>
+                <th>Contact Phone</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="judges-tbody">
+              <!-- Dynamic -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. PARTICIPANTS VIEWING PAGE (SPECTATOR MODE) -->
+    <section id="view-participants" class="tab-view">
+      <div class="participant-view-header">
+        <div class="public-badge">📺 PUBLIC PARTICIPANT & SPECTATOR DISPLAY</div>
+        <h2>ROBOFEST 2.0 OBSTACLE RACE — LIVE ARENA SCHEDULE & STANDINGS</h2>
+        <p>Live update stream for participating teams and audience screens.</p>
+      </div>
+
+      <div class="participant-grid">
+        <!-- ARENA SCHEDULE CARDS -->
+        <div class="glass-card">
+          <h3>🏟️ Arena A Schedule (R1 Time Trial)</h3>
+          <div class="arena-schedule-list" id="part-arenaA-list">
+            <!-- Dynamic -->
+          </div>
+        </div>
+
+        <div class="glass-card">
+          <h3>🏟️ Arena B Schedule (R1 Time Trial)</h3>
+          <div class="arena-schedule-list" id="part-arenaB-list">
+            <!-- Dynamic -->
+          </div>
+        </div>
+
+        <!-- LIVE TOP STANDINGS -->
+        <div class="glass-card span-2">
+          <h3>🏆 Live Round 1 Top Standings (Top 25 Advance to Round 2)</h3>
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Current Rank</th>
+                  <th>Bot ID</th>
+                  <th>Team Name</th>
+                  <th>Institution</th>
+                  <th>Arena</th>
+                  <th>Final Time</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="part-standings-tbody">
+                <!-- Dynamic -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TEAMS VIEW -->
+    <section id="view-teams" class="tab-view">
+      <div class="section-header">
+        <div>
+          <h2>Teams List & Master Registry</h2>
+          <p>Overview of all 58 registered obstacle race teams.</p>
+        </div>
+        <button id="btn-add-team" class="btn btn-primary">+ Add New Team</button>
+      </div>
+
+      <div class="teams-container">
+        <div class="glass-card full-width">
+          <div class="table-toolbar">
+            <input type="text" id="team-search" placeholder="Search by Bot ID, Team Name or Institution..." class="search-input">
+            <div class="filter-group">
+              <label>Filter:</label>
+              <select id="team-elig-filter" class="form-select">
+                <option value="all">All Teams</option>
+                <option value="passed">Passed Eligibility</option>
+                <option value="pending">Pending Eligibility</option>
+                <option value="failed">Failed Eligibility</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="data-table" id="teams-table">
+              <thead>
+                <tr>
+                  <th>Bot ID</th>
+                  <th>Team Name</th>
+                  <th>Institution</th>
+                  <th>Arena (R1)</th>
+                  <th>Eligibility Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="teams-tbody">
+                <!-- Populated dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ROUND 1 SCORING VIEW -->
+    <section id="view-round1" class="tab-view">
+      <div class="scoring-layout">
+        <!-- LEFT: TIMER & PENALTY CONSOLE -->
+        <div class="glass-card scoring-console">
+          <div class="console-header">
+            <div>
+              <h2>Round 1 — Time Trial (58 → 25)</h2>
+              <p>Arenas A & B pooled into single top-25 ranking list.</p>
+            </div>
+            <div class="arena-toggle">
+              <label>Active Arena:</label>
+              <select id="r1-arena-select" class="form-select sm">
+                <option value="A">Arena A</option>
+                <option value="B">Arena B</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- TEAM SELECTOR -->
+          <div class="form-group select-team-group">
+            <label for="r1-team-select">Select Team (Eligibility Passed Only):</label>
+            <select id="r1-team-select" class="form-select lg">
+              <option value="">-- Choose Eligible Team --</option>
+            </select>
+          </div>
+
+          <!-- STOPWATCH DISPLAY -->
+          <div class="stopwatch-container">
+            <div class="stopwatch-digits" id="r1-timer-display">00:00.000</div>
+            <div class="stopwatch-controls">
+              <button id="r1-btn-start" class="btn btn-success lg">▶ START</button>
+              <button id="r1-btn-pause" class="btn btn-warning lg" disabled>⏸ PAUSE</button>
+              <button id="r1-btn-reset" class="btn btn-danger lg">🔄 RESET</button>
+            </div>
+            <div class="manual-time-toggle">
+              <label><input type="checkbox" id="r1-manual-toggle"> Manual Time Override</label>
+              <div id="r1-manual-inputs" class="manual-inputs hidden">
+                <input type="number" id="r1-manual-min" placeholder="Min" min="0" max="59" class="num-input">m
+                <input type="number" id="r1-manual-sec" placeholder="Sec" min="0" max="59" class="num-input">s
+                <input type="number" id="r1-manual-ms" placeholder="MS" min="0" max="999" class="num-input">ms
+              </div>
+            </div>
+          </div>
+
+          <!-- PENALTY COUNTERS PAD -->
+          <div class="penalty-pad-section">
+            <h3>⚠️ Penalty Counter Pad</h3>
+            <div class="penalty-grid">
+              
+              <div class="penalty-card">
+                <div class="penalty-title">Wheel Touches Line (+5s)</div>
+                <div class="counter-ctrl">
+                  <button class="btn-step dec" onclick="adjustPenalty('r1', 'p_boundary', -1)">-</button>
+                  <span class="count-val" id="r1-count-p_boundary">0</span>
+                  <button class="btn-step inc" onclick="adjustPenalty('r1', 'p_boundary', 1)">+</button>
+                </div>
+                <span class="sub-total" id="r1-sub-p_boundary">+0s</span>
+              </div>
+
+              <div class="penalty-card">
+                <div class="penalty-title">Hand Touch Bot (+5s)</div>
+                <div class="counter-ctrl">
+                  <button class="btn-step dec" onclick="adjustPenalty('r1', 'p_hand', -1)">-</button>
+                  <span class="count-val" id="r1-count-p_hand">0</span>
+                  <button class="btn-step inc" onclick="adjustPenalty('r1', 'p_hand', 1)">+</button>
+                </div>
+                <span class="sub-total" id="r1-sub-p_hand">+0s</span>
+              </div>
+
+              <div class="penalty-card">
+                <div class="penalty-title">Out of Track - Air (+10s)</div>
+                <div class="counter-ctrl">
+                  <button class="btn-step dec" onclick="adjustPenalty('r1', 'p_out_air', -1)">-</button>
+                  <span class="count-val" id="r1-count-p_out_air">0</span>
+                  <button class="btn-step inc" onclick="adjustPenalty('r1', 'p_out_air', 1)">+</button>
+                </div>
+                <span class="sub-total" id="r1-sub-p_out_air">+0s</span>
+              </div>
+
+              <div class="penalty-card">
+                <div class="penalty-title">Out of Track - Ground (+20s +5s/wheel)</div>
+                <div class="counter-ctrl">
+                  <button class="btn-step dec" onclick="adjustPenalty('r1', 'p_out_ground', -1)">-</button>
+                  <span class="count-val" id="r1-count-p_out_ground">0</span>
+                  <button class="btn-step inc" onclick="adjustPenalty('r1', 'p_out_ground', 1)">+</button>
+                </div>
+                <span class="sub-total" id="r1-sub-p_out_ground">+0s</span>
+              </div>
+
+              <div class="penalty-card span-2">
+                <div class="penalty-title">Obstacle Skipped (+25s / obstacle)</div>
+                <div class="counter-ctrl">
+                  <button class="btn-step dec" onclick="adjustPenalty('r1', 'p_skip', -1)">-</button>
+                  <span class="count-val" id="r1-count-p_skip">0</span>
+                  <button class="btn-step inc" onclick="adjustPenalty('r1', 'p_skip', 1)">+</button>
+                </div>
+                <span class="sub-total" id="r1-sub-p_skip">+0s</span>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- SUMMARY & SAVE BAR -->
+          <div class="score-summary-bar">
+            <div class="summary-item">
+              <span class="lbl">Raw Time:</span>
+              <span class="val" id="r1-calc-raw">00:00.000</span>
+            </div>
+            <div class="summary-item">
+              <span class="lbl">+ Penalties:</span>
+              <span class="val text-warning" id="r1-calc-penalties">+0.00s</span>
+            </div>
+            <div class="summary-item main-final">
+              <span class="lbl">= FINAL TIME:</span>
+              <span class="val text-cyan" id="r1-calc-final">00:00.000</span>
+            </div>
+          </div>
+
+          <div class="dq-judge-row">
+            <label class="dq-check"><input type="checkbox" id="r1-is-dq"> Mark Disqualified (DQ)</label>
+            <input type="text" id="r1-dq-reason" placeholder="DQ Reason (if applicable)..." class="form-input">
+            <select id="r1-judge-name" class="form-select sm">
+              <option value="">-- Select Officiating Judge --</option>
+            </select>
+            <button id="r1-btn-save-run" class="btn btn-primary lg">💾 Submit Run Score</button>
+          </div>
+        </div>
+
+        <!-- RIGHT: LIVE RUNS LOG -->
+        <div class="glass-card side-runs-card">
+          <h3>📋 Submitted Round 1 Runs</h3>
+          <div class="table-responsive">
+            <table class="data-table sm">
+              <thead>
+                <tr>
+                  <th>Bot ID</th>
+                  <th>Arena</th>
+                  <th>Raw</th>
+                  <th>Pens</th>
+                  <th>Final Time</th>
+                </tr>
+              </thead>
+              <tbody id="r1-runs-tbody">
+                <!-- Dynamic -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ROUND 2 SCORING VIEW -->
+    <section id="view-round2" class="tab-view">
+      <div class="scoring-layout">
+        <!-- LEFT: TIMER & PENALTY CONSOLE FOR R2 -->
+        <div class="glass-card scoring-console">
+          <div class="console-header">
+            <div>
+              <h2>Round 2 — Time Trial, 1 Arena (Harder) (25 → 9)</h2>
+              <p>Top 25 teams from R1 run on single tougher arena. Top 9 advance to Round 3.</p>
+            </div>
+          </div>
+
+          <!-- TEAM SELECTOR (R2 Qualified) -->
+          <div class="form-group select-team-group">
+            <label for="r2-team-select">Select Team (Top 25 Qualified Only):</label>
+            <select id="r2-team-select" class="form-select lg">
+              <option value="">-- Choose R2 Qualified Team --</option>
+            </select>
+          </div>
+
+          <!-- STOPWATCH DISPLAY -->
+          <div class="stopwatch-container">
+            <div class="stopwatch-digits" id="r2-timer-display">00:00.000</div>
+            <div class="stopwatch-controls">
+              <button id="r2-btn-start" class="btn btn-success lg">▶ START</button>
+              <button id="r2-btn-pause" class="btn btn-warning lg" disabled>⏸ PAUSE</button>
+              <button id="r2-btn-reset" class="btn btn-danger lg">🔄 RESET</button>
+            </div>
+            <div class="manual-time-toggle">
+              <label><input type="checkbox" id="r2-manual-toggle"> Manual Time Override</label>
+              <div id="r2-manual-inputs" class="manual-inputs hidden">
+                <input type="number" id="r2-manual-min" placeholder="Min" min="0" max="59" class="num-input">m
+                <input type="number" id="r2-manual-sec" placeholder="Sec" min="0" max="59" class="num-input">s
+                <input type="number" id="r2-manual-ms" placeholder="MS" min="0" max="999" class="num-input">ms
+              </div>
+            </div>
+          </div>
+
+          <!-- PENALTY COUNTERS PAD R2 -->
+          <div class="penalty-pad-section">
+            <h3>⚠️ Penalty Counter Pad</h3>
+            <div class="penalty-grid">
+              
+              <div class="penalty-card">
+                <div class="penalty-title">Wheel Touches Line (+5s)</div>
+                <div class="counter-ctrl">
+                  <button class="btn-step dec" onclick="adjustPenalty('r2', 'p_boundary', -1)">-</button>
+                  <span class="count-val" id="r2-count-p_boundary">0</span>
+                  <button class="btn-step inc" onclick="adjustPenalty('r2', 'p_boundary', 1)">+</button>
+                </div>
+                <span class="sub-total" id="r2-sub-p_boundary">+0s</span>
+              </div>
+
+              <div class="penalty-card">
+                <div class="penalty-title">Hand Touch Bot (+5s)</div>
+                <div class="counter-ctrl">
+                  <button class="btn-step dec" onclick="adjustPenalty('r2', 'p_hand', -1)">-</button>
+                  <span class="count-val" id="r2-count-p_hand">0</span>
+                  <button class="btn-step inc" onclick="adjustPenalty('r2', 'p_hand', 1)">+</button>
+                </div>
+                <span class="sub-total" id="r2-sub-p_hand">+0s</span>
+              </div>
+
+              <div class="penalty-card">
+                <div class="penalty-title">Out of Track - Air (+10s)</div>
+                <div class="counter-ctrl">
+                  <button class="btn-step dec" onclick="adjustPenalty('r2', 'p_out_air', -1)">-</button>
+                  <span class="count-val" id="r2-count-p_out_air">0</span>
+                  <button class="btn-step inc" onclick="adjustPenalty('r2', 'p_out_air', 1)">+</button>
+                </div>
+                <span class="sub-total" id="r2-sub-p_out_air">+0s</span>
+              </div>
+
+              <div class="penalty-card">
+                <div class="penalty-title">Out of Track - Ground (+20s +5s/wheel)</div>
+                <div class="counter-ctrl">
+                  <button class="btn-step dec" onclick="adjustPenalty('r2', 'p_out_ground', -1)">-</button>
+                  <span class="count-val" id="r2-count-p_out_ground">0</span>
+                  <button class="btn-step inc" onclick="adjustPenalty('r2', 'p_out_ground', 1)">+</button>
+                </div>
+                <span class="sub-total" id="r2-sub-p_out_ground">+0s</span>
+              </div>
+
+              <div class="penalty-card span-2">
+                <div class="penalty-title">Obstacle Skipped (+25s / obstacle)</div>
+                <div class="counter-ctrl">
+                  <button class="btn-step dec" onclick="adjustPenalty('r2', 'p_skip', -1)">-</button>
+                  <span class="count-val" id="r2-count-p_skip">0</span>
+                  <button class="btn-step inc" onclick="adjustPenalty('r2', 'p_skip', 1)">+</button>
+                </div>
+                <span class="sub-total" id="r2-sub-p_skip">+0s</span>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- SUMMARY & SAVE BAR -->
+          <div class="score-summary-bar">
+            <div class="summary-item">
+              <span class="lbl">Raw Time:</span>
+              <span class="val" id="r2-calc-raw">00:00.000</span>
+            </div>
+            <div class="summary-item">
+              <span class="lbl">+ Penalties:</span>
+              <span class="val text-warning" id="r2-calc-penalties">+0.00s</span>
+            </div>
+            <div class="summary-item main-final">
+              <span class="lbl">= FINAL TIME:</span>
+              <span class="val text-cyan" id="r2-calc-final">00:00.000</span>
+            </div>
+          </div>
+
+          <div class="dq-judge-row">
+            <label class="dq-check"><input type="checkbox" id="r2-is-dq"> Mark Disqualified (DQ)</label>
+            <input type="text" id="r2-dq-reason" placeholder="DQ Reason (if applicable)..." class="form-input">
+            <select id="r2-judge-name" class="form-select sm">
+              <option value="">-- Select Officiating Judge --</option>
+            </select>
+            <button id="r2-btn-save-run" class="btn btn-primary lg">💾 Submit R2 Run Score</button>
+          </div>
+        </div>
+
+        <!-- RIGHT: LIVE RUNS LOG R2 -->
+        <div class="glass-card side-runs-card">
+          <h3>📋 Submitted Round 2 Runs</h3>
+          <div class="table-responsive">
+            <table class="data-table sm">
+              <thead>
+                <tr>
+                  <th>Bot ID</th>
+                  <th>Raw</th>
+                  <th>Pens</th>
+                  <th>Final Time</th>
+                </tr>
+              </thead>
+              <tbody id="r2-runs-tbody">
+                <!-- Dynamic -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ROUND 3 BRACKET VIEW -->
+    <section id="view-round3" class="tab-view">
+      <div class="section-header">
+        <div>
+          <h2>Round 3 — 8-Team Bracket + Play-in (9 → Top 3)</h2>
+          <p>Pure Knockout. Head-to-Head Heats. Winner decided by judge decision/first to finish.</p>
+        </div>
+        <button id="btn-sync-bracket-seeds" class="btn btn-outline">🔄 Sync Seeds from Round 2 Rankings</button>
+      </div>
+
+      <div class="bracket-wrapper">
+        <div class="bracket-container" id="bracket-render">
+          <!-- Visual Interactive Bracket Rendered via JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- LEADERBOARDS VIEW -->
+    <section id="view-leaderboard" class="tab-view">
+      <div class="sub-nav-bar">
+        <button class="sub-tab-btn active" data-sub="r1-lead">Round 1 Standings (58 → 25)</button>
+        <button class="sub-tab-btn" data-sub="r2-lead">Round 2 Standings (25 → 9)</button>
+        <button class="sub-tab-btn" data-sub="r3-lead">Round 3 Final Winners</button>
+      </div>
+
+      <div id="sub-r1-lead" class="sub-view active">
+        <div class="glass-card full-width">
+          <h3>🏆 Round 1 Rankings (Top 25 Highlighted in Green)</h3>
+          <div class="table-responsive">
+            <table class="data-table" id="r1-leaderboard-table">
+              <thead>
+                <tr>
+                  <th>Rank</th>
+                  <th>Bot ID</th>
+                  <th>Team Name</th>
+                  <th>Arena</th>
+                  <th>Raw Time</th>
+                  <th>Penalties</th>
+                  <th>Final Time</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="r1-leaderboard-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div id="sub-r2-lead" class="sub-view">
+        <div class="glass-card full-width">
+          <h3>⚡ Round 2 Rankings (Top 9 Highlighted in Gold for Round 3 Seeding)</h3>
+          <div class="table-responsive">
+            <table class="data-table" id="r2-leaderboard-table">
+              <thead>
+                <tr>
+                  <th>Seed / Rank</th>
+                  <th>Bot ID</th>
+                  <th>Team Name</th>
+                  <th>Raw Time</th>
+                  <th>Penalties</th>
+                  <th>Final Time</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="r2-leaderboard-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div id="sub-r3-lead" class="sub-view">
+        <div class="glass-card full-width">
+          <h3>🥇 RoboFest 2.0 Obstacle Race Final Champions</h3>
+          <div class="podium-display" id="r3-podium">
+            <!-- Dynamic Podium Cards -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- MODALS -->
+
+  <!-- ADD/EDIT JUDGE MODAL -->
+  <div id="modal-judge" class="modal-overlay hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="modal-judge-title">Add Officiating Judge</h3>
+        <button class="close-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="form-judge">
+          <input type="hidden" id="judge-id-hidden">
+          <div class="form-group">
+            <label>Judge Full Name *</label>
+            <input type="text" id="inp-judge-name" class="form-input" required placeholder="e.g. Dr. A. Sharma">
+          </div>
+          <div class="form-group">
+            <label>Official Role *</label>
+            <select id="inp-judge-role" class="form-select">
+              <option value="Head Referee">Head Referee</option>
+              <option value="Track Judge">Track Judge</option>
+              <option value="Tech Inspector">Tech Inspector</option>
+              <option value="Time Keeper">Time Keeper</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Assigned Arena</label>
+            <select id="inp-judge-arena" class="form-select">
+              <option value="A">Arena A</option>
+              <option value="B">Arena B</option>
+              <option value="All">All Arenas</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Contact Phone Number</label>
+            <input type="text" id="inp-judge-phone" class="form-input" placeholder="+91 9876543210">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline close-modal">Cancel</button>
+            <button type="submit" class="btn btn-primary">Save Judge</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- TEAM ADD/EDIT MODAL -->
+  <div id="modal-team" class="modal-overlay hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="modal-team-title">Add Team</h3>
+        <button class="close-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="form-team">
+          <input type="hidden" id="team-id-hidden">
+          <div class="form-group">
+            <label>Bot ID / Code *</label>
+            <input type="text" id="inp-bot-id" class="form-input" required placeholder="e.g. BOT-001">
+          </div>
+          <div class="form-group">
+            <label>Team Name *</label>
+            <input type="text" id="inp-team-name" class="form-input" required placeholder="e.g. CyberRobotics">
+          </div>
+          <div class="form-group">
+            <label>Institution / College *</label>
+            <input type="text" id="inp-institution" class="form-input" required placeholder="e.g. SRMIST">
+          </div>
+          <div class="form-group">
+            <label>Team Members (comma separated)</label>
+            <input type="text" id="inp-members" class="form-input" placeholder="e.g. John, Sarah, Alex">
+          </div>
+          <div class="form-group">
+            <label>Assigned Round 1 Arena</label>
+            <select id="inp-arena" class="form-select">
+              <option value="A">Arena A</option>
+              <option value="B">Arena B</option>
+            </select>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline close-modal">Cancel</button>
+            <button type="submit" class="btn btn-primary">Save Team</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRE-MATCH ELIGIBILITY CHECKLIST MODAL -->
+  <div id="modal-eligibility" class="modal-overlay hidden">
+    <div class="modal-card lg">
+      <div class="modal-header">
+        <div>
+          <h3 id="elig-modal-team-name">Pre-Match Technical Inspection</h3>
+          <span id="elig-modal-bot-id" class="badge badge-info">BOT-000</span>
+        </div>
+        <button class="close-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="text-sm text-muted">To be completed before a bot is allowed onto the arena. A single 'No' = Not permitted to compete.</p>
+        
+        <form id="form-eligibility">
+          <div class="checklist-grid">
+            
+            <div class="checklist-item">
+              <div class="chk-desc">
+                <strong>1. Dimensions</strong>
+                <span>≤ 30 × 30 × 30 cm (5% tolerance)</span>
+              </div>
+              <div class="chk-toggle">
+                <input type="checkbox" id="chk-dimensions" class="toggle-input">
+                <label for="chk-dimensions" class="toggle-label"></label>
+              </div>
+            </div>
+
+            <div class="checklist-item">
+              <div class="chk-desc">
+                <strong>2. Weight</strong>
+                <span>≤ 5 kg (5% tolerance)</span>
+              </div>
+              <div class="chk-toggle">
+                <input type="checkbox" id="chk-weight" class="toggle-input">
+                <label for="chk-weight" class="toggle-label"></label>
+              </div>
+            </div>
+
+            <div class="checklist-item">
+              <div class="chk-desc">
+                <strong>3. Voltage</strong>
+                <span>≤ 16.8 V at any two circuit points</span>
+              </div>
+              <div class="chk-toggle">
+                <input type="checkbox" id="chk-voltage" class="toggle-input">
+                <label for="chk-voltage" class="toggle-label"></label>
+              </div>
+            </div>
+
+            <div class="checklist-item">
+              <div class="chk-desc">
+                <strong>4. Drive Type</strong>
+                <span>2WD or 4WD; all tyres powered</span>
+              </div>
+              <div class="chk-toggle">
+                <input type="checkbox" id="chk-driveType" class="toggle-input">
+                <label for="chk-driveType" class="toggle-label"></label>
+              </div>
+            </div>
+
+            <div class="checklist-item">
+              <div class="chk-desc">
+                <strong>5. Body Origin</strong>
+                <span>Not built from readymade toys (kits allowed)</span>
+              </div>
+              <div class="chk-toggle">
+                <input type="checkbox" id="chk-bodyOrigin" class="toggle-input">
+                <label for="chk-bodyOrigin" class="toggle-label"></label>
+              </div>
+            </div>
+
+            <div class="checklist-item">
+              <div class="chk-desc">
+                <strong>6. Wired Control</strong>
+                <span>Cable ≥ 4 m; routed via pole ≥ 45 cm or held upright; slack maintained</span>
+              </div>
+              <div class="chk-toggle">
+                <input type="checkbox" id="chk-wiredControl" class="toggle-input">
+                <label for="chk-wiredControl" class="toggle-label"></label>
+              </div>
+            </div>
+
+            <div class="checklist-item">
+              <div class="chk-desc">
+                <strong>7. Wireless Control</strong>
+                <span>Dual-frequency operation confirmed</span>
+              </div>
+              <div class="chk-toggle">
+                <input type="checkbox" id="chk-wirelessControl" class="toggle-input">
+                <label for="chk-wirelessControl" class="toggle-label"></label>
+              </div>
+            </div>
+
+            <div class="checklist-item">
+              <div class="chk-desc">
+                <strong>8. Banned Parts</strong>
+                <span>No IC engines, no LEGO kits (toy RF modules OK)</span>
+              </div>
+              <div class="chk-toggle">
+                <input type="checkbox" id="chk-bannedParts" class="toggle-input">
+                <label for="chk-bannedParts" class="toggle-label"></label>
+              </div>
+            </div>
+
+            <div class="checklist-item">
+              <div class="chk-desc">
+                <strong>9. Team</strong>
+                <span>Max 4 members; institute ID carried</span>
+              </div>
+              <div class="chk-toggle">
+                <input type="checkbox" id="chk-teamMembers" class="toggle-input">
+                <label for="chk-teamMembers" class="toggle-label"></label>
+              </div>
+            </div>
+
+            <div class="checklist-item">
+              <div class="chk-desc">
+                <strong>10. Transmitter/Receiver</strong>
+                <span>Dedicated set per robot</span>
+              </div>
+              <div class="chk-toggle">
+                <input type="checkbox" id="chk-dedicatedTxRx" class="toggle-input">
+                <label for="chk-dedicatedTxRx" class="toggle-label"></label>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="form-group mt-3">
+            <label>Inspector Remarks & Certificate Sign-off</label>
+            <input type="text" id="chk-notes" placeholder="Optional inspector remarks..." class="form-input">
+          </div>
+
+          <div class="eligibility-status-banner" id="elig-status-banner">
+            STATUS: PENDING VERIFICATION
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline close-modal">Cancel</button>
+            <button type="submit" class="btn btn-primary">Save Inspection Certificate</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- MATCH JUDGE DECISION MODAL (ROUND 3) -->
+  <div id="modal-match-judge" class="modal-overlay hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="r3-modal-match-title">Match Decision</h3>
+        <button class="close-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="match-vs-header">
+          <div class="team-vs-box" id="r3-teamA-box">
+            <span class="team-label">TEAM A</span>
+            <strong id="r3-teamA-name">Team A Name</strong>
+            <button class="btn btn-success btn-sm mt-2" onclick="selectMatchWinner('A')">Select as Winner</button>
+          </div>
+          <div class="vs-badge">VS</div>
+          <div class="team-vs-box" id="r3-teamB-box">
+            <span class="team-label">TEAM B</span>
+            <strong id="r3-teamB-name">Team B Name</strong>
+            <button class="btn btn-success btn-sm mt-2" onclick="selectMatchWinner('B')">Select as Winner</button>
+          </div>
+        </div>
+
+        <form id="form-match-result" class="mt-4">
+          <input type="hidden" id="r3-match-id">
+          <input type="hidden" id="r3-selected-winner-id">
+
+          <div class="form-group">
+            <label>Selected Winner:</label>
+            <input type="text" id="r3-winner-display-name" readonly class="form-input bg-dark" placeholder="Click 'Select as Winner' above">
+          </div>
+
+          <div class="form-group">
+            <label>Decision Reason / Result Details:</label>
+            <select id="r3-win-reason" class="form-select">
+              <option value="First to finish track">First to finish track</option>
+              <option value="Opponent Disqualified (DQ)">Opponent Disqualified (DQ)</option>
+              <option value="Opponent Bot Stopped / Out of Boundary">Opponent Bot Stopped / Out of Boundary</option>
+              <option value="Opponent Human Interference DQ">Opponent Human Interference DQ</option>
+            </select>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline close-modal">Cancel</button>
+            <button type="submit" class="btn btn-primary">Confirm Match Result</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- OFFICIAL PRINT SHEET CONTAINER (Hidden on screen, visible on print) -->
+  <div id="print-sheet-wrapper" class="print-only">
+    <div class="print-header">
+      <h2>ROBOFEST 2.0 — OBSTACLE RACE OFFICIAL SCORECARD</h2>
+      <p>Intelligent Systems Design Lab | robofest@srmist.edu.in</p>
+    </div>
+
+    <div class="print-section">
+      <h3>Round 1 & Round 2 Time Trial Score Log</h3>
+      <table class="print-table">
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Bot ID</th>
+            <th>Team Name</th>
+            <th>Arena</th>
+            <th>Raw Time (s)</th>
+            <th>Penalties (s)</th>
+            <th>Final Time (s)</th>
+          </tr>
+        </thead>
+        <tbody id="print-r1-r2-tbody"></tbody>
+      </table>
+    </div>
+
+    <div class="print-section page-break-before">
+      <h3>Round 3 Heat Result Sheet</h3>
+      <table class="print-table">
+        <thead>
+          <tr>
+            <th>Heat #</th>
+            <th>Stage</th>
+            <th>Team A</th>
+            <th>Team B</th>
+            <th>Winner</th>
+            <th>Reason / Result</th>
+          </tr>
+        </thead>
+        <tbody id="print-r3-tbody"></tbody>
+      </table>
+    </div>
+
+    <div class="print-section">
+      <h3>JUDGE SIGN-OFF</h3>
+      <table class="print-table">
+        <thead>
+          <tr>
+            <th>Judge Name</th>
+            <th>Lane / Heat(s)</th>
+            <th>Signature</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody id="print-judges-tbody">
+          <!-- Dynamic -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- SCRIPT INCLUDES -->
+  <script src="js/store.js"></script>
+  <script src="js/supabase.js"></script>
+  <script src="js/eligibility.js"></script>
+  <script src="js/timer.js"></script>
+  <script src="js/scoring.js"></script>
+  <script src="js/bracket.js"></script>
+  <script src="js/export.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
