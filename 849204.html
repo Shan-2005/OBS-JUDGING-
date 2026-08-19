@@ -868,25 +868,26 @@
   <!-- MODALS -->
 
   <!-- JUDGE AUTHENTICATION LOCK MODAL -->
-  <div id="modal-judge-auth" class="modal-overlay hidden">
-    <div class="modal-card">
-      <div class="modal-header">
-        <h3>≡ƒöÆ Judge Portal Security Login</h3>
+  <div id="modal-judge-auth" class="modal-overlay hidden" style="display:none;">
+    <div class="modal-card" style="max-width:420px;">
+      <div class="modal-header" style="border:none;padding-bottom:0;justify-content:center;flex-direction:column;align-items:center;text-align:center;">
+        <div class="judge-auth-icon" style="font-size:48px;margin-bottom:8px;">🏁</div>
+        <h3 style="margin:0;">Official Arena Console</h3>
+        <p class="text-muted" style="font-size:12px;margin-top:4px;">RoboFest 2.0 — Authorised Personnel Only</p>
       </div>
       <div class="modal-body">
         <form id="form-judge-auth">
-          <div id="auth-error-msg" class="alert alert-danger hidden mb-3"></div>
+          <div id="auth-error-msg" class="alert alert-danger hidden mb-3" style="font-size:13px;"></div>
           <div class="form-group">
-            <label>Judge Credential Passcode *</label>
-            <input type="password" id="inp-passcode" class="form-input lg" required placeholder="Enter Official Judge Passcode">
-            <small class="text-muted">Default Passcode: <code>ROBOFEST2026</code></small>
+            <label>Username</label>
+            <input type="text" id="inp-judge-username" class="form-input lg" required autocomplete="username" placeholder="Enter username" style="width:100%;">
           </div>
-          <div class="form-group mt-3">
-            <label>Officiating Judge / Referee Name *</label>
-            <input type="text" id="inp-judge-login-name" class="form-input lg" required placeholder="e.g. Dr. A. Sharma">
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="inp-judge-password" class="form-input lg" required autocomplete="current-password" placeholder="Enter password" style="width:100%;">
           </div>
-          <div class="modal-footer mt-4">
-            <button type="submit" class="btn btn-primary lg btn-block">≡ƒöô Unlock Judging Console</button>
+          <div class="modal-footer mt-4" style="padding:0;">
+            <button type="submit" class="btn btn-primary lg" style="width:100%;">🔓 Access Judging Console</button>
           </div>
         </form>
       </div>
@@ -1235,158 +1236,6 @@
     </div>
   </div>
 
-  <!-- MODAL: ADD/EDIT TEAM -->
-  <div id="modal-team" class="modal-overlay hidden" style="display:none;">
-    <div class="modal-card">
-      <div class="modal-header">
-        <h3 id="modal-team-title">Add New Team</h3>
-        <button class="close-modal">&times;</button>
-      </div>
-      <div class="modal-body">
-        <form id="form-team">
-          <input type="hidden" id="team-id-hidden">
-          <div class="form-group">
-            <label>Bot ID *</label>
-            <input type="text" id="inp-bot-id" class="form-input" required placeholder="BOT-001">
-          </div>
-          <div class="form-group">
-            <label>Team Name *</label>
-            <input type="text" id="inp-team-name" class="form-input" required placeholder="e.g. Apex Predators">
-          </div>
-          <div class="form-group">
-            <label>Institution *</label>
-            <input type="text" id="inp-institution" class="form-input" required placeholder="e.g. MIT Chennai">
-          </div>
-          <div class="form-group">
-            <label>Team Members (comma separated)</label>
-            <input type="text" id="inp-members" class="form-input" placeholder="Member 1, Member 2">
-          </div>
-          <div class="form-group">
-            <label>Assigned R1 Arena</label>
-            <select id="inp-arena" class="form-select">
-              <option value="A">Arena A</option>
-              <option value="B">Arena B</option>
-            </select>
-          </div>
-          <div class="modal-footer mt-4">
-            <button type="submit" class="btn btn-primary">Save Team Record</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL: PRE-MATCH TECHNICAL INSPECTION (10 CHECKS) -->
-  <div id="modal-eligibility" class="modal-overlay hidden" style="display:none;">
-    <div class="modal-card lg">
-      <div class="modal-header">
-        <div>
-          <h3>📋 Pre-Match Technical Inspection Checklist</h3>
-          <p class="text-muted" style="font-size:12px;">Team: <strong id="elig-modal-team-name">---</strong> (<span id="elig-modal-bot-id">---</span>)</p>
-        </div>
-        <button class="close-modal">&times;</button>
-      </div>
-      <div class="modal-body">
-        <form id="form-eligibility">
-          <div id="elig-status-banner" class="eligibility-status-banner badge-danger mb-3">
-            STATUS: FAILED / NOT PERMITTED TO COMPETE (1+ NO)
-          </div>
-          <div class="checklist-grid">
-            <label class="check-tile"><input type="checkbox" id="chk-dimensions"> <span>1. Dimensions (≤30x30x30 cm)</span></label>
-            <label class="check-tile"><input type="checkbox" id="chk-weight"> <span>2. Weight (≤5 kg)</span></label>
-            <label class="check-tile"><input type="checkbox" id="chk-voltage"> <span>3. Voltage (≤16.8 V)</span></label>
-            <label class="check-tile"><input type="checkbox" id="chk-driveType"> <span>4. Drive Type (2WD/4WD)</span></label>
-            <label class="check-tile"><input type="checkbox" id="chk-bodyOrigin"> <span>5. Body Origin (No toy chassis)</span></label>
-            <label class="check-tile"><input type="checkbox" id="chk-wiredControl"> <span>6. Wired Cable (≥4m length)</span></label>
-            <label class="check-tile"><input type="checkbox" id="chk-wirelessControl"> <span>7. Wireless (Dual Freq 2.4G)</span></label>
-            <label class="check-tile"><input type="checkbox" id="chk-bannedParts"> <span>8. Banned Parts (No Lego/IC)</span></label>
-            <label class="check-tile"><input type="checkbox" id="chk-teamMembers"> <span>9. Team (Max 4, ID carried)</span></label>
-            <label class="check-tile"><input type="checkbox" id="chk-dedicatedTxRx"> <span>10. Dedicated Tx/Rx Set</span></label>
-          </div>
-          <div class="form-group mt-3">
-            <label>Inspection Notes / Observations</label>
-            <input type="text" id="chk-notes" class="form-input" placeholder="e.g. Dimensions verified by official gauge caliper">
-          </div>
-          <div class="modal-footer mt-4">
-            <button type="submit" class="btn btn-primary lg">💾 Save Technical Inspection Certificate</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL: ADD/EDIT JUDGE -->
-  <div id="modal-judge" class="modal-overlay hidden" style="display:none;">
-    <div class="modal-card">
-      <div class="modal-header">
-        <h3 id="modal-judge-title">Add Officiating Judge</h3>
-        <button class="close-modal">&times;</button>
-      </div>
-      <div class="modal-body">
-        <form id="form-judge">
-          <input type="hidden" id="judge-id-hidden">
-          <div class="form-group">
-            <label>Judge Full Name *</label>
-            <input type="text" id="inp-judge-name" class="form-input" required placeholder="e.g. Dr. A. Sharma">
-          </div>
-          <div class="form-group">
-            <label>Role / Designation *</label>
-            <input type="text" id="inp-judge-role" class="form-input" required placeholder="e.g. Arena Referee">
-          </div>
-          <div class="form-group">
-            <label>Assigned Arena *</label>
-            <select id="inp-judge-arena" class="form-select">
-              <option value="A">Arena A</option>
-              <option value="B">Arena B</option>
-              <option value="All">All Arenas</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Contact Phone Number</label>
-            <input type="text" id="inp-judge-phone" class="form-input" placeholder="+91 9876543210">
-          </div>
-          <div class="modal-footer mt-4">
-            <button type="submit" class="btn btn-primary">Save Judge Record</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL: MATCH DECISION R3 -->
-  <div id="modal-match-result" class="modal-overlay hidden" style="display:none;">
-    <div class="modal-card">
-      <div class="modal-header">
-        <h3 id="r3-modal-match-title">Round 3 Heat Decision</h3>
-        <button class="close-modal">&times;</button>
-      </div>
-      <div class="modal-body">
-        <form id="form-match-result">
-          <input type="hidden" id="r3-match-id">
-          <input type="hidden" id="r3-selected-winner-id">
-          <div class="form-group">
-            <label>Choose Winning Team:</label>
-            <div class="d-flex gap-2 mt-2">
-              <button type="button" class="btn btn-outline flex-grow" onclick="selectMatchWinner('A')" id="r3-teamA-name">Team A</button>
-              <button type="button" class="btn btn-outline flex-grow" onclick="selectMatchWinner('B')" id="r3-teamB-name">Team B</button>
-            </div>
-          </div>
-          <div class="form-group mt-3">
-            <label>Selected Winner:</label>
-            <input type="text" id="r3-winner-display-name" class="form-input" readonly placeholder="Click a team button above">
-          </div>
-          <div class="form-group mt-3">
-            <label>Reason / Result Details:</label>
-            <input type="text" id="r3-win-reason" class="form-input" placeholder="e.g. Finished track in 45s vs DNF">
-          </div>
-          <div class="modal-footer mt-4">
-            <button type="submit" class="btn btn-primary">Confirm Heat Winner</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-
   <!-- SCRIPT INCLUDES -->
   <script src="js/store.js"></script>
   <script src="js/supabase.js"></script>
@@ -1399,33 +1248,6 @@
   <script src="js/auth.js"></script>
   <script src="js/participant_lookup.js"></script>
   <script src="js/app.js"></script>
-
-  <!-- JUDGE AUTH MODAL (shown immediately before any content) -->
-  <div id="modal-judge-auth" class="modal-overlay" style="display:none;">
-    <div class="modal-card" style="max-width:420px;">
-      <div class="modal-header" style="border:none;padding-bottom:0;justify-content:center;flex-direction:column;align-items:center;text-align:center;">
-        <div class="judge-auth-icon" style="font-size:48px;margin-bottom:8px;">🏁</div>
-        <h3 style="margin:0;">Official Arena Console</h3>
-        <p class="text-muted" style="font-size:12px;margin-top:4px;">RoboFest 2.0 — Authorised Personnel Only</p>
-      </div>
-      <div class="modal-body">
-        <form id="form-judge-auth" onsubmit="handleJudgeLoginSubmit(event); return false;">
-          <div id="auth-error-msg" class="alert alert-danger hidden mb-3" style="font-size:13px;"></div>
-          <div class="form-group">
-            <label>Username</label>
-            <input type="text" id="inp-judge-username" class="form-input lg" required autocomplete="username" placeholder="Enter username" style="width:100%;">
-          </div>
-          <div class="form-group">
-            <label>Password</label>
-            <input type="password" id="inp-judge-password" class="form-input lg" required autocomplete="current-password" placeholder="Enter password" style="width:100%;">
-          </div>
-          <div class="modal-footer mt-4" style="padding:0;">
-            <button type="submit" class="btn btn-primary lg" style="width:100%;">🔓 Access Judging Console</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
 
   <!-- SELF-CONTAINED AUTH GATE -->
   <script>
@@ -1442,6 +1264,8 @@
 
       function unlock() {
         sessionStorage.setItem('judge_authenticated', 'true');
+        sessionStorage.setItem('active_judge_name', 'Officiating Judge');
+        sessionStorage.setItem('active_judge_arena', 'All');
         if (modal) modal.remove();  // fully destroy — no leftover backdrop
         if (header) { header.style.display = 'flex'; }
         if (main)   { main.style.display   = 'block'; }
