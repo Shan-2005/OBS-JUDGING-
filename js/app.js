@@ -147,6 +147,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Initial View Render
   refreshAllViews();
+  handleHashRouting();
 });
 
 function switchTab(tabId) {
@@ -159,6 +160,11 @@ function switchTab(tabId) {
   if (btn) btn.classList.add('active');
   if (view) view.classList.add('active');
 
+  // Update URL hash without scroll jumping
+  if (window.location.hash !== `#${tabId}`) {
+    history.replaceState(null, null, `#${tabId}`);
+  }
+
   if (tabId === 'attendance') renderAttendanceTable();
   if (tabId === 'botcheck') renderBotCheckView();
   if (tabId === 'judges') renderJudgesTable();
@@ -168,6 +174,17 @@ function switchTab(tabId) {
   if (tabId === 'leaderboard') renderLeaderboards();
   if (tabId === 'participants') renderParticipantsView();
 }
+
+function handleHashRouting() {
+  const hash = window.location.hash.replace('#', '').toLowerCase();
+  if (hash) {
+    if (['dashboard', 'attendance', 'botcheck', 'judges', 'teams', 'callorder', 'round1', 'round2', 'round3', 'leaderboard', 'participants'].includes(hash)) {
+      switchTab(hash);
+    }
+  }
+}
+
+window.addEventListener('hashchange', handleHashRouting);
 
 function switchSubTab(subId) {
   document.querySelectorAll('.sub-tab-btn').forEach(b => b.classList.remove('active'));
