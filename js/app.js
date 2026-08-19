@@ -151,45 +151,56 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function switchTab(tabId) {
+  const hasParticipantsTab = !!document.getElementById('view-participants');
+
   // Security Guard: Restrict judging tabs to authenticated judges only
-  if (tabId !== 'participants' && typeof isJudgeAuthenticated === 'function' && !isJudgeAuthenticated()) {
-    showJudgeAuthModal(tabId);
-    // Force stay on participants tab if unauthenticated
-    if (window.location.hash !== '#participants') {
-      history.replaceState(null, null, '#participants');
-    }
+  if (typeof isJudgeAuthenticated === 'function' && !isJudgeAuthenticated()) {
+    const targetTab = (tabId === 'participants' || !tabId) ? 'dashboard' : tabId;
+    showJudgeAuthModal(targetTab);
+
     document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
     document.querySelectorAll('.tab-view').forEach(v => v.classList.remove('active'));
-    const pBtn = document.querySelector(`.nav-btn[data-tab="participants"]`);
-    const pView = document.getElementById(`view-participants`);
-    if (pBtn) pBtn.classList.add('active');
-    if (pView) pView.classList.add('active');
-    renderParticipantsView();
-    return;
+
+    if (hasParticipantsTab && tabId === 'participants') {
+      const pBtn = document.querySelector(`.nav-btn[data-tab="participants"]`);
+      const pView = document.getElementById(`view-participants`);
+      if (pBtn) pBtn.classList.add('active');
+      if (pView) pView.classList.add('active');
+      if (typeof renderParticipantsView === 'function') renderParticipantsView();
+      return;
+    } else {
+      // Default to dashboard state behind auth modal
+      const dBtn = document.querySelector(`.nav-btn[data-tab="dashboard"]`);
+      const dView = document.getElementById(`view-dashboard`);
+      if (dBtn) dBtn.classList.add('active');
+      if (dView) dView.classList.add('active');
+      return;
+    }
   }
 
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
   document.querySelectorAll('.tab-view').forEach(v => v.classList.remove('active'));
 
-  const btn = document.querySelector(`.nav-btn[data-tab="${tabId}"]`);
-  const view = document.getElementById(`view-${tabId}`);
+  const targetId = (!tabId || (tabId === 'participants' && !hasParticipantsTab)) ? 'dashboard' : tabId;
+  const btn = document.querySelector(`.nav-btn[data-tab="${targetId}"]`);
+  const view = document.getElementById(`view-${targetId}`);
 
   if (btn) btn.classList.add('active');
   if (view) view.classList.add('active');
 
   // Update URL hash without scroll jumping
-  if (window.location.hash !== `#${tabId}`) {
-    history.replaceState(null, null, `#${tabId}`);
+  if (window.location.hash !== `#${targetId}`) {
+    history.replaceState(null, null, `#${targetId}`);
   }
 
-  if (tabId === 'attendance') renderAttendanceTable();
-  if (tabId === 'botcheck') renderBotCheckView();
-  if (tabId === 'judges') renderJudgesTable();
-  if (tabId === 'teams') renderTeamsTable();
-  if (tabId === 'callorder') renderCallOrderView();
-  if (tabId === 'round3') renderBracket();
-  if (tabId === 'leaderboard') renderLeaderboards();
-  if (tabId === 'participants') {
+  if (targetId === 'attendance') renderAttendanceTable();
+  if (targetId === 'botcheck') renderBotCheckView();
+  if (targetId === 'judges') renderJudgesTable();
+  if (targetId === 'teams') renderTeamsTable();
+  if (targetId === 'callorder') renderCallOrderView();
+  if (targetId === 'round3') renderBracket();
+  if (targetId === 'leaderboard') renderLeaderboards();
+  if (targetId === 'participants' && hasParticipantsTab) {
     if (typeof initParticipantsView === 'function') initParticipantsView();
     else if (typeof renderParticipantsView === 'function') renderParticipantsView();
   }
@@ -197,13 +208,16 @@ function switchTab(tabId) {
 
 function handleHashRouting() {
   const hash = window.location.hash.replace('#', '').toLowerCase();
-  if (hash) {
-    if (['dashboard', 'attendance', 'botcheck', 'judges', 'teams', 'callorder', 'round1', 'round2', 'round3', 'leaderboard', 'participants'].includes(hash)) {
+  const hasParticipantsTab = !!document.getElementById('view-participants');
+
+  if (hash && ['dashboard', 'attendance', 'botcheck', 'judges', 'teams', 'callorder', 'round1', 'round2', 'round3', 'leaderboard', 'participants'].includes(hash)) {
+    if (hash === 'participants' && !hasParticipantsTab) {
+      switchTab('dashboard');
+    } else {
       switchTab(hash);
     }
-  } else if (typeof isJudgeAuthenticated === 'function' && !isJudgeAuthenticated()) {
-    // Default unauthenticated visitors directly to participants portal
-    switchTab('participants');
+  } else {
+    switchTab('dashboard');
   }
 }
 

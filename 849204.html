@@ -1257,7 +1257,7 @@
         <p class="text-muted" style="font-size:12px;margin-top:4px;">RoboFest 2.0 — Authorised Personnel Only</p>
       </div>
       <div class="modal-body">
-        <form id="form-judge-auth">
+        <form id="form-judge-auth" onsubmit="handleJudgeLoginSubmit(event); return false;">
           <div id="auth-error-msg" class="alert alert-danger hidden mb-3" style="font-size:13px;"></div>
           <div class="form-group">
             <label>Username</label>
