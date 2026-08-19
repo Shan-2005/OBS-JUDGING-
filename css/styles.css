@@ -960,152 +960,180 @@ body {
 
 /* Mobile Devices (Smartphones & Portrait Tablets) */
 @media (max-width: 768px) {
+  html, body {
+    width: 100% !important;
+    max-width: 100vw !important;
+    overflow-x: hidden !important;
+  }
+
   .app-header {
     flex-direction: column !important;
     align-items: stretch !important;
-    padding: 6px 12px !important;
-    gap: 6px !important;
+    padding: 8px 12px !important;
+    gap: 8px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
   }
   
   .header-brand {
-    justify-content: space-between;
-    width: 100%;
-    flex-wrap: nowrap;
-    gap: 8px;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+  }
+
+  .brand-text h1 {
+    font-size: clamp(14px, 4vw, 18px) !important;
+  }
+
+  .brand-text span {
+    font-size: clamp(8px, 2.5vw, 10px) !important;
   }
   
   .nav-tabs {
-    width: 100% !important;
-    overflow-x: auto !important;
-    white-space: nowrap !important;
-    padding: 4px !important;
-    display: flex !important;
-    -webkit-overflow-scrolling: touch;
-    -ms-overflow-style: none !important;
-    scrollbar-width: none !important;
-  }
-  
-  .nav-tabs::-webkit-scrollbar {
-    display: none !important;
+    display: none !important; /* Replaced by Mobile Bottom Dock for clean app experience */
   }
 
-  .nav-btn {
-    padding: 6px 10px !important;
-    font-size: 11px !important;
-    gap: 4px !important;
-  }
-  
   .header-actions {
     display: none !important;
   }
 
   .app-main {
-    padding: 12px;
+    padding: 10px 10px 80px 10px !important;
+    width: 100% !important;
+    max-width: 100vw !important;
+    overflow-x: hidden !important;
+    box-sizing: border-box !important;
   }
 
   .dashboard-hero {
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 18px;
-    gap: 12px;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    padding: 14px !important;
+    gap: 10px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
   }
 
   .hero-title h2 {
-    font-size: 24px;
+    font-size: 20px !important;
   }
 
   .hero-title p {
-    font-size: 13px;
+    font-size: 12px !important;
   }
 
   .stats-grid {
     grid-template-columns: repeat(2, 1fr) !important;
-    gap: 10px !important;
-    margin-bottom: 16px;
+    gap: 8px !important;
+    margin-bottom: 12px !important;
+    width: 100% !important;
   }
 
   .stat-card {
-    padding: 12px !important;
-    gap: 10px !important;
+    padding: 10px !important;
+    gap: 8px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
   }
 
   .stat-icon {
-    font-size: 20px !important;
-    width: 40px !important;
-    height: 40px !important;
+    font-size: 18px !important;
+    width: 36px !important;
+    height: 36px !important;
     border-radius: 8px !important;
   }
 
   .stat-label {
-    font-size: 10px !important;
+    font-size: 9px !important;
   }
 
   .stat-value {
-    font-size: 24px !important;
+    font-size: 20px !important;
   }
 
   .glass-card {
-    padding: 16px !important;
+    padding: 12px !important;
+    margin-bottom: 12px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
   }
 
   .action-grid {
     grid-template-columns: 1fr !important;
-    gap: 10px !important;
+    gap: 8px !important;
   }
 
   .section-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-    margin-bottom: 16px;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 8px !important;
+    margin-bottom: 12px !important;
   }
 
   .section-header h2 {
-    font-size: 20px;
+    font-size: 18px !important;
   }
 
-  /* Table styling enhancements on mobile */
+  /* Dynamic Table Wrapping */
   .table-responsive {
-    width: 100%;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    margin-top: 6px !important;
+    border-radius: var(--radius-sm);
+  }
+
+  .data-table {
+    width: 100% !important;
+    min-width: 520px !important;
+  }
+
+  .data-table th, .data-table td {
+    padding: 6px 8px !important;
+    font-size: 11px !important;
+    white-space: nowrap !important;
   }
 
   .table-toolbar {
     flex-direction: column !important;
     align-items: stretch !important;
-    gap: 10px !important;
+    gap: 8px !important;
+    width: 100% !important;
   }
 
   .search-input {
     max-width: 100% !important;
     width: 100% !important;
+    box-sizing: border-box !important;
   }
 
   .filter-group {
     width: 100% !important;
-    justify-content: space-between;
+    justify-content: space-between !important;
   }
 
   .filter-group .form-select {
-    flex: 1;
-  }
-
-  .data-table th, .data-table td {
-    padding: 8px 10px;
-    font-size: 12px;
+    flex: 1 !important;
   }
 
   /* BOT CHECK & SCORING LAYOUT MOBILE STYLING */
   .botcheck-layout {
     grid-template-columns: 1fr !important;
-    gap: 16px !important;
+    gap: 12px !important;
+    width: 100% !important;
   }
 
   .botcheck-select-group {
     flex-direction: column !important;
     align-items: stretch !important;
-    gap: 10px !important;
+    gap: 8px !important;
+    width: 100% !important;
   }
 
   .botcheck-select-group > div {
@@ -1115,23 +1143,27 @@ body {
   .botcheck-select-group select {
     width: 100% !important;
     font-size: 14px !important;
-    padding: 12px !important;
-    min-height: 48px !important;
+    padding: 10px !important;
+    min-height: 46px !important;
+    box-sizing: border-box !important;
   }
 
   .scoring-layout {
     grid-template-columns: 1fr !important;
-    gap: 16px !important;
+    gap: 12px !important;
+    width: 100% !important;
   }
 
   .scoring-console {
-    gap: 16px !important;
+    gap: 12px !important;
+    width: 100% !important;
   }
 
   .console-header {
     flex-direction: column !important;
     align-items: flex-start !important;
-    gap: 10px !important;
+    gap: 8px !important;
+    width: 100% !important;
   }
 
   .arena-toggle {
@@ -1141,101 +1173,141 @@ body {
 
   .select-team-group select {
     font-size: 14px !important;
-    padding: 12px !important;
-    min-height: 48px !important;
+    padding: 10px !important;
+    min-height: 46px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
   }
 
-  .btn-step {
-    width: 52px !important;
-    height: 52px !important;
-    font-size: 22px !important;
+  .stopwatch-container {
+    width: 100% !important;
+    padding: 16px 10px !important;
+    box-sizing: border-box !important;
   }
 
   .stopwatch-digits {
-    font-size: 38px !important;
-    letter-spacing: 2px !important;
+    font-size: clamp(32px, 8vw, 44px) !important;
+    letter-spacing: 1px !important;
   }
 
   .stopwatch-controls {
     flex-direction: row !important;
-    flex-wrap: wrap;
-    gap: 8px !important;
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+    width: 100% !important;
   }
 
   .stopwatch-controls .btn {
-    flex: 1;
-    min-width: 90px;
-    padding: 12px 8px !important;
-    font-size: 13px !important;
-    min-height: 48px !important;
+    flex: 1 1 calc(33.33% - 6px) !important;
+    min-width: 80px !important;
+    padding: 10px 6px !important;
+    font-size: 12px !important;
+    min-height: 46px !important;
   }
 
   .penalty-grid {
     grid-template-columns: 1fr 1fr !important;
-    gap: 10px !important;
+    gap: 8px !important;
+    width: 100% !important;
+  }
+
+  .penalty-card {
+    padding: 10px !important;
+    gap: 6px !important;
   }
 
   .penalty-card.span-2 {
     grid-column: span 2 !important;
   }
 
+  .counter-ctrl {
+    width: 100% !important;
+    justify-content: space-between !important;
+  }
+
+  .btn-step {
+    width: 44px !important;
+    height: 44px !important;
+    font-size: 20px !important;
+  }
+
   .score-summary-bar {
     flex-direction: column !important;
     align-items: stretch !important;
-    gap: 10px !important;
-    text-align: center;
+    gap: 8px !important;
+    text-align: center !important;
+    width: 100% !important;
+    padding: 12px !important;
   }
 
   .dq-judge-row {
     flex-direction: column !important;
     align-items: stretch !important;
-    gap: 10px !important;
+    gap: 8px !important;
+    width: 100% !important;
   }
 
   .dq-judge-row .btn {
-    width: 100%;
-    min-height: 48px !important;
-    font-size: 15px !important;
+    width: 100% !important;
+    min-height: 46px !important;
+    font-size: 14px !important;
   }
 
   /* PARTICIPANT DASHBOARD MOBILE STYLING */
   .team-dash-header {
     flex-direction: column !important;
     align-items: flex-start !important;
-    gap: 12px !important;
+    gap: 10px !important;
+    width: 100% !important;
   }
 
   .team-dash-header div:last-child {
     text-align: left !important;
-    width: 100%;
+    width: 100% !important;
   }
 
   .team-roster-grid {
-    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)) !important;
-    gap: 8px !important;
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)) !important;
+    gap: 6px !important;
   }
 
   /* Modals responsiveness */
+  .modal-overlay {
+    padding: 10px !important;
+  }
+
   .modal-card {
-    padding: 16px !important;
+    padding: 14px 10px !important;
     width: 100% !important;
+    max-width: 100% !important;
     max-height: 92vh !important;
+    box-sizing: border-box !important;
   }
 
   .checklist-grid {
     grid-template-columns: 1fr !important;
-    max-height: 340px !important;
+    max-height: 320px !important;
     overflow-y: auto !important;
+    gap: 8px !important;
+  }
+
+  .checklist-item {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: 8px 10px !important;
+    gap: 8px !important;
   }
 
   .bracket-wrapper {
     overflow-x: auto !important;
     -webkit-overflow-scrolling: touch !important;
-    padding-bottom: 16px;
+    padding-bottom: 12px !important;
+    width: 100% !important;
   }
 
   .bracket-container {
-    min-width: 850px !important;
+    min-width: 800px !important;
   }
 }
 
@@ -1247,15 +1319,15 @@ body {
     grid-column: span 1 !important;
   }
   .brand-text h1 {
-    font-size: 18px !important;
+    font-size: 15px !important;
   }
   .brand-text span {
-    font-size: 9px !important;
+    font-size: 8px !important;
   }
   .logo-icon {
-    width: 36px !important;
-    height: 36px !important;
-    font-size: 18px !important;
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 16px !important;
   }
 }
 
@@ -1272,55 +1344,51 @@ body {
 
 @media (max-width: 768px) {
   .mobile-bottom-dock {
-    display: flex;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 60px;
-    background: rgba(5, 5, 5, 0.95);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border-top: 1px solid var(--border-glow);
-    z-index: 999;
-    justify-content: space-around;
-    align-items: center;
-    padding-bottom: env(safe-area-inset-bottom, 0px);
+    display: flex !important;
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    height: 60px !important;
+    background: rgba(5, 5, 5, 0.96) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    border-top: 1px solid var(--border-glow) !important;
+    z-index: 9999 !important;
+    justify-content: space-around !important;
+    align-items: center !important;
+    padding-bottom: env(safe-area-inset-bottom, 0px) !important;
   }
 
   .dock-btn {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background: transparent;
-    border: none;
-    color: var(--text-muted);
-    font-size: 10px;
-    font-family: var(--font-sans);
-    font-weight: 700;
-    gap: 3px;
-    padding: 6px 2px;
-    cursor: pointer;
-    transition: all 0.15s ease;
+    flex: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: transparent !important;
+    border: none !important;
+    color: var(--text-muted) !important;
+    font-size: 10px !important;
+    font-family: var(--font-sans) !important;
+    font-weight: 700 !important;
+    gap: 2px !important;
+    padding: 6px 2px !important;
+    cursor: pointer !important;
+    transition: all 0.15s ease !important;
+    touch-action: manipulation !important;
   }
 
   .dock-btn i {
-    font-size: 16px;
+    font-size: 16px !important;
   }
 
   .dock-btn.active {
-    color: var(--nothing-red);
-    text-shadow: 0 0 10px rgba(255, 42, 42, 0.5);
+    color: var(--nothing-red) !important;
+    text-shadow: 0 0 10px rgba(255, 42, 42, 0.6) !important;
   }
 
   .dock-btn.active i {
-    transform: translateY(-2px);
-  }
-
-  /* Padding bottom for app content so dock doesn't overlap UI */
-  .app-main {
-    padding-bottom: 74px !important;
+    transform: translateY(-2px) !important;
   }
 }
