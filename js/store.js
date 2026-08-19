@@ -50,6 +50,9 @@ function loadStore() {
 function saveStore() {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(storeState));
+    if (typeof syncDataToCloud === 'function') {
+      syncDataToCloud();
+    }
   } catch (e) {
     console.error("Failed to save store:", e);
   }

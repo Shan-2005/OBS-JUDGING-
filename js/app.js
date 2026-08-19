@@ -143,6 +143,7 @@ function switchTab(tabId) {
   if (tabId === 'botcheck') renderBotCheckView();
   if (tabId === 'judges') renderJudgesTable();
   if (tabId === 'teams') renderTeamsTable();
+  if (tabId === 'callorder') renderCallOrderView();
   if (tabId === 'round3') renderBracket();
   if (tabId === 'leaderboard') renderLeaderboards();
   if (tabId === 'participants') renderParticipantsView();
@@ -165,6 +166,7 @@ function refreshAllViews() {
   renderBotCheckView();
   renderJudgesTable();
   renderTeamsTable();
+  renderCallOrderView();
   populateScoringTeamSelects();
   populateJudgeSelectDropdowns();
   renderSubmittedRuns('r1');
@@ -453,6 +455,88 @@ function populateJudgeSelectDropdowns() {
 
   if (r1Select) r1Select.innerHTML = options;
   if (r2Select) r2Select.innerHTML = options;
+}
+
+/* ==========================================================================
+   ORDER OF CALL & HEAT SCHEDULE RENDERER
+   ========================================================================== */
+
+function renderCallOrderView() {
+  // Round 1 Call Order Table
+  const r1Tbody = document.getElementById('callorder-r1-tbody');
+  if (r1Tbody && typeof getRound1CallOrder === 'function') {
+    const queue = getRound1CallOrder();
+    r1Tbody.innerHTML = queue.map(q => {
+      let badgeClass = 'badge-info';
+      if (q.status === 'COMPLETED') badgeClass = 'badge-success';
+      if (q.status === 'IN ARENA') badgeClass = 'badge-warning';
+      if (q.status === 'ON DECK') badgeClass = 'badge-info';
+      if (q.status === 'DISQUALIFIED') badgeClass = 'badge-danger';
+
+      return `
+        <tr class="${q.status === 'IN ARENA' ? 'highlight-qualified' : ''}">
+          <td><strong>${q.slot}</strong></td>
+          <td><span class="badge badge-info">Arena ${q.arena}</span></td>
+          <td><strong>${q.teamId}</strong></td>
+          <td>${q.teamName}</td>
+          <td>${q.institution}</td>
+          <td><span class="badge ${badgeClass}">${q.status}</span></td>
+          <td><strong>${q.resultTime}</strong></td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  // Round 2 Call Order Table (Top 25)
+  const r2Tbody = document.getElementById('callorder-r2-tbody');
+  if (r2Tbody && typeof getRound2CallOrder === 'function') {
+    const queue = getRound2CallOrder();
+    if (queue.length === 0) {
+      r2Tbody.innerHTML = `<tr><td colspan="7" class="text-muted text-center">Complete Round 1 to generate Round 2 Heat Call Sheet</td></tr>`;
+    } else {
+      r2Tbody.innerHTML = queue.map(q => {
+        let badgeClass = 'badge-info';
+        if (q.status === 'COMPLETED') badgeClass = 'badge-success';
+        if (q.status === 'IN ARENA') badgeClass = 'badge-warning';
+        if (q.status === 'ON DECK') badgeClass = 'badge-info';
+        if (q.status === 'DISQUALIFIED') badgeClass = 'badge-danger';
+
+        return `
+          <tr class="${q.status === 'IN ARENA' ? 'highlight-qualified' : ''}">
+            <td><strong>Call #${q.callOrder}</strong></td>
+            <td><strong>Seed #${q.seed}</strong></td>
+            <td><strong>${q.teamId}</strong></td>
+            <td>${q.teamName}</td>
+            <td>${q.institution}</td>
+            <td><span class="badge ${badgeClass}">${q.status}</span></td>
+            <td><strong>${q.resultTime}</strong></td>
+          </tr>
+        `;
+      }).join('');
+    }
+  }
+
+  // Round 3 Heat Schedule Table
+  const r3Tbody = document.getElementById('callorder-r3-tbody');
+  if (r3Tbody && typeof getRound3MatchSchedule === 'function') {
+    const queue = getRound3MatchSchedule();
+    r3Tbody.innerHTML = queue.map(q => {
+      let badgeClass = 'badge-info';
+      if (q.status === 'COMPLETED') badgeClass = 'badge-success';
+      if (q.status === 'READY TO CALL') badgeClass = 'badge-warning';
+
+      return `
+        <tr>
+          <td><strong>Heat ${q.matchId}</strong></td>
+          <td>${q.stage}</td>
+          <td><strong>${q.teamADisp}</strong></td>
+          <td><strong>${q.teamBDisp}</strong></td>
+          <td><span class="badge ${badgeClass}">${q.status}</span></td>
+          <td class="text-cyan"><strong>${q.winnerDisp}</strong></td>
+        </tr>
+      `;
+    }).join('');
+  }
 }
 
 /* ==========================================================================

@@ -50,6 +50,9 @@
       <button class="nav-btn" data-tab="leaderboard">
         <span class="icon">🥇</span> Leaderboard
       </button>
+      <button class="nav-btn highlight" data-tab="callorder">
+        <span class="icon">📢</span> Order of Call
+      </button>
       <button class="nav-btn highlight" data-tab="participants">
         <span class="icon">📺</span> Participants View
       </button>
@@ -285,6 +288,89 @@
               <!-- Dynamic -->
             </tbody>
           </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. ORDER OF CALL & HEAT SCHEDULE ANNOUNCEMENT PAGE -->
+    <section id="view-callorder" class="tab-view">
+      <div class="section-header">
+        <div>
+          <h2>📢 Order of Call & Next Round Heat Schedule</h2>
+          <p>Official order of call for pit announcements, track queues, and team notifications.</p>
+        </div>
+        <div class="header-actions">
+          <button onclick="window.print()" class="btn btn-outline">🖨️ Print Call Sheet</button>
+        </div>
+      </div>
+
+      <div class="callorder-layout">
+        <!-- ROUND 1 CALL ORDER -->
+        <div class="glass-card full-width mb-4">
+          <h3>🏎️ Round 1 — Time Trial Order of Call (Arena A & B Queue)</h3>
+          <div class="table-responsive mt-3">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Slot / Queue #</th>
+                  <th>Arena</th>
+                  <th>Bot ID</th>
+                  <th>Team Name</th>
+                  <th>Institution</th>
+                  <th>Status</th>
+                  <th>Run Result</th>
+                </tr>
+              </thead>
+              <tbody id="callorder-r1-tbody">
+                <!-- Dynamic -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ROUND 2 CALL ORDER (TOP 25) -->
+        <div class="glass-card full-width mb-4">
+          <h3>⚡ Round 2 — Top 25 Qualified Heat Call Sheet</h3>
+          <div class="table-responsive mt-3">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Call Order #</th>
+                  <th>R1 Seed</th>
+                  <th>Bot ID</th>
+                  <th>Team Name</th>
+                  <th>Institution</th>
+                  <th>Status</th>
+                  <th>R2 Result</th>
+                </tr>
+              </thead>
+              <tbody id="callorder-r2-tbody">
+                <!-- Dynamic -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ROUND 3 MATCH CALL ORDER -->
+        <div class="glass-card full-width">
+          <h3>🏆 Round 3 — Knockout Heats Schedule (M1 to M9)</h3>
+          <div class="table-responsive mt-3">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Heat #</th>
+                  <th>Stage</th>
+                  <th>Team A</th>
+                  <th>Team B</th>
+                  <th>Match Status</th>
+                  <th>Winner / Result</th>
+                </tr>
+              </thead>
+              <tbody id="callorder-r3-tbody">
+                <!-- Dynamic -->
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </section>
@@ -1113,6 +1199,7 @@
   <script src="js/timer.js"></script>
   <script src="js/scoring.js"></script>
   <script src="js/bracket.js"></script>
+  <script src="js/callorder.js"></script>
   <script src="js/export.js"></script>
   <script src="js/app.js"></script>
 </body>
