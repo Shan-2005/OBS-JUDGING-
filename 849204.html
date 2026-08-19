@@ -551,11 +551,25 @@
               <button id="r1-btn-reset" class="btn btn-danger lg"><i class="fa-solid fa-rotate-left"></i> RESET</button>
             </div>
             <div class="manual-time-toggle">
-              <label><input type="checkbox" id="r1-manual-toggle"> Manual Time Override</label>
-              <div id="r1-manual-inputs" class="manual-inputs hidden">
-                <input type="number" id="r1-manual-min" placeholder="Min" min="0" max="59" class="num-input">m
-                <input type="number" id="r1-manual-sec" placeholder="Sec" min="0" max="59" class="num-input">s
-                <input type="number" id="r1-manual-ms" placeholder="MS" min="0" max="999" class="num-input">ms
+              <label class="manual-edit-label">
+                <input type="checkbox" id="r1-manual-toggle" onchange="toggleManualTimeEdit('r1')">
+                <span>✏️ Enable Manual Time Edit</span>
+              </label>
+              <div id="r1-manual-inputs" class="manual-inputs hidden" style="display:none;">
+                <div class="manual-input-box">
+                  <input type="number" id="r1-manual-min" placeholder="00" min="0" max="59" class="num-input" oninput="handleManualTimeInput('r1')">
+                  <span class="unit">m</span>
+                </div>
+                <span class="colon">:</span>
+                <div class="manual-input-box">
+                  <input type="number" id="r1-manual-sec" placeholder="00" min="0" max="59" class="num-input" oninput="handleManualTimeInput('r1')">
+                  <span class="unit">s</span>
+                </div>
+                <span class="colon">.</span>
+                <div class="manual-input-box">
+                  <input type="number" id="r1-manual-ms" placeholder="000" min="0" max="999" class="num-input" oninput="handleManualTimeInput('r1')">
+                  <span class="unit">ms</span>
+                </div>
               </div>
             </div>
           </div>
@@ -696,11 +710,25 @@
               <button id="r2-btn-reset" class="btn btn-danger lg"><i class="fa-solid fa-rotate-left"></i> RESET</button>
             </div>
             <div class="manual-time-toggle">
-              <label><input type="checkbox" id="r2-manual-toggle"> Manual Time Override</label>
-              <div id="r2-manual-inputs" class="manual-inputs hidden">
-                <input type="number" id="r2-manual-min" placeholder="Min" min="0" max="59" class="num-input">m
-                <input type="number" id="r2-manual-sec" placeholder="Sec" min="0" max="59" class="num-input">s
-                <input type="number" id="r2-manual-ms" placeholder="MS" min="0" max="999" class="num-input">ms
+              <label class="manual-edit-label">
+                <input type="checkbox" id="r2-manual-toggle" onchange="toggleManualTimeEdit('r2')">
+                <span>✏️ Enable Manual Time Edit</span>
+              </label>
+              <div id="r2-manual-inputs" class="manual-inputs hidden" style="display:none;">
+                <div class="manual-input-box">
+                  <input type="number" id="r2-manual-min" placeholder="00" min="0" max="59" class="num-input" oninput="handleManualTimeInput('r2')">
+                  <span class="unit">m</span>
+                </div>
+                <span class="colon">:</span>
+                <div class="manual-input-box">
+                  <input type="number" id="r2-manual-sec" placeholder="00" min="0" max="59" class="num-input" oninput="handleManualTimeInput('r2')">
+                  <span class="unit">s</span>
+                </div>
+                <span class="colon">.</span>
+                <div class="manual-input-box">
+                  <input type="number" id="r2-manual-ms" placeholder="000" min="0" max="999" class="num-input" oninput="handleManualTimeInput('r2')">
+                  <span class="unit">ms</span>
+                </div>
               </div>
             </div>
           </div>

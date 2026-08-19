@@ -698,9 +698,74 @@ body {
 }
 
 .stopwatch-controls { display: flex; gap: 14px; width: 100%; justify-content: center; }
-.manual-time-toggle { display: flex; flex-direction: column; align-items: center; gap: 8px; font-size: 13px; color: var(--text-muted); }
-.manual-inputs { display: flex; align-items: center; gap: 6px; }
-.num-input { width: 64px; background: #000; border: 1px solid var(--border-color); color: var(--nothing-red); padding: 8px; text-align: center; border-radius: 6px; font-family: var(--font-doto); font-size: 16px; font-weight: 700; }
+.manual-time-toggle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-top: 14px;
+  padding: 12px 16px;
+  background: rgba(255, 42, 42, 0.05);
+  border: 1px dashed rgba(255, 42, 42, 0.3);
+  border-radius: var(--radius-md);
+  width: 100%;
+}
+.manual-edit-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--nothing-red);
+  cursor: pointer;
+  user-select: none;
+}
+.manual-edit-label input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--nothing-red);
+  cursor: pointer;
+}
+.manual-inputs {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 6px;
+}
+.manual-input-box {
+  display: flex;
+  align-items: center;
+  background: #000;
+  border: 1.5px solid var(--nothing-red);
+  border-radius: 8px;
+  padding: 4px 8px;
+}
+.num-input {
+  width: 58px;
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  padding: 4px;
+  text-align: center;
+  font-family: var(--font-doto);
+  font-size: 20px;
+  font-weight: 900;
+  outline: none;
+}
+.manual-input-box .unit {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--text-muted);
+  margin-left: 2px;
+}
+.manual-inputs .colon {
+  font-family: var(--font-doto);
+  font-size: 22px;
+  font-weight: 900;
+  color: var(--nothing-red);
+}
 
 /* PENALTY COUNTER PAD */
 .penalty-pad-section h3 { font-size: 15px; font-weight: 800; margin-bottom: 12px; color: var(--nothing-red); letter-spacing: 0.5px; }
