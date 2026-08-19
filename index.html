@@ -397,6 +397,20 @@
         </div>
       </div>
 
+      <!-- ALL TEAMS ROSTER — Shown at page top so participants can find their Bot ID -->
+      <div class="glass-card full-width mb-4">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+          <div>
+            <h4 style="margin:0;">📋 All 58 Registered Teams</h4>
+            <p class="text-muted" style="font-size:12px;margin:4px 0 0;">Click your team name to load your personalized dashboard instantly.</p>
+          </div>
+          <input type="text" id="page-roster-search" class="form-input" placeholder="🔍 Filter teams..." style="width:220px;" oninput="renderTeamRosterGrid('page-team-roster', this.value)">
+        </div>
+        <div id="page-team-roster" class="team-roster-grid">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
       <!-- PERSONALIZED TEAM CARD (Rendered via JS) -->
       <div id="participant-personalized-card" class="mb-4">
         <!-- Rendered dynamically -->
@@ -903,7 +917,7 @@
 
   <!-- PARTICIPANT TEAM GATE MODAL -->
   <div id="modal-participant-gate" class="modal-overlay hidden">
-    <div class="modal-card">
+    <div class="modal-card" style="max-width:620px;">
       <div class="modal-header" style="border:none;padding-bottom:0;">
         <div>
           <span class="public-badge" style="margin-bottom:4px;display:inline-block;">📺 PARTICIPANT PORTAL</span>
@@ -911,18 +925,22 @@
         </div>
       </div>
       <div class="modal-body">
-        <p class="text-muted mb-4" style="font-size:14px;">Enter your <strong>Team Name</strong> or <strong>Bot ID</strong> to view your personalized dashboard — timings, queue status, tech check, and next round details.</p>
+        <p class="text-muted mb-3" style="font-size:14px;">Find your team below and click on it — or type your <strong>Team Name / Bot ID</strong> in the search box.</p>
+
         <form id="form-participant-gate">
           <div id="participant-gate-error" class="alert alert-warning hidden mb-3" style="font-size:13px;"></div>
           <div class="form-group">
-            <label>Team Name or Bot ID</label>
-            <input type="text" id="inp-participant-team-name" class="form-input lg" required placeholder="e.g. Python Riders or BOT-006" autocomplete="off">
-            <small class="text-muted">Your Bot ID was assigned during registration (BOT-001 to BOT-058)</small>
-          </div>
-          <div class="modal-footer mt-3">
-            <button type="submit" class="btn btn-primary lg" style="width:100%">🎯 View My Team Dashboard</button>
+            <div style="display:flex;gap:8px;">
+              <input type="text" id="inp-participant-team-name" class="form-input" required placeholder="🔍 Search Team Name or Bot ID (e.g. BOT-006)" autocomplete="off" style="flex:1;" oninput="renderTeamRosterGrid('gate-team-roster', this.value)">
+              <button type="submit" class="btn btn-primary">Find Me →</button>
+            </div>
           </div>
         </form>
+
+        <div style="margin-top:8px;margin-bottom:6px;font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;">All 58 Registered Teams — Click yours to continue:</div>
+        <div id="gate-team-roster" class="team-roster-grid" style="max-height:320px;overflow-y:auto;">
+          <!-- Populated by JS -->
+        </div>
       </div>
     </div>
   </div>

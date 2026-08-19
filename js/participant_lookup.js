@@ -12,26 +12,68 @@ function searchParticipantTeam(query) {
   );
 }
 
+// Renders the full team list grid for reference (shown in gate popup + page top)
+function renderTeamRosterGrid(containerId, filterQuery = '') {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+
+  const teams = storeState.teams || [];
+  const q = filterQuery.trim().toLowerCase();
+  const filtered = q
+    ? teams.filter(t => t.name.toLowerCase().includes(q) || t.id.toLowerCase().includes(q))
+    : teams;
+
+  if (filtered.length === 0) {
+    container.innerHTML = `<p class="text-muted" style="text-align:center;padding:12px;">No matching team found.</p>`;
+    return;
+  }
+
+  container.innerHTML = filtered.map(t => `
+    <div class="team-roster-chip" onclick="selectTeamFromRoster('${t.id}', '${t.name.replace(/'/g, "\\'")}')">
+      <span class="roster-botid">${t.id}</span>
+      <span class="roster-name">${t.name}</span>
+      <span class="roster-arena">Arena ${t.arena || 'A'}</span>
+    </div>
+  `).join('');
+}
+
+// Called when user clicks a team chip in the roster
+function selectTeamFromRoster(teamId, teamName) {
+  // If participant gate is open, fill and submit
+  const gateInp = document.getElementById('inp-participant-team-name');
+  const gateModal = document.getElementById('modal-participant-gate');
+  if (gateModal && !gateModal.classList.contains('hidden')) {
+    if (gateInp) gateInp.value = teamName;
+    sessionStorage.setItem('participant_team_name', teamName);
+    sessionStorage.setItem('participant_team_id', teamId);
+    gateModal.classList.add('hidden');
+    renderPersonalizedTeamDashboard(teamId);
+    return;
+  }
+  // Otherwise just render the dashboard directly
+  const searchInp = document.getElementById('part-team-search-inp');
+  if (searchInp) searchInp.value = teamName;
+  renderPersonalizedTeamDashboard(teamId);
+  // Scroll to dashboard
+  const card = document.getElementById('participant-personalized-card');
+  if (card) card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
 function renderPersonalizedTeamDashboard(teamId) {
   const container = document.getElementById('participant-personalized-card');
   if (!container) return;
 
   if (!teamId) {
-    container.innerHTML = `
-      <div class="glass-card text-center p-5">
-        <h3>🔍 Search Your Team / Bot ID</h3>
-        <p class="text-muted mb-4">Enter your Bot ID (e.g. <code>BOT-001</code>) or Team Name above to view your personalized schedule, timing results, tech check, and next round status.</p>
-      </div>
-    `;
+    container.innerHTML = '';
     return;
   }
 
   const team = storeState.teams.find(t => t.id === teamId);
   if (!team) {
     container.innerHTML = `
-      <div class="glass-card text-center p-5">
+      <div class="glass-card" style="text-align:center;padding:32px;">
         <h3 class="text-warning">⚠️ Team Not Found</h3>
-        <p class="text-muted mb-4">No registered team matching "<strong>${teamId}</strong>". Please check your Bot ID.</p>
+        <p class="text-muted mt-2">No registered team matching "<strong>${teamId}</strong>". Check your Bot ID from the list below.</p>
       </div>
     `;
     return;
@@ -43,8 +85,7 @@ function renderPersonalizedTeamDashboard(teamId) {
   const elig = team.eligibility || {};
 
   // Calculate Rank in Round 1
-  const r1Ranked = getRankedLeaderboard('round1');
-  const r1RankObj = r1Ranked.find(r => r.teamId === team.id);
+  const r1Ranked = typeof getRankedLeaderboard === 'function' ? getRankedLeaderboard('round1') : [];
   const r1RankIndex = r1Ranked.findIndex(r => r.teamId === team.id);
   const r1RankStr = r1RankIndex !== -1 ? `#${r1RankIndex + 1} of ${r1Ranked.length}` : 'Pending Run';
   const isTop25 = r1RankIndex !== -1 && r1RankIndex < 25 && !r1Run?.disqualified;
@@ -57,26 +98,29 @@ function renderPersonalizedTeamDashboard(teamId) {
     <div class="glass-card full-width personalized-team-card">
       <div class="team-dash-header mb-4">
         <div>
-          <span class="badge badge-info">Arena ${team.arena || 'A'} Slot</span>
+          <span class="badge badge-info">Arena ${team.arena || 'A'}</span>
           <h2 class="mt-1">${team.name} <span class="text-muted">(${team.id})</span></h2>
-          <p class="text-muted">${team.institution} — Members: ${(team.members || []).join(', ')}</p>
+          <p class="text-muted">${team.institution}</p>
         </div>
-        <div class="text-right">
-          <div class="status-pill mb-2">
-            ${elig.passed ? '<span class="badge badge-success lg">✅ TECH CHECK PASSED</span>' : '<span class="badge badge-danger lg">❌ TECH CHECK PENDING/FAILED</span>'}
-          </div>
-          <div>
-            ${att.status === 'Present' ? '<span class="badge badge-success">📌 Desk Check-In: PRESENT</span>' : '<span class="badge badge-warning">📌 Desk Check-In: ' + att.status + '</span>'}
-          </div>
+        <div style="text-align:right;">
+          ${elig.passed 
+            ? '<span class="badge badge-success lg">✅ TECH CHECK PASSED</span>' 
+            : '<span class="badge badge-warning lg">⏳ TECH CHECK PENDING</span>'}
+          <br><br>
+          ${att.status === 'Present' 
+            ? '<span class="badge badge-success">📌 CHECK-IN: PRESENT</span>' 
+            : `<span class="badge badge-warning">📌 CHECK-IN: ${att.status}</span>`}
+          <br><br>
+          <button onclick="changeParticipantTeam()" class="change-team-link">🔄 Not your team? Switch</button>
         </div>
       </div>
 
       <div class="stats-grid mb-4">
-        
+
         <div class="stat-card">
           <div class="stat-icon">⏱️</div>
           <div class="stat-info">
-            <span class="stat-label">Round 1 Raw Time</span>
+            <span class="stat-label">R1 Raw Time</span>
             <span class="stat-value">${r1Run ? formatMsToDisplay(r1Run.rawTimeMs) : '--:--.---'}</span>
           </div>
         </div>
@@ -84,23 +128,23 @@ function renderPersonalizedTeamDashboard(teamId) {
         <div class="stat-card">
           <div class="stat-icon">⚠️</div>
           <div class="stat-info">
-            <span class="stat-label">Round 1 Penalties</span>
-            <span class="stat-value text-warning">${r1Run ? '+' + r1Run.penaltySeconds + 's' : '+0s'}</span>
+            <span class="stat-label">R1 Penalties</span>
+            <span class="stat-value" style="color:var(--accent-gold)">${r1Run ? '+' + r1Run.penaltySeconds + 's' : '+0s'}</span>
           </div>
         </div>
 
         <div class="stat-card">
           <div class="stat-icon">🏎️</div>
           <div class="stat-info">
-            <span class="stat-label">Round 1 Final Time</span>
-            <span class="stat-value text-cyan">${r1Run ? (r1Run.disqualified ? 'DQ' : formatMsToDisplay(r1Run.finalTimeMs)) : '--:--.---'}</span>
+            <span class="stat-label">R1 Final Time</span>
+            <span class="stat-value" style="color:var(--primary-cyan)">${r1Run ? (r1Run.disqualified ? 'DQ' : formatMsToDisplay(r1Run.finalTimeMs)) : '--:--.---'}</span>
           </div>
         </div>
 
         <div class="stat-card">
           <div class="stat-icon">🥇</div>
           <div class="stat-info">
-            <span class="stat-label">Round 1 Leaderboard Rank</span>
+            <span class="stat-label">Leaderboard Rank</span>
             <span class="stat-value">${r1RankStr}</span>
           </div>
         </div>
@@ -108,43 +152,26 @@ function renderPersonalizedTeamDashboard(teamId) {
       </div>
 
       <div class="personalized-sections-grid">
-        
-        <!-- CALL SCHEDULE CARD -->
+
         <div class="sub-glass-card">
-          <h4>📢 Your Call Schedule & Queue Status</h4>
+          <h4>📢 Queue & Call Schedule</h4>
           <div class="mt-3">
-            <div class="info-row">
-              <span>Current Status:</span>
-              <strong class="text-cyan">${myQueueItem ? myQueueItem.status : 'Queued'}</strong>
-            </div>
-            <div class="info-row">
-              <span>Assigned Arena:</span>
-              <strong>Arena ${team.arena}</strong>
-            </div>
-            <div class="info-row">
-              <span>Queue Slot #:</span>
-              <strong>${myQueueItem ? myQueueItem.slot : '--'}</strong>
-            </div>
+            <div class="info-row"><span>Status:</span><strong style="color:var(--primary-cyan)">${myQueueItem ? myQueueItem.status : 'Awaiting Queue'}</strong></div>
+            <div class="info-row"><span>Arena:</span><strong>Arena ${team.arena || 'A'}</strong></div>
+            <div class="info-row"><span>Queue Slot:</span><strong>${myQueueItem ? '#' + myQueueItem.slot : 'TBA'}</strong></div>
           </div>
         </div>
 
-        <!-- NEXT ROUND ELIGIBILITY CARD -->
         <div class="sub-glass-card">
-          <h4>⚡ Round 2 Qualification Status</h4>
+          <h4>⚡ Round 2 Qualification</h4>
           <div class="mt-3">
             ${isTop25 ? `
-              <div class="alert alert-success">
-                🎉 <strong>QUALIFIED FOR ROUND 2!</strong> Your team is in the Top 25. Report to the main arena desk.
-              </div>
-            ` : (r1Run ? `
-              <div class="alert alert-warning">
-                Rank #${r1RankIndex + 1} — Did not qualify for Round 2 Top 25 cutoff.
-              </div>
+              <div class="alert alert-success">🎉 <strong>QUALIFIED FOR ROUND 2!</strong> You are in the Top 25. Report to the main arena desk.</div>
+            ` : r1Run ? `
+              <div class="alert alert-warning">Rank #${r1RankIndex + 1} — Did not reach the Top 25 cutoff.</div>
             ` : `
-              <div class="alert alert-info">
-                Complete your Round 1 Time Trial run to view qualification results.
-              </div>
-            `)}
+              <div class="alert alert-info">Complete your Round 1 time trial run to see your qualification status here.</div>
+            `}
           </div>
         </div>
 

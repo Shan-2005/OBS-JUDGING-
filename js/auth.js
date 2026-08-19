@@ -162,6 +162,12 @@ function changeParticipantTeam() {
 
 // Called when Participants tab is activated
 function initParticipantsView() {
+  // Always populate both rosters first
+  if (typeof renderTeamRosterGrid === 'function') {
+    renderTeamRosterGrid('page-team-roster');
+    renderTeamRosterGrid('gate-team-roster');
+  }
+
   const savedId = sessionStorage.getItem('participant_team_id');
   if (savedId) {
     if (typeof renderPersonalizedTeamDashboard === 'function') {
