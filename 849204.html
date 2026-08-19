@@ -15,7 +15,7 @@
   <!-- TOP NAVIGATION HEADER -->
   <header class="app-header" style="display:none;">
     <div class="header-brand">
-      <div class="logo-icon"><i class="fa-solid fa-flag-checkered"></i></div>
+      <div class="logo-icon"><img src="assets/logo_red.png" alt="RoboFest Logo" class="brand-logo-img"></div>
       <div class="brand-text">
         <h1>ROBOFEST 2.0</h1>
         <span>OBSTACLE RACE PORTAL</span>
@@ -881,8 +881,8 @@
   <div id="modal-judge-auth" class="modal-overlay hidden" style="display:none;">
     <div class="modal-card" style="max-width:420px;">
       <div class="modal-header" style="border:none;padding-bottom:0;justify-content:center;flex-direction:column;align-items:center;text-align:center;">
-        <div class="judge-auth-icon" style="font-size:48px;margin-bottom:8px;color:var(--primary);"><i class="fa-solid fa-shield-halved"></i></div>
-        <h3 style="margin:0;">Official Arena Console</h3>
+        <div class="judge-auth-icon" style="margin-bottom:12px;"><img src="assets/logo_red.png" alt="RoboFest Logo" style="width:64px;height:64px;object-fit:contain;filter:drop-shadow(0 0 10px rgba(255,42,42,0.6));"></div>
+        <h3 style="margin:0;font-family:var(--font-doto);letter-spacing:1px;">Official Arena Console</h3>
         <p class="text-muted" style="font-size:12px;margin-top:4px;">RoboFest 2.0 — Authorised Personnel Only</p>
       </div>
       <div class="modal-body">
@@ -1258,54 +1258,5 @@
   <script src="js/auth.js"></script>
   <script src="js/participant_lookup.js"></script>
   <script src="js/app.js"></script>
-
-  <!-- SELF-CONTAINED AUTH GATE -->
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      var modal = document.getElementById('modal-judge-auth');
-      var header = document.querySelector('.app-header');
-      var main   = document.querySelector('.app-main');
-
-      function showGate() {
-        if (modal)  { modal.classList.remove('hidden'); modal.style.display = 'flex'; }
-        if (header) header.style.display = 'none';
-        if (main)   main.style.display   = 'none';
-      }
-
-      function unlock() {
-        sessionStorage.setItem('judge_authenticated', 'true');
-        sessionStorage.setItem('active_judge_name', 'Officiating Judge');
-        sessionStorage.setItem('active_judge_arena', 'All');
-        if (modal) modal.remove();  // fully destroy — no leftover backdrop
-        if (header) { header.style.display = 'flex'; }
-        if (main)   { main.style.display   = 'block'; }
-        if (typeof switchTab === 'function') switchTab('dashboard');
-        if (typeof updateJudgeHeaderBadge === 'function') updateJudgeHeaderBadge();
-      }
-
-      if (sessionStorage.getItem('judge_authenticated') === 'true') {
-        unlock();
-      } else {
-        showGate();
-      }
-
-      var form = document.getElementById('form-judge-auth');
-      if (form) {
-        form.onsubmit = function(e) {
-          e.preventDefault();
-          var u = (document.getElementById('inp-judge-username').value || '').trim().toLowerCase();
-          var p = (document.getElementById('inp-judge-password').value || '');
-          if (u === 'obsrace26' && p === 'motoroil') {
-            unlock();
-          } else {
-            var err = document.getElementById('auth-error-msg');
-            if (err) { err.textContent = '❌ Wrong credentials.'; err.style.cssText = 'display:block;color:#ef476f;margin-top:8px;'; }
-            document.getElementById('inp-judge-password').value = '';
-          }
-          return false;
-        };
-      }
-    });
-  </script>
 </body>
 </html>

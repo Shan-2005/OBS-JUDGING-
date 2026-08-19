@@ -951,27 +951,34 @@ body {
   }
 }
 
+.brand-logo-img {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 8px rgba(255, 42, 42, 0.7));
+}
+
 /* Mobile Devices (Smartphones & Portrait Tablets) */
 @media (max-width: 768px) {
   .app-header {
     flex-direction: column !important;
     align-items: stretch !important;
-    padding: 12px !important;
-    gap: 12px !important;
+    padding: 6px 12px !important;
+    gap: 6px !important;
   }
   
   .header-brand {
     justify-content: space-between;
     width: 100%;
-    flex-wrap: wrap;
-    gap: 10px;
+    flex-wrap: nowrap;
+    gap: 8px;
   }
   
   .nav-tabs {
     width: 100% !important;
     overflow-x: auto !important;
     white-space: nowrap !important;
-    padding: 6px !important;
+    padding: 4px !important;
     display: flex !important;
     -webkit-overflow-scrolling: touch;
     -ms-overflow-style: none !important;
@@ -983,22 +990,13 @@ body {
   }
 
   .nav-btn {
-    padding: 8px 12px !important;
-    font-size: 12px !important;
-    gap: 5px !important;
+    padding: 6px 10px !important;
+    font-size: 11px !important;
+    gap: 4px !important;
   }
   
   .header-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 8px;
-    width: 100%;
-  }
-
-  .header-actions .btn {
-    flex: 1;
-    font-size: 12px;
-    padding: 8px 12px;
+    display: none !important;
   }
 
   .app-main {

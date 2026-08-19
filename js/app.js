@@ -356,14 +356,14 @@ function renderAttendanceTable() {
   tbody.innerHTML = filtered.map(t => {
     const att = storeState.attendance[t.id] || { status: 'Absent', checkInTime: null, membersPresent: 0 };
     
-    let statusBadge = `<span class="badge badge-danger">ABSENT</span>`;
-    if (att.status === 'Present') statusBadge = `<span class="badge badge-success">PRESENT</span>`;
-    if (att.status === 'Late') statusBadge = `<span class="badge badge-warning">LATE</span>`;
+    let statusBadge = `<span class="badge badge-danger badge-status">ABSENT</span>`;
+    if (att.status === 'Present') statusBadge = `<span class="badge badge-success badge-status">PRESENT</span>`;
+    if (att.status === 'Late') statusBadge = `<span class="badge badge-warning badge-status">LATE</span>`;
 
     const timeStr = att.checkInTime ? new Date(att.checkInTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '--:--';
 
     return `
-      <tr>
+      <tr data-team-id="${t.id}">
         <td><strong>${t.id}</strong></td>
         <td>${t.name}</td>
         <td>${t.institution}</td>
@@ -372,7 +372,7 @@ function renderAttendanceTable() {
           <input type="number" min="0" max="4" value="${att.membersPresent}" class="num-input sm" onchange="updateAttendanceMembers('${t.id}', this.value)">
         </td>
         <td>${statusBadge}</td>
-        <td>${timeStr}</td>
+        <td class="checkin-time-cell">${timeStr}</td>
         <td>
           <select class="form-select sm" onchange="updateAttendanceStatus('${t.id}', this.value)">
             <option value="Present" ${att.status === 'Present' ? 'selected' : ''}>Present</option>
@@ -392,7 +392,23 @@ function updateAttendanceStatus(teamId, status) {
   storeState.attendance[teamId].status = status;
   storeState.attendance[teamId].checkInTime = status !== 'Absent' ? Date.now() : null;
   saveStore();
-  renderAttendanceTable();
+
+  const row = document.querySelector(`#att-tbody tr[data-team-id="${teamId}"]`);
+  if (row) {
+    const badgeEl = row.querySelector('.badge-status');
+    const timeEl = row.querySelector('.checkin-time-cell');
+    if (badgeEl) {
+      if (status === 'Present') { badgeEl.className = 'badge badge-success badge-status'; badgeEl.textContent = 'PRESENT'; }
+      else if (status === 'Late') { badgeEl.className = 'badge badge-warning badge-status'; badgeEl.textContent = 'LATE'; }
+      else { badgeEl.className = 'badge badge-danger badge-status'; badgeEl.textContent = 'ABSENT'; }
+    }
+    if (timeEl) {
+      timeEl.textContent = status !== 'Absent' && storeState.attendance[teamId].checkInTime 
+        ? new Date(storeState.attendance[teamId].checkInTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) 
+        : '--:--';
+    }
+  }
+
   renderDashboardStats();
   renderTeamsTable();
   populateScoringTeamSelects();
@@ -405,7 +421,6 @@ function updateAttendanceMembers(teamId, count) {
   }
   storeState.attendance[teamId].membersPresent = parseInt(count, 10);
   saveStore();
-  renderAttendanceTable();
   renderDashboardStats();
   renderParticipantsView();
 }
@@ -613,12 +628,22 @@ function populateJudgeSelectDropdowns() {
   const r1Select = document.getElementById('r1-judge-name');
   const r2Select = document.getElementById('r2-judge-name');
   const judges = storeState.judges || [];
+  const activeJudgeName = typeof getActiveJudgeName === 'function' ? getActiveJudgeName() : 'Officiating Judge';
 
   const options = `<option value="">-- Select Officiating Judge --</option>` +
-    judges.map(j => `<option value="${j.name}">${j.name} (${j.role} - Arena ${j.assignedArena})</option>`).join('');
+    judges.map(j => {
+      const isSel = j.name === activeJudgeName || judges.length === 1;
+      return `<option value="${j.name}" ${isSel ? 'selected' : ''}>${j.name} (${j.role} - Arena ${j.assignedArena})</option>`;
+    }).join('');
 
-  if (r1Select) r1Select.innerHTML = options;
-  if (r2Select) r2Select.innerHTML = options;
+  if (r1Select) {
+    r1Select.innerHTML = options;
+    if (!r1Select.value && judges.length > 0) r1Select.value = judges[0].name;
+  }
+  if (r2Select) {
+    r2Select.innerHTML = options;
+    if (!r2Select.value && judges.length > 0) r2Select.value = judges[0].name;
+  }
 }
 
 /* ==========================================================================
@@ -878,41 +903,29 @@ function populateScoringTeamSelects() {
   const r1Select = document.getElementById('r1-team-select');
   const r2Select = document.getElementById('r2-team-select');
 
-  // R1 eligible: Present (Present/Late) AND passed eligibility_r1
-  const r1Eligible = storeState.teams.filter(t => {
-    const att = storeState.attendance[t.id] || { status: 'Absent' };
-    const isPresent = att.status === 'Present' || att.status === 'Late';
-    const passedTech = t.eligibility_r1 && t.eligibility_r1.passed;
-    return isPresent && passedTech;
-  });
-
   if (r1Select) {
     const currentVal = r1Select.value;
-    r1Select.innerHTML = `<option value="">-- Select Eligible Team --</option>` +
-      r1Eligible.map(t => `<option value="${t.id}">${t.id} — ${t.name} (${t.institution}) [Arena ${t.arena}]</option>`).join('');
-    if (currentVal && r1Eligible.some(t => t.id === currentVal)) {
+    const teams = storeState.teams || [];
+    r1Select.innerHTML = `<option value="">-- Select Team to Score --</option>` +
+      teams.map(t => {
+        const passedTech = t.eligibility_r1 && t.eligibility_r1.passed;
+        return `<option value="${t.id}">${t.id} — ${t.name} (Arena ${t.arena || 'A'})${passedTech ? ' [Tech Passed]' : ''}</option>`;
+      }).join('');
+    if (currentVal && teams.some(t => t.id === currentVal)) {
       r1Select.value = currentVal;
     }
   }
 
-  // R2 eligible: Present (Present/Late) AND passed eligibility_r2 AND placed in R1 Top 25
-  const r1Ranked = getRankedLeaderboard('round1');
+  // R2 eligible: Top 25 from Round 1
+  const r1Ranked = typeof getRankedLeaderboard === 'function' ? getRankedLeaderboard('round1') : [];
   const top25 = r1Ranked.filter(r => !r.disqualified).slice(0, 25);
   
-  const r2Eligible = top25.filter(r => {
-    const t = storeState.teams.find(team => team.id === r.teamId);
-    if (!t) return false;
-    const att = storeState.attendance[t.id] || { status: 'Absent' };
-    const isPresent = att.status === 'Present' || att.status === 'Late';
-    const passedTech = t.eligibility_r2 && t.eligibility_r2.passed;
-    return isPresent && passedTech;
-  });
-
   if (r2Select) {
     const currentVal = r2Select.value;
-    r2Select.innerHTML = `<option value="">-- Select R2 Qualified Team (Top 25) --</option>` +
-      r2Eligible.map((r, i) => `<option value="${r.teamId}">#${i+1} ${r.teamId} — ${r.teamName}</option>`).join('');
-    if (currentVal && r2Eligible.some(r => r.teamId === currentVal)) {
+    const list = top25.length > 0 ? top25 : (storeState.teams || []).slice(0, 25).map((t, idx) => ({ teamId: t.id, teamName: t.name }));
+    r2Select.innerHTML = `<option value="">-- Choose R2 Qualified Team --</option>` +
+      list.map((r, i) => `<option value="${r.teamId}">#${i+1} ${r.teamId} — ${r.teamName}</option>`).join('');
+    if (currentVal && list.some(r => r.teamId === currentVal)) {
       r2Select.value = currentVal;
     }
   }
