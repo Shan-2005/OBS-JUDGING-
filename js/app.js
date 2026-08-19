@@ -151,6 +151,23 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function switchTab(tabId) {
+  // Security Guard: Restrict judging tabs to authenticated judges only
+  if (tabId !== 'participants' && typeof isJudgeAuthenticated === 'function' && !isJudgeAuthenticated()) {
+    showJudgeAuthModal(tabId);
+    // Force stay on participants tab if unauthenticated
+    if (window.location.hash !== '#participants') {
+      history.replaceState(null, null, '#participants');
+    }
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-view').forEach(v => v.classList.remove('active'));
+    const pBtn = document.querySelector(`.nav-btn[data-tab="participants"]`);
+    const pView = document.getElementById(`view-participants`);
+    if (pBtn) pBtn.classList.add('active');
+    if (pView) pView.classList.add('active');
+    renderParticipantsView();
+    return;
+  }
+
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
   document.querySelectorAll('.tab-view').forEach(v => v.classList.remove('active'));
 
@@ -181,6 +198,9 @@ function handleHashRouting() {
     if (['dashboard', 'attendance', 'botcheck', 'judges', 'teams', 'callorder', 'round1', 'round2', 'round3', 'leaderboard', 'participants'].includes(hash)) {
       switchTab(hash);
     }
+  } else if (typeof isJudgeAuthenticated === 'function' && !isJudgeAuthenticated()) {
+    // Default unauthenticated visitors directly to participants portal
+    switchTab('participants');
   }
 }
 

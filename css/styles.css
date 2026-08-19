@@ -628,3 +628,16 @@ body {
   .print-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
   .print-table th, .print-table td { border: 1px solid #000; padding: 8px; font-size: 12px; color: #000; }
 }
+
+/* JUDGE LOCKED NAVIGATION BADGE */
+.nav-btn.judge-locked-btn {
+  opacity: 0.6;
+  position: relative;
+}
+
+.nav-btn.judge-locked-btn::after {
+  content: '🔒';
+  font-size: 10px;
+  margin-left: 2px;
+}
+
