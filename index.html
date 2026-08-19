@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>RoboFest 2.0 — Official Participant Portal</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@500;700;800&family=Rajdhani:wght@600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Doto:wght@400;600;700;800;900&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -53,12 +53,12 @@
 
       <!-- ALL TEAMS ROSTER — Shown at page top so participants can find their Bot ID -->
       <div class="glass-card full-width mb-4">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+        <div class="table-toolbar" style="margin-bottom:12px;">
           <div>
             <h4 style="margin:0;"><i class="fa-solid fa-list-check"></i> All 58 Registered Teams</h4>
             <p class="text-muted" style="font-size:12px;margin:4px 0 0;">Click your team name to load your personalized dashboard instantly.</p>
           </div>
-          <input type="text" id="page-roster-search" class="form-input" placeholder="Filter teams..." style="width:220px;" oninput="renderTeamRosterGrid('page-team-roster', this.value)">
+          <input type="text" id="page-roster-search" class="form-input search-input" placeholder="Filter teams..." style="max-width:220px;" oninput="renderTeamRosterGrid('page-team-roster', this.value)">
         </div>
         <div id="page-team-roster" class="team-roster-grid">
           <!-- Populated by JS -->

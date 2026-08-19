@@ -218,7 +218,12 @@ function switchTab(tabId) {
   const btn = document.querySelector(`.nav-btn[data-tab="${targetId}"]`);
   const view = document.getElementById(`view-${targetId}`);
 
-  if (btn) btn.classList.add('active');
+  if (btn) {
+    btn.classList.add('active');
+    try {
+      btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    } catch (e) {}
+  }
   if (view) view.classList.add('active');
 
   // Update URL hash without scroll jumping
