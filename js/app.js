@@ -592,7 +592,10 @@ function openJudgeModal(judgeId = null) {
     document.getElementById('inp-judge-phone').value = "";
   }
 
-  modal.classList.remove('hidden');
+  if (modal) {
+    modal.classList.remove('hidden');
+    modal.style.display = 'flex';
+  }
 }
 
 function handleJudgeFormSubmit(e) {
@@ -874,7 +877,10 @@ function openTeamModal(teamId = null) {
     document.getElementById('inp-arena').value = "A";
   }
 
-  modal.classList.remove('hidden');
+  if (modal) {
+    modal.classList.remove('hidden');
+    modal.style.display = 'flex';
+  }
 }
 
 function handleTeamFormSubmit(e) {
@@ -1139,7 +1145,11 @@ function openMatchDecisionModal(matchId) {
   document.getElementById('r3-selected-winner-id').value = match.winner || "";
   document.getElementById('r3-winner-display-name').value = match.winner ? getTeamDisplayName(match.winner) : "";
 
-  document.getElementById('modal-match-judge').classList.remove('hidden');
+  const modal = document.getElementById('modal-match-judge');
+  if (modal) {
+    modal.classList.remove('hidden');
+    modal.style.display = 'flex';
+  }
 }
 
 function selectMatchWinner(slot) {

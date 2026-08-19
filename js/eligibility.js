@@ -42,7 +42,11 @@ function openEligibilityModal(teamId, roundKey) {
     if (chk) chk.onchange = updateEligibilityModalBanner;
   });
 
-  document.getElementById('modal-eligibility').classList.remove('hidden');
+  const modal = document.getElementById('modal-eligibility');
+  if (modal) {
+    modal.classList.remove('hidden');
+    modal.style.display = 'flex';
+  }
 }
 
 function updateEligibilityModalBanner() {
