@@ -1,126 +1,189 @@
 /* ==========================================================================
-   ROBOFEST 2.0 - JUDGE SINGLE CREDENTIAL AUTHENTICATION GATE & ACCESS GUARD
+   ROBOFEST 2.0 - JUDGE CREDENTIAL AUTH & PARTICIPANT TEAM GATE
    ========================================================================== */
 
-const JUDGE_PASSCODE = "ROBOFEST2026"; // Default passcode for judging team
+// ─── JUDGE CREDENTIALS ─────────────────────────────────────────────────────
+// Add more judge accounts as needed
+const JUDGE_ACCOUNTS = [
+  { username: "headjudge",  password: "Robo@2026",    name: "Head Referee",    arena: "All" },
+  { username: "judgeA",     password: "ArenaA@2026",  name: "Arena A Judge",   arena: "A" },
+  { username: "judgeB",     password: "ArenaB@2026",  name: "Arena B Judge",   arena: "B" },
+  { username: "techinspect",password: "TechObs@2026", name: "Tech Inspector",  arena: "All" },
+  { username: "admin",      password: "Admin@2026",   name: "Admin / Organiser", arena: "All" }
+];
 
+// ─── AUTH STATE ─────────────────────────────────────────────────────────────
 function isJudgeAuthenticated() {
   return sessionStorage.getItem('judge_authenticated') === 'true';
 }
-
 function getActiveJudgeName() {
-  return sessionStorage.getItem('active_judge_name') || "Officiating Referee";
+  return sessionStorage.getItem('active_judge_name') || "Judge";
+}
+function getActiveJudgeArena() {
+  return sessionStorage.getItem('active_judge_arena') || "All";
 }
 
-function checkJudgeAuth() {
-  if (!isJudgeAuthenticated()) {
-    showJudgeAuthModal();
-    return false;
-  } else {
-    updateJudgeHeaderBadge();
-    return true;
-  }
-}
-
-function showJudgeAuthModal(requestedTab = null) {
+// ─── JUDGE LOGIN MODAL ──────────────────────────────────────────────────────
+function showJudgeAuthModal(requestedTab = 'dashboard') {
   const modal = document.getElementById('modal-judge-auth');
-  if (modal) {
-    document.getElementById('inp-passcode').value = "";
-    document.getElementById('inp-judge-login-name').value = "";
-    document.getElementById('auth-error-msg').classList.add('hidden');
-    if (requestedTab) {
-      modal.setAttribute('data-requested-tab', requestedTab);
-    } else {
-      modal.removeAttribute('data-requested-tab');
-    }
-    modal.classList.remove('hidden');
-  }
+  if (!modal) return;
+  modal.setAttribute('data-requested-tab', requestedTab);
+  document.getElementById('inp-judge-username').value = '';
+  document.getElementById('inp-judge-password').value = '';
+  document.getElementById('auth-error-msg').textContent = '';
+  document.getElementById('auth-error-msg').classList.add('hidden');
+  modal.classList.remove('hidden');
+  setTimeout(() => document.getElementById('inp-judge-username').focus(), 100);
 }
 
 function handleJudgeLoginSubmit(e) {
   e.preventDefault();
-  const passcode = document.getElementById('inp-passcode').value.trim();
-  const judgeName = document.getElementById('inp-judge-login-name').value.trim();
+  const username = document.getElementById('inp-judge-username').value.trim().toLowerCase();
+  const password = document.getElementById('inp-judge-password').value;
   const errorMsg = document.getElementById('auth-error-msg');
 
-  if (passcode !== JUDGE_PASSCODE && passcode !== "JUDGE2026") {
-    errorMsg.textContent = "❌ Invalid Passcode! Please enter official judge credential.";
+  const account = JUDGE_ACCOUNTS.find(
+    a => a.username.toLowerCase() === username && a.password === password
+  );
+
+  if (!account) {
+    errorMsg.textContent = "❌ Invalid username or password. Contact the organiser if locked out.";
     errorMsg.classList.remove('hidden');
+    document.getElementById('inp-judge-password').value = '';
     return;
   }
 
-  if (!judgeName) {
-    errorMsg.textContent = "❌ Please enter your full Name / Referee ID.";
-    errorMsg.classList.remove('hidden');
-    return;
-  }
-
+  // Store session
   sessionStorage.setItem('judge_authenticated', 'true');
-  sessionStorage.setItem('active_judge_name', judgeName);
+  sessionStorage.setItem('active_judge_name', account.name);
+  sessionStorage.setItem('active_judge_arena', account.arena);
 
-  const modal = document.getElementById('modal-judge-auth');
-  const reqTab = modal.getAttribute('data-requested-tab') || 'dashboard';
-  modal.classList.add('hidden');
-
+  document.getElementById('modal-judge-auth').classList.add('hidden');
   updateJudgeHeaderBadge();
   enforceJudgeNavVisibility();
 
-  if (typeof switchTab === 'function') {
-    switchTab(reqTab);
-  }
-
-  alert(`Welcome ${judgeName}! Judge Portal unlocked.`);
+  const reqTab = document.getElementById('modal-judge-auth').getAttribute('data-requested-tab') || 'dashboard';
+  if (typeof switchTab === 'function') switchTab(reqTab);
 }
 
 function logoutJudge() {
-  if (confirm("Lock Judge Portal and switch to Participant View?")) {
+  if (confirm(`Log out ${getActiveJudgeName()} and return to Participant View?`)) {
     sessionStorage.removeItem('judge_authenticated');
     sessionStorage.removeItem('active_judge_name');
+    sessionStorage.removeItem('active_judge_arena');
     updateJudgeHeaderBadge();
     enforceJudgeNavVisibility();
-    if (typeof switchTab === 'function') {
-      switchTab('participants');
-    }
+    if (typeof switchTab === 'function') switchTab('participants');
   }
 }
 
+// ─── NAV GUARD ──────────────────────────────────────────────────────────────
 function enforceJudgeNavVisibility() {
-  const judgeTabs = document.querySelectorAll('.nav-btn[data-tab]:not([data-tab="participants"])');
   const isAuth = isJudgeAuthenticated();
-
-  judgeTabs.forEach(btn => {
+  document.querySelectorAll('.nav-btn[data-tab]').forEach(btn => {
+    const tab = btn.getAttribute('data-tab');
+    if (tab === 'participants') return; // Always visible
     if (isAuth) {
       btn.classList.remove('judge-locked-btn');
-      btn.title = "";
+      btn.title = '';
     } else {
       btn.classList.add('judge-locked-btn');
-      btn.title = "🔒 Judge Passcode Required";
+      btn.title = '🔒 Judge Login Required';
     }
   });
 }
 
+// ─── HEADER BADGE ───────────────────────────────────────────────────────────
 function updateJudgeHeaderBadge() {
   const badge = document.getElementById('judge-session-badge');
-  if (badge) {
-    if (isJudgeAuthenticated()) {
-      badge.innerHTML = `
-        <span class="badge badge-success">👨‍⚖️ ${getActiveJudgeName()}</span>
-        <button onclick="logoutJudge()" class="btn btn-danger-ghost sm">🔒 Lock Console</button>
-      `;
-    } else {
-      badge.innerHTML = `
-        <span class="badge badge-secondary mr-2">👁️ Participant View</span>
-        <button onclick="showJudgeAuthModal('dashboard')" class="btn btn-warning sm">🔑 Judge Login</button>
-      `;
-    }
+  if (!badge) return;
+  if (isJudgeAuthenticated()) {
+    const arena = getActiveJudgeArena();
+    badge.innerHTML = `
+      <span class="badge badge-success">👨‍⚖️ ${getActiveJudgeName()}${arena !== 'All' ? ` · Arena ${arena}` : ''}</span>
+      <button onclick="logoutJudge()" class="btn btn-danger-ghost sm ml-2">🔒 Logout</button>
+    `;
+  } else {
+    badge.innerHTML = `
+      <span class="badge badge-secondary mr-2">👁️ Participant View</span>
+      <button onclick="showJudgeAuthModal('dashboard')" class="btn btn-warning sm">🔑 Judge Login</button>
+    `;
   }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  const authForm = document.getElementById('form-judge-auth');
-  if (authForm) {
-    authForm.addEventListener('submit', handleJudgeLoginSubmit);
+// ─── PARTICIPANT TEAM GATE ───────────────────────────────────────────────────
+function getParticipantTeamName() {
+  return sessionStorage.getItem('participant_team_name') || null;
+}
+
+function showParticipantTeamGate() {
+  const modal = document.getElementById('modal-participant-gate');
+  if (modal) {
+    document.getElementById('inp-participant-team-name').value = '';
+    document.getElementById('participant-gate-error').classList.add('hidden');
+    modal.classList.remove('hidden');
+    setTimeout(() => document.getElementById('inp-participant-team-name').focus(), 100);
   }
+}
+
+function handleParticipantGateSubmit(e) {
+  e.preventDefault();
+  const teamName = document.getElementById('inp-participant-team-name').value.trim();
+  const errorEl = document.getElementById('participant-gate-error');
+
+  if (!teamName) {
+    errorEl.textContent = "Please enter your Team Name or Bot ID.";
+    errorEl.classList.remove('hidden');
+    return;
+  }
+
+  // Search for matching team
+  const team = typeof searchParticipantTeam === 'function' ? searchParticipantTeam(teamName) : null;
+
+  if (!team) {
+    errorEl.textContent = `⚠️ No team found for "${teamName}". Check your Bot ID or Team Name with the organiser desk.`;
+    errorEl.classList.remove('hidden');
+    return;
+  }
+
+  // Save to session
+  sessionStorage.setItem('participant_team_name', team.name);
+  sessionStorage.setItem('participant_team_id', team.id);
+
+  document.getElementById('modal-participant-gate').classList.add('hidden');
+
+  // Show personalized dashboard
+  if (typeof renderPersonalizedTeamDashboard === 'function') {
+    renderPersonalizedTeamDashboard(team.id);
+  }
+}
+
+function changeParticipantTeam() {
+  sessionStorage.removeItem('participant_team_name');
+  sessionStorage.removeItem('participant_team_id');
+  showParticipantTeamGate();
+}
+
+// Called when Participants tab is activated
+function initParticipantsView() {
+  const savedId = sessionStorage.getItem('participant_team_id');
+  if (savedId) {
+    if (typeof renderPersonalizedTeamDashboard === 'function') {
+      renderPersonalizedTeamDashboard(savedId);
+    }
+  } else {
+    showParticipantTeamGate();
+  }
+}
+
+// ─── INIT ────────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  const judgeForm = document.getElementById('form-judge-auth');
+  if (judgeForm) judgeForm.addEventListener('submit', handleJudgeLoginSubmit);
+
+  const partForm = document.getElementById('form-participant-gate');
+  if (partForm) partForm.addEventListener('submit', handleParticipantGateSubmit);
+
   updateJudgeHeaderBadge();
   enforceJudgeNavVisibility();
 });

@@ -876,19 +876,51 @@
         <h3>🔒 Judge Portal Security Login</h3>
       </div>
       <div class="modal-body">
+        <div class="judge-auth-branding">
+          <div class="judge-auth-icon">🏁</div>
+          <p class="text-muted" style="font-size:13px;margin-top:8px;">RoboFest 2.0 — Official Judging Console</p>
+        </div>
         <form id="form-judge-auth">
           <div id="auth-error-msg" class="alert alert-danger hidden mb-3"></div>
           <div class="form-group">
-            <label>Judge Credential Passcode *</label>
-            <input type="password" id="inp-passcode" class="form-input lg" required placeholder="Enter Official Judge Passcode">
-            <small class="text-muted">Default Passcode: <code>ROBOFEST2026</code></small>
+            <label>Username</label>
+            <input type="text" id="inp-judge-username" class="form-input lg" required autocomplete="username" placeholder="e.g. judgeA">
           </div>
-          <div class="form-group mt-3">
-            <label>Officiating Judge / Referee Name *</label>
-            <input type="text" id="inp-judge-login-name" class="form-input lg" required placeholder="e.g. Dr. A. Sharma">
+          <div class="form-group">
+            <label>Password</label>
+            <div style="position:relative;">
+              <input type="password" id="inp-judge-password" class="form-input lg" required autocomplete="current-password" placeholder="Enter your judge password" style="width:100%">
+            </div>
           </div>
           <div class="modal-footer mt-4">
-            <button type="submit" class="btn btn-primary lg btn-block">🔓 Unlock Judging Console</button>
+            <button type="submit" class="btn btn-primary lg" style="width:100%">🔓 Access Judging Console</button>
+          </div>
+          <p class="text-muted text-center mt-3" style="font-size:11px;">Credentials issued by the Organising Committee only. Contact the chief organiser if locked out.</p>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- PARTICIPANT TEAM GATE MODAL -->
+  <div id="modal-participant-gate" class="modal-overlay hidden">
+    <div class="modal-card">
+      <div class="modal-header" style="border:none;padding-bottom:0;">
+        <div>
+          <span class="public-badge" style="margin-bottom:4px;display:inline-block;">📺 PARTICIPANT PORTAL</span>
+          <h3 style="margin-top:6px;">Welcome to RoboFest 2.0!</h3>
+        </div>
+      </div>
+      <div class="modal-body">
+        <p class="text-muted mb-4" style="font-size:14px;">Enter your <strong>Team Name</strong> or <strong>Bot ID</strong> to view your personalized dashboard — timings, queue status, tech check, and next round details.</p>
+        <form id="form-participant-gate">
+          <div id="participant-gate-error" class="alert alert-warning hidden mb-3" style="font-size:13px;"></div>
+          <div class="form-group">
+            <label>Team Name or Bot ID</label>
+            <input type="text" id="inp-participant-team-name" class="form-input lg" required placeholder="e.g. Python Riders or BOT-006" autocomplete="off">
+            <small class="text-muted">Your Bot ID was assigned during registration (BOT-001 to BOT-058)</small>
+          </div>
+          <div class="modal-footer mt-3">
+            <button type="submit" class="btn btn-primary lg" style="width:100%">🎯 View My Team Dashboard</button>
           </div>
         </form>
       </div>

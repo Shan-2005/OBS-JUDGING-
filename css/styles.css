@@ -631,13 +631,62 @@ body {
 
 /* JUDGE LOCKED NAVIGATION BADGE */
 .nav-btn.judge-locked-btn {
-  opacity: 0.6;
+  opacity: 0.4;
   position: relative;
+  cursor: not-allowed;
 }
 
 .nav-btn.judge-locked-btn::after {
   content: '🔒';
   font-size: 10px;
-  margin-left: 2px;
+  margin-left: 3px;
 }
+
+/* JUDGE AUTH BRANDING */
+.judge-auth-branding {
+  text-align: center;
+  margin-bottom: 24px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.judge-auth-icon {
+  font-size: 48px;
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, rgba(0, 242, 254, 0.15), rgba(114, 9, 183, 0.2));
+  border: 1px solid var(--border-glow);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 8px;
+  box-shadow: var(--shadow-glow);
+}
+
+/* PARTICIPANT PORTAL CHANGE TEAM */
+.change-team-link {
+  background: transparent;
+  border: none;
+  color: var(--primary-cyan);
+  font-size: 12px;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+  font-family: var(--font-sans);
+}
+
+.change-team-link:hover { opacity: 0.8; }
+
+/* ALERT STYLES */
+.alert {
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 600;
+}
+.alert-danger { background: rgba(239,71,111,0.12); border: 1px solid var(--accent-red); color: var(--accent-red); }
+.alert-warning { background: rgba(255,183,3,0.12); border: 1px solid var(--accent-gold); color: var(--accent-gold); }
+.alert-success { background: rgba(6,214,160,0.12); border: 1px solid var(--accent-green); color: var(--accent-green); }
+.alert-info { background: rgba(0,242,254,0.12); border: 1px solid var(--primary-cyan); color: var(--primary-cyan); }
 

@@ -189,7 +189,10 @@ function switchTab(tabId) {
   if (tabId === 'callorder') renderCallOrderView();
   if (tabId === 'round3') renderBracket();
   if (tabId === 'leaderboard') renderLeaderboards();
-  if (tabId === 'participants') renderParticipantsView();
+  if (tabId === 'participants') {
+    if (typeof initParticipantsView === 'function') initParticipantsView();
+    else if (typeof renderParticipantsView === 'function') renderParticipantsView();
+  }
 }
 
 function handleHashRouting() {
