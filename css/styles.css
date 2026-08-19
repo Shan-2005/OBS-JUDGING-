@@ -1260,7 +1260,67 @@ body {
 }
 
 /* Micro-animations and tactile feedback */
-.nav-btn:active, .btn:active, .action-tile:active, .team-roster-chip:active {
+.nav-btn:active, .btn:active, .action-tile:active, .team-roster-chip:active, .dock-btn:active {
   transform: scale(0.97);
   transition: transform 0.05s ease;
+}
+
+/* MOBILE BOTTOM DOCK (STANDALONE WEB APP NAVIGATION BAR) */
+.mobile-bottom-dock {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .mobile-bottom-dock {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: rgba(5, 5, 5, 0.95);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-top: 1px solid var(--border-glow);
+    z-index: 999;
+    justify-content: space-around;
+    align-items: center;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  .dock-btn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-size: 10px;
+    font-family: var(--font-sans);
+    font-weight: 700;
+    gap: 3px;
+    padding: 6px 2px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .dock-btn i {
+    font-size: 16px;
+  }
+
+  .dock-btn.active {
+    color: var(--nothing-red);
+    text-shadow: 0 0 10px rgba(255, 42, 42, 0.5);
+  }
+
+  .dock-btn.active i {
+    transform: translateY(-2px);
+  }
+
+  /* Padding bottom for app content so dock doesn't overlap UI */
+  .app-main {
+    padding-bottom: 74px !important;
+  }
 }

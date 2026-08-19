@@ -3,6 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#000000">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="manifest" href="manifest.json">
   <title>RoboFest 2.0 — Official Arena Console</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1251,6 +1255,34 @@
     </div>
   </div>
 
+  <!-- MOBILE BOTTOM APP NAVIGATION DOCK (ONLY SHOWN ON MOBILE < 768px) -->
+  <nav class="mobile-bottom-dock">
+    <button class="dock-btn active" data-tab="dashboard">
+      <i class="fa-solid fa-chart-simple"></i>
+      <span>Dash</span>
+    </button>
+    <button class="dock-btn" data-tab="attendance">
+      <i class="fa-solid fa-clipboard-user"></i>
+      <span>Att</span>
+    </button>
+    <button class="dock-btn" data-tab="botcheck">
+      <i class="fa-solid fa-robot"></i>
+      <span>Inspect</span>
+    </button>
+    <button class="dock-btn" data-tab="round1">
+      <i class="fa-solid fa-stopwatch"></i>
+      <span>R1</span>
+    </button>
+    <button class="dock-btn" data-tab="round2">
+      <i class="fa-solid fa-bolt"></i>
+      <span>R2</span>
+    </button>
+    <button class="dock-btn" data-tab="round3">
+      <i class="fa-solid fa-trophy"></i>
+      <span>R3</span>
+    </button>
+  </nav>
+
   <!-- SCRIPT INCLUDES -->
   <script src="js/store.js"></script>
   <script src="js/supabase.js"></script>
@@ -1263,5 +1295,12 @@
   <script src="js/auth.js"></script>
   <script src="js/participant_lookup.js"></script>
   <script src="js/app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js').catch(err => console.log('SW reg error:', err));
+      });
+    }
+  </script>
 </body>
 </html>

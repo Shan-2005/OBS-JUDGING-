@@ -18,8 +18,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (el) el.addEventListener(event, handler);
   };
 
-  // Navigation Event Listeners
-  document.querySelectorAll('.nav-btn').forEach(btn => {
+  // Navigation Event Listeners (Top tabs & Mobile bottom dock)
+  document.querySelectorAll('.nav-btn, .dock-btn').forEach(btn => {
     btn.addEventListener('click', () => switchTab(btn.dataset.tab));
   });
 
@@ -193,37 +193,35 @@ function switchTab(tabId) {
   if (isJudgeTab && typeof isJudgeAuthenticated === 'function' && !isJudgeAuthenticated()) {
     showJudgeAuthModal(tabId);
 
-    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.nav-btn, .dock-btn').forEach(b => b.classList.remove('active'));
     document.querySelectorAll('.tab-view').forEach(v => v.classList.remove('active'));
 
     if (hasParticipantsTab) {
-      const pBtn = document.querySelector(`.nav-btn[data-tab="participants"]`);
+      document.querySelectorAll(`[data-tab="participants"]`).forEach(b => b.classList.add('active'));
       const pView = document.getElementById(`view-participants`);
-      if (pBtn) pBtn.classList.add('active');
       if (pView) pView.classList.add('active');
       if (typeof renderParticipantsView === 'function') renderParticipantsView();
     } else {
-      const dBtn = document.querySelector(`.nav-btn[data-tab="dashboard"]`);
+      document.querySelectorAll(`[data-tab="dashboard"]`).forEach(b => b.classList.add('active'));
       const dView = document.getElementById(`view-dashboard`);
-      if (dBtn) dBtn.classList.add('active');
       if (dView) dView.classList.add('active');
     }
     return;
   }
 
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.nav-btn, .dock-btn').forEach(b => b.classList.remove('active'));
   document.querySelectorAll('.tab-view').forEach(v => v.classList.remove('active'));
 
   const targetId = (!tabId || (tabId === 'participants' && !hasParticipantsTab)) ? 'dashboard' : tabId;
-  const btn = document.querySelector(`.nav-btn[data-tab="${targetId}"]`);
+  const btns = document.querySelectorAll(`[data-tab="${targetId}"]`);
   const view = document.getElementById(`view-${targetId}`);
 
-  if (btn) {
+  btns.forEach(btn => {
     btn.classList.add('active');
     try {
       btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
     } catch (e) {}
-  }
+  });
   if (view) view.classList.add('active');
 
   // Update URL hash without scroll jumping
