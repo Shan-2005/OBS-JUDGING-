@@ -625,12 +625,80 @@ body {
 
 .eligibility-status-banner { margin-top: 16px; padding: 12px; border-radius: var(--radius-sm); font-weight: 800; text-align: center; font-family: var(--font-display); font-size: 16px; letter-spacing: 1px; }
 
+/* Hide print-only layout on screen */
+.print-only {
+  display: none !important;
+}
+
 @media print {
-  body * { visibility: hidden; }
-  .print-only, .print-only * { visibility: visible; }
-  .print-only { position: absolute; left: 0; top: 0; width: 100%; color: #000 !important; background: #fff !important; }
-  .print-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-  .print-table th, .print-table td { border: 1px solid #000; padding: 8px; font-size: 12px; color: #000; }
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+  /* Hide all interactive screen elements */
+  body > :not(.print-only) {
+    display: none !important;
+  }
+  .print-only {
+    display: block !important;
+    position: relative;
+    width: 100%;
+    color: #000 !important;
+    background: #fff !important;
+    font-family: 'Inter', Arial, sans-serif;
+  }
+  .print-header {
+    text-align: center;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #000;
+    padding-bottom: 12px;
+  }
+  .print-header h2 {
+    font-size: 20px;
+    font-weight: 800;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .print-header p {
+    font-size: 12px;
+    color: #444;
+  }
+  .print-section {
+    margin-bottom: 35px;
+  }
+  .print-section h3 {
+    font-size: 14px;
+    font-weight: 700;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 6px;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .print-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    margin-bottom: 20px;
+  }
+  .print-table th, .print-table td {
+    border: 1px solid #000;
+    padding: 10px 12px;
+    font-size: 12px;
+    color: #000;
+    text-align: left;
+  }
+  .print-table th {
+    background-color: #f2f2f2 !important;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+  }
+  .page-break-before {
+    page-break-before: always;
+  }
 }
 
 /* JUDGE LOCKED NAVIGATION BADGE */
@@ -744,5 +812,205 @@ body {
   color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 0.5px;
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN (PC & MOBILE OPTIMIZATION)
+   ========================================================================== */
+
+/* Large tablets / small desktops */
+@media (max-width: 1024px) {
+  .app-header {
+    padding: 12px 16px;
+  }
+  .nav-tabs {
+    max-width: 100%;
+  }
+  .dashboard-sections {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .botcheck-layout {
+    grid-template-columns: 1fr;
+  }
+  .participant-grid {
+    grid-template-columns: 1fr;
+  }
+  .participant-grid .span-2 {
+    grid-column: span 1;
+  }
+}
+
+/* Mobile Devices (Smartphones & Portrait Tablets) */
+@media (max-width: 768px) {
+  .app-header {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    padding: 12px !important;
+    gap: 12px !important;
+  }
+  
+  .header-brand {
+    justify-content: space-between;
+    width: 100%;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  
+  .nav-tabs {
+    width: 100% !important;
+    overflow-x: auto !important;
+    white-space: nowrap !important;
+    padding: 4px !important;
+    display: flex !important;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Hide scrollbar for nav-tabs for a premium app feel */
+  .nav-tabs::-webkit-scrollbar {
+    display: none !important;
+  }
+  .nav-tabs {
+    -ms-overflow-style: none !important;  /* IE and Edge */
+    scrollbar-width: none !important;  /* Firefox */
+  }
+
+  .nav-btn {
+    padding: 6px 12px !important;
+    font-size: 11px !important;
+    gap: 4px !important;
+  }
+  
+  .header-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .header-actions .btn {
+    flex: 1;
+    max-width: 150px;
+    font-size: 12px;
+    padding: 8px 12px;
+  }
+
+  .app-main {
+    padding: 12px;
+  }
+
+  .dashboard-hero {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 16px;
+    gap: 12px;
+  }
+
+  .hero-title h2 {
+    font-size: 24px;
+  }
+
+  .hero-title p {
+    font-size: 13px;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+    margin-bottom: 16px;
+  }
+
+  .stat-card {
+    padding: 12px !important;
+    gap: 10px !important;
+  }
+
+  .stat-icon {
+    font-size: 20px !important;
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 8px !important;
+  }
+
+  .stat-label {
+    font-size: 10px !important;
+  }
+
+  .stat-value {
+    font-size: 20px !important;
+  }
+
+  .glass-card {
+    padding: 16px !important;
+  }
+
+  .action-grid {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .section-header h2 {
+    font-size: 20px;
+  }
+
+  .section-header p {
+    font-size: 12px;
+  }
+
+  /* Table styling enhancements on mobile */
+  .table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .data-table th, .data-table td {
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+
+  /* Modals responsiveness */
+  .modal-card {
+    padding: 16px !important;
+    width: 95% !important;
+  }
+
+  .checklist-grid {
+    grid-template-columns: 1fr !important;
+    max-height: 280px !important;
+  }
+
+  /* R3 Bracket View mobile zoom out to fit */
+  .bracket-container {
+    overflow-x: auto;
+    padding-bottom: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .brand-text h1 {
+    font-size: 18px !important;
+  }
+  .brand-text span {
+    font-size: 9px !important;
+  }
+  .logo-icon {
+    width: 36px !important;
+    height: 36px !important;
+    font-size: 18px !important;
+  }
+}
+
+/* Micro-animations and tactile feedback */
+.nav-btn:active, .btn:active, .action-tile:active, .team-roster-chip:active {
+  transform: scale(0.97);
+  transition: transform 0.05s ease;
 }
 

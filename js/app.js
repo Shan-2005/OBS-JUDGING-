@@ -28,14 +28,6 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Header Actions
-  safeListen('btn-quick-seed', 'click', () => {
-    if (confirm("Reset and re-seed 58 competition teams?")) {
-      seedDefaultTeams();
-      refreshAllViews();
-      alert("Seeded 58 teams successfully!");
-    }
-  });
-
   safeListen('btn-print-sheets', 'click', preparePrintSheets);
 
   safeListen('btn-reset-data', 'click', () => {

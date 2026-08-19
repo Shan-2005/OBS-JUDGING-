@@ -133,7 +133,7 @@ function seedDefaultTeams() {
   officialCsvList.forEach((item, idx) => {
     const num = String(idx + 1).padStart(3, '0');
     const botId = `BOT-${num}`;
-    const passed = true;
+    const passed = false;
 
     storeState.teams.push({
       id: botId,
@@ -153,16 +153,9 @@ function seedDefaultTeams() {
         teamMembers: passed,
         dedicatedTxRx: passed,
         passed: passed,
-        notes: "Official CSV Imported Team — Pre-verified"
+        notes: "Tech check pending"
       }
     });
-
-    storeState.attendance[botId] = {
-      status: 'Present',
-      checkInTime: Date.now() - (idx * 30000),
-      membersPresent: 2,
-      notes: 'Official registration desk check-in'
-    };
   });
 
   saveStore();
