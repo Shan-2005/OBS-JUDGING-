@@ -7,8 +7,16 @@ let r2Timer = null;
 
 document.addEventListener('DOMContentLoaded', () => {
   // Initialize Timers
-  r1Timer = new PrecisionTimer('r1-timer-display');
-  r2Timer = new PrecisionTimer('r2-timer-display');
+  if (typeof PrecisionTimer === 'function') {
+    r1Timer = new PrecisionTimer('r1-timer-display');
+    r2Timer = new PrecisionTimer('r2-timer-display');
+  }
+
+  // Safe Listener Helper
+  const safeListen = (id, event, handler) => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener(event, handler);
+  };
 
   // Navigation Event Listeners
   document.querySelectorAll('.nav-btn').forEach(btn => {
@@ -20,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Header Actions
-  document.getElementById('btn-quick-seed').addEventListener('click', () => {
+  safeListen('btn-quick-seed', 'click', () => {
     if (confirm("Reset and re-seed 58 competition teams?")) {
       seedDefaultTeams();
       refreshAllViews();
@@ -28,9 +36,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  document.getElementById('btn-print-sheets').addEventListener('click', preparePrintSheets);
+  safeListen('btn-print-sheets', 'click', preparePrintSheets);
 
-  document.getElementById('btn-reset-data').addEventListener('click', () => {
+  safeListen('btn-reset-data', 'click', () => {
     if (confirm("DANGER: Wipe all scores and reset data?")) {
       resetStore();
       refreshAllViews();
@@ -38,9 +46,9 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // 1. ATTENDANCE EVENT LISTENERS
-  document.getElementById('att-search').addEventListener('input', renderAttendanceTable);
-  document.getElementById('att-filter-select').addEventListener('change', renderAttendanceTable);
-  document.getElementById('btn-mark-all-present').addEventListener('click', () => {
+  safeListen('att-search', 'input', renderAttendanceTable);
+  safeListen('att-filter-select', 'change', renderAttendanceTable);
+  safeListen('btn-mark-all-present', 'click', () => {
     storeState.teams.forEach(t => {
       storeState.attendance[t.id] = {
         status: 'Present',
@@ -55,75 +63,90 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // 2. BOT CHECK INSPECTION LISTENERS
-  document.getElementById('botcheck-team-select').addEventListener('change', (e) => {
+  safeListen('botcheck-team-select', 'change', (e) => {
     renderBotCheckInspectorCard(e.target.value);
   });
 
   // 3. JUDGE MANAGEMENT LISTENERS
-  document.getElementById('btn-open-judge-modal').addEventListener('click', () => openJudgeModal());
-  document.getElementById('form-judge').addEventListener('submit', handleJudgeFormSubmit);
+  safeListen('btn-open-judge-modal', 'click', () => openJudgeModal());
+  safeListen('form-judge', 'submit', handleJudgeFormSubmit);
 
   // Teams Management Listeners
-  document.getElementById('btn-add-team').addEventListener('click', () => openTeamModal());
-  document.getElementById('form-team').addEventListener('submit', handleTeamFormSubmit);
-  document.getElementById('team-search').addEventListener('input', renderTeamsTable);
-  document.getElementById('team-elig-filter').addEventListener('change', renderTeamsTable);
+  safeListen('btn-add-team', 'click', () => openTeamModal());
+  safeListen('form-team', 'submit', handleTeamFormSubmit);
+  safeListen('team-search', 'input', renderTeamsTable);
+  safeListen('team-elig-filter', 'change', renderTeamsTable);
 
   // Pre-Match Eligibility Form
-  document.getElementById('form-eligibility').addEventListener('submit', saveEligibilityForm);
+  safeListen('form-eligibility', 'submit', saveEligibilityForm);
 
   // Stopwatch R1 Controls
-  document.getElementById('r1-btn-start').addEventListener('click', () => {
-    r1Timer.start();
-    document.getElementById('r1-btn-start').disabled = true;
-    document.getElementById('r1-btn-pause').disabled = false;
+  safeListen('r1-btn-start', 'click', () => {
+    if (r1Timer) r1Timer.start();
+    const btnS = document.getElementById('r1-btn-start');
+    const btnP = document.getElementById('r1-btn-pause');
+    if (btnS) btnS.disabled = true;
+    if (btnP) btnP.disabled = false;
   });
-  document.getElementById('r1-btn-pause').addEventListener('click', () => {
-    r1Timer.pause();
-    document.getElementById('r1-btn-start').disabled = false;
-    document.getElementById('r1-btn-pause').disabled = true;
+  safeListen('r1-btn-pause', 'click', () => {
+    if (r1Timer) r1Timer.pause();
+    const btnS = document.getElementById('r1-btn-start');
+    const btnP = document.getElementById('r1-btn-pause');
+    if (btnS) btnS.disabled = false;
+    if (btnP) btnP.disabled = true;
     updateScoreSummary('r1');
   });
-  document.getElementById('r1-btn-reset').addEventListener('click', () => {
-    r1Timer.reset();
-    document.getElementById('r1-btn-start').disabled = false;
-    document.getElementById('r1-btn-pause').disabled = true;
+  safeListen('r1-btn-reset', 'click', () => {
+    if (r1Timer) r1Timer.reset();
+    const btnS = document.getElementById('r1-btn-start');
+    const btnP = document.getElementById('r1-btn-pause');
+    if (btnS) btnS.disabled = false;
+    if (btnP) btnP.disabled = true;
     resetPenaltyCounts('r1');
   });
-  document.getElementById('r1-btn-save-run').addEventListener('click', () => submitRunScore('r1'));
+  safeListen('r1-btn-save-run', 'click', () => submitRunScore('r1'));
 
   // Stopwatch R2 Controls
-  document.getElementById('r2-btn-start').addEventListener('click', () => {
-    r2Timer.start();
-    document.getElementById('r2-btn-start').disabled = true;
-    document.getElementById('r2-btn-pause').disabled = false;
+  safeListen('r2-btn-start', 'click', () => {
+    if (r2Timer) r2Timer.start();
+    const btnS = document.getElementById('r2-btn-start');
+    const btnP = document.getElementById('r2-btn-pause');
+    if (btnS) btnS.disabled = true;
+    if (btnP) btnP.disabled = false;
   });
-  document.getElementById('r2-btn-pause').addEventListener('click', () => {
-    r2Timer.pause();
-    document.getElementById('r2-btn-start').disabled = false;
-    document.getElementById('r2-btn-pause').disabled = true;
+  safeListen('r2-btn-pause', 'click', () => {
+    if (r2Timer) r2Timer.pause();
+    const btnS = document.getElementById('r2-btn-start');
+    const btnP = document.getElementById('r2-btn-pause');
+    if (btnS) btnS.disabled = false;
+    if (btnP) btnP.disabled = true;
     updateScoreSummary('r2');
   });
-  document.getElementById('r2-btn-reset').addEventListener('click', () => {
-    r2Timer.reset();
-    document.getElementById('r2-btn-start').disabled = false;
-    document.getElementById('r2-btn-pause').disabled = true;
+  safeListen('r2-btn-reset', 'click', () => {
+    if (r2Timer) r2Timer.reset();
+    const btnS = document.getElementById('r2-btn-start');
+    const btnP = document.getElementById('r2-btn-pause');
+    if (btnS) btnS.disabled = false;
+    if (btnP) btnP.disabled = true;
     resetPenaltyCounts('r2');
   });
-  document.getElementById('r2-btn-save-run').addEventListener('click', () => submitRunScore('r2'));
+  safeListen('r2-btn-save-run', 'click', () => submitRunScore('r2'));
 
   // Bracket Sync
-  document.getElementById('btn-sync-bracket-seeds').addEventListener('click', syncRound3SeedsFromR2);
+  safeListen('btn-sync-bracket-seeds', 'click', syncRound3SeedsFromR2);
 
   // Modal Close buttons
   document.querySelectorAll('.close-modal').forEach(btn => {
     btn.addEventListener('click', () => {
-      document.querySelectorAll('.modal-overlay').forEach(m => m.classList.add('hidden'));
+      document.querySelectorAll('.modal-overlay').forEach(m => {
+        m.classList.add('hidden');
+        m.style.display = 'none';
+      });
     });
   });
 
   // Match decision form submit
-  document.getElementById('form-match-result').addEventListener('submit', handleMatchDecisionSubmit);
+  safeListen('form-match-result', 'submit', handleMatchDecisionSubmit);
 
   // Participant Search Handler
   const btnPartSearch = document.getElementById('btn-part-search-team');
@@ -132,11 +155,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const doLookup = () => {
       const q = inpPartSearch.value.trim();
       if (!q) return;
-      const team = searchParticipantTeam(q);
-      if (team) {
-        renderPersonalizedTeamDashboard(team.id);
-      } else {
-        renderPersonalizedTeamDashboard(q);
+      if (typeof searchParticipantTeam === 'function' && typeof renderPersonalizedTeamDashboard === 'function') {
+        const team = searchParticipantTeam(q);
+        renderPersonalizedTeamDashboard(team ? team.id : q);
       }
     };
     btnPartSearch.addEventListener('click', doLookup);

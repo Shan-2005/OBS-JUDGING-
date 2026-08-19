@@ -1235,6 +1235,158 @@
     </div>
   </div>
 
+  <!-- MODAL: ADD/EDIT TEAM -->
+  <div id="modal-team" class="modal-overlay hidden" style="display:none;">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="modal-team-title">Add New Team</h3>
+        <button class="close-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="form-team">
+          <input type="hidden" id="team-id-hidden">
+          <div class="form-group">
+            <label>Bot ID *</label>
+            <input type="text" id="inp-bot-id" class="form-input" required placeholder="BOT-001">
+          </div>
+          <div class="form-group">
+            <label>Team Name *</label>
+            <input type="text" id="inp-team-name" class="form-input" required placeholder="e.g. Apex Predators">
+          </div>
+          <div class="form-group">
+            <label>Institution *</label>
+            <input type="text" id="inp-institution" class="form-input" required placeholder="e.g. MIT Chennai">
+          </div>
+          <div class="form-group">
+            <label>Team Members (comma separated)</label>
+            <input type="text" id="inp-members" class="form-input" placeholder="Member 1, Member 2">
+          </div>
+          <div class="form-group">
+            <label>Assigned R1 Arena</label>
+            <select id="inp-arena" class="form-select">
+              <option value="A">Arena A</option>
+              <option value="B">Arena B</option>
+            </select>
+          </div>
+          <div class="modal-footer mt-4">
+            <button type="submit" class="btn btn-primary">Save Team Record</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: PRE-MATCH TECHNICAL INSPECTION (10 CHECKS) -->
+  <div id="modal-eligibility" class="modal-overlay hidden" style="display:none;">
+    <div class="modal-card lg">
+      <div class="modal-header">
+        <div>
+          <h3>📋 Pre-Match Technical Inspection Checklist</h3>
+          <p class="text-muted" style="font-size:12px;">Team: <strong id="elig-modal-team-name">---</strong> (<span id="elig-modal-bot-id">---</span>)</p>
+        </div>
+        <button class="close-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="form-eligibility">
+          <div id="elig-status-banner" class="eligibility-status-banner badge-danger mb-3">
+            STATUS: FAILED / NOT PERMITTED TO COMPETE (1+ NO)
+          </div>
+          <div class="checklist-grid">
+            <label class="check-tile"><input type="checkbox" id="chk-dimensions"> <span>1. Dimensions (≤30x30x30 cm)</span></label>
+            <label class="check-tile"><input type="checkbox" id="chk-weight"> <span>2. Weight (≤5 kg)</span></label>
+            <label class="check-tile"><input type="checkbox" id="chk-voltage"> <span>3. Voltage (≤16.8 V)</span></label>
+            <label class="check-tile"><input type="checkbox" id="chk-driveType"> <span>4. Drive Type (2WD/4WD)</span></label>
+            <label class="check-tile"><input type="checkbox" id="chk-bodyOrigin"> <span>5. Body Origin (No toy chassis)</span></label>
+            <label class="check-tile"><input type="checkbox" id="chk-wiredControl"> <span>6. Wired Cable (≥4m length)</span></label>
+            <label class="check-tile"><input type="checkbox" id="chk-wirelessControl"> <span>7. Wireless (Dual Freq 2.4G)</span></label>
+            <label class="check-tile"><input type="checkbox" id="chk-bannedParts"> <span>8. Banned Parts (No Lego/IC)</span></label>
+            <label class="check-tile"><input type="checkbox" id="chk-teamMembers"> <span>9. Team (Max 4, ID carried)</span></label>
+            <label class="check-tile"><input type="checkbox" id="chk-dedicatedTxRx"> <span>10. Dedicated Tx/Rx Set</span></label>
+          </div>
+          <div class="form-group mt-3">
+            <label>Inspection Notes / Observations</label>
+            <input type="text" id="chk-notes" class="form-input" placeholder="e.g. Dimensions verified by official gauge caliper">
+          </div>
+          <div class="modal-footer mt-4">
+            <button type="submit" class="btn btn-primary lg">💾 Save Technical Inspection Certificate</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: ADD/EDIT JUDGE -->
+  <div id="modal-judge" class="modal-overlay hidden" style="display:none;">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="modal-judge-title">Add Officiating Judge</h3>
+        <button class="close-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="form-judge">
+          <input type="hidden" id="judge-id-hidden">
+          <div class="form-group">
+            <label>Judge Full Name *</label>
+            <input type="text" id="inp-judge-name" class="form-input" required placeholder="e.g. Dr. A. Sharma">
+          </div>
+          <div class="form-group">
+            <label>Role / Designation *</label>
+            <input type="text" id="inp-judge-role" class="form-input" required placeholder="e.g. Arena Referee">
+          </div>
+          <div class="form-group">
+            <label>Assigned Arena *</label>
+            <select id="inp-judge-arena" class="form-select">
+              <option value="A">Arena A</option>
+              <option value="B">Arena B</option>
+              <option value="All">All Arenas</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Contact Phone Number</label>
+            <input type="text" id="inp-judge-phone" class="form-input" placeholder="+91 9876543210">
+          </div>
+          <div class="modal-footer mt-4">
+            <button type="submit" class="btn btn-primary">Save Judge Record</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: MATCH DECISION R3 -->
+  <div id="modal-match-result" class="modal-overlay hidden" style="display:none;">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="r3-modal-match-title">Round 3 Heat Decision</h3>
+        <button class="close-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="form-match-result">
+          <input type="hidden" id="r3-match-id">
+          <input type="hidden" id="r3-selected-winner-id">
+          <div class="form-group">
+            <label>Choose Winning Team:</label>
+            <div class="d-flex gap-2 mt-2">
+              <button type="button" class="btn btn-outline flex-grow" onclick="selectMatchWinner('A')" id="r3-teamA-name">Team A</button>
+              <button type="button" class="btn btn-outline flex-grow" onclick="selectMatchWinner('B')" id="r3-teamB-name">Team B</button>
+            </div>
+          </div>
+          <div class="form-group mt-3">
+            <label>Selected Winner:</label>
+            <input type="text" id="r3-winner-display-name" class="form-input" readonly placeholder="Click a team button above">
+          </div>
+          <div class="form-group mt-3">
+            <label>Reason / Result Details:</label>
+            <input type="text" id="r3-win-reason" class="form-input" placeholder="e.g. Finished track in 45s vs DNF">
+          </div>
+          <div class="modal-footer mt-4">
+            <button type="submit" class="btn btn-primary">Confirm Heat Winner</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
   <!-- SCRIPT INCLUDES -->
   <script src="js/store.js"></script>
   <script src="js/supabase.js"></script>
