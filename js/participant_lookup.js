@@ -104,21 +104,21 @@ function renderPersonalizedTeamDashboard(teamId) {
         </div>
         <div style="text-align:right;">
           ${elig.passed 
-            ? '<span class="badge badge-success lg">✅ TECH CHECK PASSED</span>' 
-            : '<span class="badge badge-warning lg">⏳ TECH CHECK PENDING</span>'}
+            ? '<span class="badge badge-success lg"><i class="fa-solid fa-circle-check"></i> TECH CHECK PASSED</span>' 
+            : '<span class="badge badge-warning lg"><i class="fa-solid fa-circle-notch fa-spin"></i> TECH CHECK PENDING</span>'}
           <br><br>
           ${att.status === 'Present' 
-            ? '<span class="badge badge-success">📌 CHECK-IN: PRESENT</span>' 
-            : `<span class="badge badge-warning">📌 CHECK-IN: ${att.status}</span>`}
+            ? '<span class="badge badge-success"><i class="fa-solid fa-location-dot"></i> CHECK-IN: PRESENT</span>' 
+            : `<span class="badge badge-warning"><i class="fa-solid fa-location-dot"></i> CHECK-IN: ${att.status}</span>`}
           <br><br>
-          <button onclick="changeParticipantTeam()" class="change-team-link">🔄 Not your team? Switch</button>
+          <button onclick="changeParticipantTeam()" class="change-team-link"><i class="fa-solid fa-arrows-rotate"></i> Not your team? Switch</button>
         </div>
       </div>
 
       <div class="stats-grid mb-4">
 
         <div class="stat-card">
-          <div class="stat-icon">⏱️</div>
+          <div class="stat-icon"><i class="fa-solid fa-stopwatch"></i></div>
           <div class="stat-info">
             <span class="stat-label">R1 Raw Time</span>
             <span class="stat-value">${r1Run ? formatMsToDisplay(r1Run.rawTimeMs) : '--:--.---'}</span>
@@ -126,7 +126,7 @@ function renderPersonalizedTeamDashboard(teamId) {
         </div>
 
         <div class="stat-card">
-          <div class="stat-icon">⚠️</div>
+          <div class="stat-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
           <div class="stat-info">
             <span class="stat-label">R1 Penalties</span>
             <span class="stat-value" style="color:var(--accent-gold)">${r1Run ? '+' + r1Run.penaltySeconds + 's' : '+0s'}</span>
@@ -134,7 +134,7 @@ function renderPersonalizedTeamDashboard(teamId) {
         </div>
 
         <div class="stat-card">
-          <div class="stat-icon">🏎️</div>
+          <div class="stat-icon"><i class="fa-solid fa-flag-checkered"></i></div>
           <div class="stat-info">
             <span class="stat-label">R1 Final Time</span>
             <span class="stat-value" style="color:var(--primary-cyan)">${r1Run ? (r1Run.disqualified ? 'DQ' : formatMsToDisplay(r1Run.finalTimeMs)) : '--:--.---'}</span>
@@ -142,7 +142,7 @@ function renderPersonalizedTeamDashboard(teamId) {
         </div>
 
         <div class="stat-card">
-          <div class="stat-icon">🥇</div>
+          <div class="stat-icon"><i class="fa-solid fa-trophy"></i></div>
           <div class="stat-info">
             <span class="stat-label">Leaderboard Rank</span>
             <span class="stat-value">${r1RankStr}</span>
@@ -154,7 +154,7 @@ function renderPersonalizedTeamDashboard(teamId) {
       <div class="personalized-sections-grid">
 
         <div class="sub-glass-card">
-          <h4>📢 Queue & Call Schedule</h4>
+          <h4><i class="fa-solid fa-bullhorn"></i> Queue & Call Schedule</h4>
           <div class="mt-3">
             <div class="info-row"><span>Status:</span><strong style="color:var(--primary-cyan)">${myQueueItem ? myQueueItem.status : 'Awaiting Queue'}</strong></div>
             <div class="info-row"><span>Arena:</span><strong>Arena ${team.arena || 'A'}</strong></div>
@@ -163,10 +163,10 @@ function renderPersonalizedTeamDashboard(teamId) {
         </div>
 
         <div class="sub-glass-card">
-          <h4>⚡ Round 2 Qualification</h4>
+          <h4><i class="fa-solid fa-bolt"></i> Round 2 Qualification</h4>
           <div class="mt-3">
             ${isTop25 ? `
-              <div class="alert alert-success">🎉 <strong>QUALIFIED FOR ROUND 2!</strong> You are in the Top 25. Report to the main arena desk.</div>
+              <div class="alert alert-success"><strong>QUALIFIED FOR ROUND 2!</strong> You are in the Top 25. Report to the main arena desk.</div>
             ` : r1Run ? `
               <div class="alert alert-warning">Rank #${r1RankIndex + 1} — Did not reach the Top 25 cutoff.</div>
             ` : `

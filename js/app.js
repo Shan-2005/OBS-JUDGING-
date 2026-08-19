@@ -365,7 +365,7 @@ function renderBotCheckView() {
     select.innerHTML = `<option value="">-- Choose Team to Inspect --</option>` +
       storeState.teams.map(t => {
         const passed = t.eligibility && t.eligibility.passed;
-        const icon = passed ? '✅' : '⏳';
+        const icon = passed ? '[OK]' : '[..]';
         return `<option value="${t.id}">${icon} ${t.id} — ${t.name} (${t.institution})</option>`;
       }).join('');
   }

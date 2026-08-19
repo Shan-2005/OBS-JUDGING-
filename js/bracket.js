@@ -113,8 +113,8 @@ function renderBracket() {
     <!-- COL 4: FINALS & 3RD PLACE -->
     <div class="bracket-column">
       <div class="bracket-col-title">3RD PLACE & FINAL</div>
-      ${renderMatchCard(m.M8, "🥉 3rd Place Match")}
-      ${renderMatchCard(m.M9, "🏆 GRAND FINAL")}
+      ${renderMatchCard(m.M8, '<i class="fa-solid fa-medal" style="color:var(--accent-gold)"></i> 3rd Place Match')}
+      ${renderMatchCard(m.M9, '<i class="fa-solid fa-trophy" style="color:var(--accent-gold)"></i> GRAND FINAL')}
     </div>
   `;
 
@@ -133,7 +133,7 @@ function renderMatchCard(match, customTitle = null) {
     <div class="match-card" onclick="openMatchDecisionModal('${match.id}')">
       <div class="match-header">
         <span>${title}</span>
-        <span>${match.winner ? "✅ DONE" : "⏳ PENDING"}</span>
+        <span>${match.winner ? '<i class="fa-solid fa-check" style="color:var(--success-green)"></i> DONE' : '<i class="fa-solid fa-hourglass-half" style="color:var(--text-muted)"></i> PENDING'}</span>
       </div>
       <div class="match-slot ${isWinnerA ? 'winner' : ''}">
         <span>${teamAName}</span>

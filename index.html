@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@500;700;800&family=Rajdhani:wght@600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body class="participant-portal-body">
@@ -15,16 +16,16 @@
   <!-- CLEAN PARTICIPANT HEADER (No Judge buttons, no admin buttons, no judge tabs) -->
   <header class="app-header" style="justify-content: space-between;">
     <div class="header-brand">
-      <div class="logo-icon">⚡</div>
+      <div class="logo-icon"><i class="fa-solid fa-bolt"></i></div>
       <div class="brand-text">
         <h1>ROBOFEST 2.0</h1>
         <span>PARTICIPANT & SPECTATOR PORTAL</span>
       </div>
-      <span id="cloud-sync-status-badge" class="badge badge-success ml-2">☁️ Live Sync Active</span>
+      <span id="cloud-sync-status-badge" class="badge badge-success ml-2"><i class="fa-solid fa-cloud"></i> Live Sync Active</span>
     </div>
     
     <div>
-      <span class="badge badge-info" style="font-size: 13px; padding: 6px 14px;">📺 Official Live Arena Feed</span>
+      <span class="badge badge-info" style="font-size: 13px; padding: 6px 14px;"><i class="fa-solid fa-desktop"></i> Official Live Arena Feed</span>
     </div>
   </header>
 
@@ -34,7 +35,7 @@
     <!-- DEDICATED CLEAN PARTICIPANT VIEW -->
     <section id="view-participants" class="tab-view active">
       <div class="participant-view-header">
-        <div class="public-badge">📺 PUBLIC PARTICIPANT & SPECTATOR DISPLAY</div>
+        <div class="public-badge"><i class="fa-solid fa-desktop"></i> PUBLIC PARTICIPANT & SPECTATOR DISPLAY</div>
         <h2>ROBOFEST 2.0 OBSTACLE RACE — PARTICIPANT PORTAL</h2>
         <p>Search your Bot ID to view your personalized schedule, timing results, next round qualification, and call order status.</p>
       </div>
@@ -42,7 +43,7 @@
       <!-- PARTICIPANT TEAM LOOKUP BAR -->
       <div class="glass-card full-width mb-4">
         <div class="participant-lookup-box">
-          <label>🔍 Enter Your Bot ID or Team Name:</label>
+          <label><i class="fa-solid fa-magnifying-glass"></i> Enter Your Bot ID or Team Name:</label>
           <div class="d-flex gap-2 mt-2">
             <input type="text" id="part-team-search-inp" placeholder="e.g. BOT-001 or Python Riders" class="form-input lg flex-grow">
             <button id="btn-part-search-team" class="btn btn-primary lg">Lookup Team Info</button>
@@ -54,10 +55,10 @@
       <div class="glass-card full-width mb-4">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
           <div>
-            <h4 style="margin:0;">📋 All 58 Registered Teams</h4>
+            <h4 style="margin:0;"><i class="fa-solid fa-list-check"></i> All 58 Registered Teams</h4>
             <p class="text-muted" style="font-size:12px;margin:4px 0 0;">Click your team name to load your personalized dashboard instantly.</p>
           </div>
-          <input type="text" id="page-roster-search" class="form-input" placeholder="🔍 Filter teams..." style="width:220px;" oninput="renderTeamRosterGrid('page-team-roster', this.value)">
+          <input type="text" id="page-roster-search" class="form-input" placeholder="Filter teams..." style="width:220px;" oninput="renderTeamRosterGrid('page-team-roster', this.value)">
         </div>
         <div id="page-team-roster" class="team-roster-grid">
           <!-- Populated by JS -->
@@ -72,14 +73,14 @@
       <div class="participant-grid">
         <!-- ARENA SCHEDULE CARDS -->
         <div class="glass-card">
-          <h3>🏟️ Arena A Schedule (R1 Time Trial)</h3>
+          <h3><i class="fa-solid fa-flag"></i> Arena A Schedule (R1 Time Trial)</h3>
           <div class="arena-schedule-list" id="part-arenaA-list">
             <!-- Dynamic -->
           </div>
         </div>
 
         <div class="glass-card">
-          <h3>🏟️ Arena B Schedule (R1 Time Trial)</h3>
+          <h3><i class="fa-solid fa-flag"></i> Arena B Schedule (R1 Time Trial)</h3>
           <div class="arena-schedule-list" id="part-arenaB-list">
             <!-- Dynamic -->
           </div>
@@ -87,7 +88,7 @@
 
         <!-- LIVE TOP STANDINGS -->
         <div class="glass-card span-2">
-          <h3>🏆 Live Round 1 Top Standings (Top 25 Advance to Round 2)</h3>
+          <h3><i class="fa-solid fa-trophy"></i> Live Round 1 Top Standings (Top 25 Advance to Round 2)</h3>
           <div class="table-responsive">
             <table class="data-table">
               <thead>
@@ -118,7 +119,7 @@
     <div class="modal-card" style="max-width:620px;">
       <div class="modal-header" style="border:none;padding-bottom:0;">
         <div>
-          <span class="public-badge" style="margin-bottom:4px;display:inline-block;">📺 PARTICIPANT PORTAL</span>
+          <span class="public-badge" style="margin-bottom:4px;display:inline-block;"><i class="fa-solid fa-desktop"></i> PARTICIPANT PORTAL</span>
           <h3 style="margin-top:6px;">Welcome to RoboFest 2.0!</h3>
         </div>
       </div>
@@ -129,7 +130,7 @@
           <div id="participant-gate-error" class="alert alert-warning hidden mb-3" style="font-size:13px;"></div>
           <div class="form-group">
             <div style="display:flex;gap:8px;">
-              <input type="text" id="inp-participant-team-name" class="form-input" required placeholder="🔍 Search Team Name or Bot ID (e.g. BOT-006)" autocomplete="off" style="flex:1;" oninput="renderTeamRosterGrid('gate-team-roster', this.value)">
+              <input type="text" id="inp-participant-team-name" class="form-input" required placeholder="Search Team Name or Bot ID (e.g. BOT-006)" autocomplete="off" style="flex:1;" oninput="renderTeamRosterGrid('gate-team-roster', this.value)">
               <button type="submit" class="btn btn-primary">Find Me →</button>
             </div>
           </div>

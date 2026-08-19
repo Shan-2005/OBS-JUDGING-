@@ -91,8 +91,7 @@ function handleJudgeLoginSubmit(e) {
 
   const modal = document.getElementById('modal-judge-auth');
   if (modal) {
-    modal.classList.add('hidden');
-    modal.style.display = 'none';
+    modal.remove(); // fully destroy — no leftover backdrop
   }
 
   // Reveal interface
@@ -128,7 +127,7 @@ function enforceJudgeNavVisibility() {
       btn.title = '';
     } else {
       btn.classList.add('judge-locked-btn');
-      btn.title = '🔒 Judge Login Required';
+      btn.title = 'Judge Login Required';
     }
   });
 }
@@ -139,8 +138,8 @@ function updateJudgeHeaderBadge() {
   if (isJudgeAuthenticated()) {
     const arena = getActiveJudgeArena();
     badge.innerHTML = `
-      <span class="badge badge-success">👨‍⚖️ ${getActiveJudgeName()}${arena !== 'All' ? ` · Arena ${arena}` : ''}</span>
-      <button onclick="logoutJudge()" class="btn btn-danger-ghost sm ml-2">🔒 Logout</button>
+      <span class="badge badge-success"><i class="fa-solid fa-user-shield"></i> ${getActiveJudgeName()}${arena !== 'All' ? ` · Arena ${arena}` : ''}</span>
+      <button onclick="logoutJudge()" class="btn btn-danger-ghost sm ml-2"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
     `;
   }
 }

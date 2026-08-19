@@ -6,20 +6,20 @@
   <title>RoboFest 2.0 — Official Arena Console</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@500;700;800&family=Rajdhani:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@500;700;800&family=Rajdhani:wght@600;700;800&display=swap" rel="stylesheet">  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
   <!-- TOP NAVIGATION HEADER -->
   <header class="app-header" style="display:none;">
     <div class="header-brand">
-      <div class="logo-icon">ΓÜí</div>
+      <div class="logo-icon"><i class="fa-solid fa-flag-checkered"></i></div>
       <div class="brand-text">
         <h1>ROBOFEST 2.0</h1>
         <span>OBSTACLE RACE PORTAL</span>
       </div>
-      <span id="cloud-sync-status-badge" class="badge badge-success ml-2">Γÿü∩╕Å Supabase Real-time Active</span>
+      <span id="cloud-sync-status-badge" class="badge badge-success ml-2"><i class="fa-solid fa-cloud"></i> Supabase Real-time Active</span>
       <div id="judge-session-badge" class="ml-3">
         <!-- Judge Login / Session Badge dynamic -->
       </div>
@@ -27,47 +27,46 @@
     
     <nav class="nav-tabs">
       <button class="nav-btn active" data-tab="dashboard">
-        <span class="icon">≡ƒôè</span> Dashboard
+        <span class="icon"><i class="fa-solid fa-chart-simple"></i></span> Dashboard
       </button>
       <button class="nav-btn" data-tab="attendance">
-        <span class="icon">≡ƒôî</span> Attendance
+        <span class="icon"><i class="fa-solid fa-clipboard-user"></i></span> Attendance
       </button>
       <button class="nav-btn" data-tab="botcheck">
-        <span class="icon">≡ƒñû</span> Bot Check
+        <span class="icon"><i class="fa-solid fa-robot"></i></span> Bot Check
       </button>
       <button class="nav-btn" data-tab="judges">
-        <span class="icon">≡ƒæ¿ΓÇìΓÜû∩╕Å</span> Add Judges
+        <span class="icon"><i class="fa-solid fa-gavel"></i></span> Add Judges
       </button>
       <button class="nav-btn" data-tab="teams">
-        <span class="icon">≡ƒæÑ</span> Teams
+        <span class="icon"><i class="fa-solid fa-users"></i></span> Teams
       </button>
       <button class="nav-btn" data-tab="round1">
-        <span class="icon">ΓÅ▒∩╕Å</span> Round 1
+        <span class="icon"><i class="fa-solid fa-stopwatch"></i></span> Round 1
       </button>
       <button class="nav-btn" data-tab="round2">
-        <span class="icon">ΓÜí</span> Round 2
+        <span class="icon"><i class="fa-solid fa-bolt"></i></span> Round 2
       </button>
       <button class="nav-btn" data-tab="round3">
-        <span class="icon">≡ƒÅå</span> R3 Bracket
+        <span class="icon"><i class="fa-solid fa-trophy"></i></span> R3 Bracket
       </button>
       <button class="nav-btn" data-tab="leaderboard">
-        <span class="icon">≡ƒÑç</span> Leaderboard
+        <span class="icon"><i class="fa-solid fa-ranking-star"></i></span> Leaderboard
       </button>
       <button class="nav-btn highlight" data-tab="callorder">
-        <span class="icon">≡ƒôó</span> Order of Call
+        <span class="icon"><i class="fa-solid fa-bullhorn"></i></span> Order of Call
       </button>
-
     </nav>
 
     <div class="header-actions">
       <button id="btn-quick-seed" class="btn btn-outline" title="Populate 58 sample teams">
-        ΓÜí Seed Teams
+        <i class="fa-solid fa-database"></i> Seed Teams
       </button>
       <button id="btn-print-sheets" class="btn btn-primary" title="Print Official Judge Sheets">
-        ≡ƒû¿∩╕Å Print Sheets
+        <i class="fa-solid fa-print"></i> Print Sheets
       </button>
       <button id="btn-reset-data" class="btn btn-danger-ghost" title="Reset all portal data">
-        ≡ƒùæ∩╕Å
+        <i class="fa-solid fa-trash-can"></i>
       </button>
     </div>
   </header>
@@ -89,28 +88,28 @@
 
       <div class="stats-grid">
         <div class="stat-card">
-          <div class="stat-icon">≡ƒÅÄ∩╕Å</div>
+          <div class="stat-icon"><i class="fa-solid fa-robot"></i></div>
           <div class="stat-info">
             <span class="stat-label">Total Teams</span>
             <span class="stat-value" id="dash-total-teams">0</span>
           </div>
         </div>
         <div class="stat-card">
-          <div class="stat-icon">≡ƒôî</div>
+          <div class="stat-icon"><i class="fa-solid fa-user-check"></i></div>
           <div class="stat-info">
             <span class="stat-label">Teams Present</span>
             <span class="stat-value" id="dash-present-teams">0</span>
           </div>
         </div>
         <div class="stat-card">
-          <div class="stat-icon">≡ƒñû</div>
+          <div class="stat-icon"><i class="fa-solid fa-clipboard-check"></i></div>
           <div class="stat-info">
             <span class="stat-label">Bot Checks Passed</span>
             <span class="stat-value" id="dash-eligible-teams">0</span>
           </div>
         </div>
         <div class="stat-card">
-          <div class="stat-icon">≡ƒæ¿ΓÇìΓÜû∩╕Å</div>
+          <div class="stat-icon"><i class="fa-solid fa-user-shield"></i></div>
           <div class="stat-info">
             <span class="stat-label">Judges Active</span>
             <span class="stat-value" id="dash-judges-count">0</span>
@@ -120,25 +119,25 @@
 
       <div class="dashboard-sections">
         <div class="glass-card">
-          <h3>ΓÜí Quick Action Hub</h3>
+          <h3><i class="fa-solid fa-bolt"></i> Quick Action Hub</h3>
           <div class="action-grid">
             <button class="action-tile" onclick="switchTab('attendance')">
-              <span class="tile-icon">≡ƒôî</span>
+              <span class="tile-icon"><i class="fa-solid fa-clipboard-user"></i></span>
               <span class="tile-title">Attendance Check-in</span>
               <span class="tile-sub">Mark team arrival & member counts</span>
             </button>
             <button class="action-tile" onclick="switchTab('botcheck')">
-              <span class="tile-icon">≡ƒñû</span>
+              <span class="tile-icon"><i class="fa-solid fa-robot"></i></span>
               <span class="tile-title">Bot Tech Inspection</span>
               <span class="tile-sub">10-point bot compliance check</span>
             </button>
             <button class="action-tile" onclick="switchTab('judges')">
-              <span class="tile-icon">≡ƒæ¿ΓÇìΓÜû∩╕Å</span>
+              <span class="tile-icon"><i class="fa-solid fa-gavel"></i></span>
               <span class="tile-title">Manage Referees & Judges</span>
               <span class="tile-sub">Assign arenas & roles</span>
             </button>
             <button class="action-tile" onclick="switchTab('participants')">
-              <span class="tile-icon">≡ƒô║</span>
+              <span class="tile-icon"><i class="fa-solid fa-desktop"></i></span>
               <span class="tile-title">Participants Live Display</span>
               <span class="tile-sub">Public viewing schedule & leaderboards</span>
             </button>
@@ -146,7 +145,7 @@
         </div>
 
         <div class="glass-card">
-          <h3>≡ƒô£ Infraction & Penalty Reference</h3>
+          <h3><i class="fa-solid fa-triangle-exclamation"></i> Infraction & Penalty Reference</h3>
           <div class="penalty-ref-table-wrap">
             <table class="data-table">
               <thead>
@@ -172,7 +171,7 @@
     <section id="view-attendance" class="tab-view">
       <div class="section-header">
         <div>
-          <h2>≡ƒôî Team Attendance & Desk Check-In</h2>
+          <h2><i class="fa-solid fa-clipboard-user"></i> Team Attendance & Desk Check-In</h2>
           <p>Track reporting status, arrival timestamp, and registered member counts for matchday.</p>
         </div>
         <div class="header-actions">
@@ -220,7 +219,7 @@
     <section id="view-botcheck" class="tab-view">
       <div class="section-header">
         <div>
-          <h2>≡ƒñû Bot Technical Inspection (10 Pre-Match Checks)</h2>
+          <h2><i class="fa-solid fa-robot"></i> Bot Technical Inspection (10 Pre-Match Checks)</h2>
           <p>Official technical inspection desk. Every bot must meet all 10 specifications before match entry.</p>
         </div>
       </div>
@@ -242,7 +241,7 @@
         </div>
 
         <div class="glass-card">
-          <h3>≡ƒôï Tech Inspection Summary Log</h3>
+          <h3><i class="fa-solid fa-clipboard-list"></i> Tech Inspection Summary Log</h3>
           <div class="table-responsive mt-3">
             <table class="data-table sm">
               <thead>
@@ -266,7 +265,7 @@
     <section id="view-judges" class="tab-view">
       <div class="section-header">
         <div>
-          <h2>≡ƒæ¿ΓÇìΓÜû∩╕Å Officiating Judges & Referees Management</h2>
+          <h2><i class="fa-solid fa-gavel"></i> Officiating Judges & Referees Management</h2>
           <p>Add and assign judges to specific arenas, lanes, and round officiating duties.</p>
         </div>
         <button id="btn-open-judge-modal" class="btn btn-primary">+ Add New Judge</button>
@@ -297,18 +296,18 @@
     <section id="view-callorder" class="tab-view">
       <div class="section-header">
         <div>
-          <h2>≡ƒôó Order of Call & Next Round Heat Schedule</h2>
+          <h2><i class="fa-solid fa-bullhorn"></i> Order of Call & Next Round Heat Schedule</h2>
           <p>Official order of call for pit announcements, track queues, and team notifications.</p>
         </div>
         <div class="header-actions">
-          <button onclick="window.print()" class="btn btn-outline">≡ƒû¿∩╕Å Print Call Sheet</button>
+          <button onclick="window.print()" class="btn btn-outline"><i class="fa-solid fa-print"></i> Print Call Sheet</button>
         </div>
       </div>
 
       <div class="callorder-layout">
         <!-- ROUND 1 CALL ORDER -->
         <div class="glass-card full-width mb-4">
-          <h3>≡ƒÅÄ∩╕Å Round 1 ΓÇö Time Trial Order of Call (Arena A & B Queue)</h3>
+          <h3><i class="fa-solid fa-stopwatch"></i> Round 1 — Time Trial Order of Call (Arena A & B Queue)</h3>
           <div class="table-responsive mt-3">
             <table class="data-table">
               <thead>
@@ -331,7 +330,7 @@
 
         <!-- ROUND 2 CALL ORDER (TOP 25) -->
         <div class="glass-card full-width mb-4">
-          <h3>ΓÜí Round 2 ΓÇö Top 25 Qualified Heat Call Sheet</h3>
+          <h3><i class="fa-solid fa-bolt"></i> Round 2 — Top 25 Qualified Heat Call Sheet</h3>
           <div class="table-responsive mt-3">
             <table class="data-table">
               <thead>
@@ -354,7 +353,7 @@
 
         <!-- ROUND 3 MATCH CALL ORDER -->
         <div class="glass-card full-width">
-          <h3>≡ƒÅå Round 3 ΓÇö Knockout Heats Schedule (M1 to M9)</h3>
+          <h3><i class="fa-solid fa-trophy"></i> Round 3 — Knockout Heats Schedule (M1 to M9)</h3>
           <div class="table-responsive mt-3">
             <table class="data-table">
               <thead>
@@ -379,15 +378,15 @@
     <!-- 4. PARTICIPANTS VIEWING PAGE (SPECTATOR MODE) -->
     <section id="view-participants" class="tab-view">
       <div class="participant-view-header">
-        <div class="public-badge">≡ƒô║ PUBLIC PARTICIPANT & SPECTATOR DISPLAY</div>
-        <h2>ROBOFEST 2.0 OBSTACLE RACE ΓÇö PARTICIPANT PORTAL</h2>
+        <div class="public-badge"><i class="fa-solid fa-desktop"></i> PUBLIC PARTICIPANT & SPECTATOR DISPLAY</div>
+        <h2>ROBOFEST 2.0 OBSTACLE RACE — PARTICIPANT PORTAL</h2>
         <p>Search your Bot ID to view your personalized schedule, timing results, next round qualification, and call order status.</p>
       </div>
 
       <!-- PARTICIPANT TEAM LOOKUP BAR -->
       <div class="glass-card full-width mb-4">
         <div class="participant-lookup-box">
-          <label>≡ƒöì Enter Your Bot ID or Team Name:</label>
+          <label><i class="fa-solid fa-magnifying-glass"></i> Enter Your Bot ID or Team Name:</label>
           <div class="d-flex gap-2 mt-2">
             <input type="text" id="part-team-search-inp" placeholder="e.g. BOT-001 or ViperBot" class="form-input lg flex-grow">
             <button id="btn-part-search-team" class="btn btn-primary lg">Lookup Team Info</button>
@@ -403,14 +402,14 @@
       <div class="participant-grid">
         <!-- ARENA SCHEDULE CARDS -->
         <div class="glass-card">
-          <h3>≡ƒÅƒ∩╕Å Arena A Schedule (R1 Time Trial)</h3>
+          <h3><i class="fa-solid fa-flag"></i> Arena A Schedule (R1 Time Trial)</h3>
           <div class="arena-schedule-list" id="part-arenaA-list">
             <!-- Dynamic -->
           </div>
         </div>
 
         <div class="glass-card">
-          <h3>≡ƒÅƒ∩╕Å Arena B Schedule (R1 Time Trial)</h3>
+          <h3><i class="fa-solid fa-flag"></i> Arena B Schedule (R1 Time Trial)</h3>
           <div class="arena-schedule-list" id="part-arenaB-list">
             <!-- Dynamic -->
           </div>
@@ -418,7 +417,7 @@
 
         <!-- LIVE TOP STANDINGS -->
         <div class="glass-card span-2">
-          <h3>≡ƒÅå Live Round 1 Top Standings (Top 25 Advance to Round 2)</h3>
+          <h3><i class="fa-solid fa-trophy"></i> Live Round 1 Top Standings (Top 25 Advance to Round 2)</h3>
           <div class="table-responsive">
             <table class="data-table">
               <thead>
@@ -494,7 +493,7 @@
         <div class="glass-card scoring-console">
           <div class="console-header">
             <div>
-              <h2>Round 1 ΓÇö Time Trial (58 ΓåÆ 25)</h2>
+              <h2>Round 1 — Time Trial (58 → 25)</h2>
               <p>Arenas A & B pooled into single top-25 ranking list.</p>
             </div>
             <div class="arena-toggle">
@@ -518,9 +517,9 @@
           <div class="stopwatch-container">
             <div class="stopwatch-digits" id="r1-timer-display">00:00.000</div>
             <div class="stopwatch-controls">
-              <button id="r1-btn-start" class="btn btn-success lg">Γû╢ START</button>
-              <button id="r1-btn-pause" class="btn btn-warning lg" disabled>ΓÅ╕ PAUSE</button>
-              <button id="r1-btn-reset" class="btn btn-danger lg">≡ƒöä RESET</button>
+              <button id="r1-btn-start" class="btn btn-success lg"><i class="fa-solid fa-play"></i> START</button>
+              <button id="r1-btn-pause" class="btn btn-warning lg" disabled><i class="fa-solid fa-pause"></i> PAUSE</button>
+              <button id="r1-btn-reset" class="btn btn-danger lg"><i class="fa-solid fa-rotate-left"></i> RESET</button>
             </div>
             <div class="manual-time-toggle">
               <label><input type="checkbox" id="r1-manual-toggle"> Manual Time Override</label>
@@ -534,7 +533,7 @@
 
           <!-- PENALTY COUNTERS PAD -->
           <div class="penalty-pad-section">
-            <h3>ΓÜá∩╕Å Penalty Counter Pad</h3>
+            <h3><i class="fa-solid fa-triangle-exclamation"></i> Penalty Counter Pad</h3>
             <div class="penalty-grid">
               
               <div class="penalty-card">
@@ -612,13 +611,13 @@
             <select id="r1-judge-name" class="form-select sm">
               <option value="">-- Select Officiating Judge --</option>
             </select>
-            <button id="r1-btn-save-run" class="btn btn-primary lg">≡ƒÆ╛ Submit Run Score</button>
+            <button id="r1-btn-save-run" class="btn btn-primary lg"><i class="fa-solid fa-floppy-disk"></i> Submit Run Score</button>
           </div>
         </div>
 
         <!-- RIGHT: LIVE RUNS LOG -->
         <div class="glass-card side-runs-card">
-          <h3>≡ƒôï Submitted Round 1 Runs</h3>
+          <h3><i class="fa-solid fa-list-check"></i> Submitted Round 1 Runs</h3>
           <div class="table-responsive">
             <table class="data-table sm">
               <thead>
@@ -646,7 +645,7 @@
         <div class="glass-card scoring-console">
           <div class="console-header">
             <div>
-              <h2>Round 2 ΓÇö Time Trial, 1 Arena (Harder) (25 ΓåÆ 9)</h2>
+              <h2>Round 2 — Time Trial, 1 Arena (Harder) (25 → 9)</h2>
               <p>Top 25 teams from R1 run on single tougher arena. Top 9 advance to Round 3.</p>
             </div>
           </div>
@@ -663,9 +662,9 @@
           <div class="stopwatch-container">
             <div class="stopwatch-digits" id="r2-timer-display">00:00.000</div>
             <div class="stopwatch-controls">
-              <button id="r2-btn-start" class="btn btn-success lg">Γû╢ START</button>
-              <button id="r2-btn-pause" class="btn btn-warning lg" disabled>ΓÅ╕ PAUSE</button>
-              <button id="r2-btn-reset" class="btn btn-danger lg">≡ƒöä RESET</button>
+              <button id="r2-btn-start" class="btn btn-success lg"><i class="fa-solid fa-play"></i> START</button>
+              <button id="r2-btn-pause" class="btn btn-warning lg" disabled><i class="fa-solid fa-pause"></i> PAUSE</button>
+              <button id="r2-btn-reset" class="btn btn-danger lg"><i class="fa-solid fa-rotate-left"></i> RESET</button>
             </div>
             <div class="manual-time-toggle">
               <label><input type="checkbox" id="r2-manual-toggle"> Manual Time Override</label>
@@ -679,7 +678,7 @@
 
           <!-- PENALTY COUNTERS PAD R2 -->
           <div class="penalty-pad-section">
-            <h3>ΓÜá∩╕Å Penalty Counter Pad</h3>
+            <h3><i class="fa-solid fa-triangle-exclamation"></i> Penalty Counter Pad</h3>
             <div class="penalty-grid">
               
               <div class="penalty-card">
@@ -757,13 +756,13 @@
             <select id="r2-judge-name" class="form-select sm">
               <option value="">-- Select Officiating Judge --</option>
             </select>
-            <button id="r2-btn-save-run" class="btn btn-primary lg">≡ƒÆ╛ Submit R2 Run Score</button>
+            <button id="r2-btn-save-run" class="btn btn-primary lg"><i class="fa-solid fa-floppy-disk"></i> Submit R2 Run Score</button>
           </div>
         </div>
 
         <!-- RIGHT: LIVE RUNS LOG R2 -->
         <div class="glass-card side-runs-card">
-          <h3>≡ƒôï Submitted Round 2 Runs</h3>
+          <h3><i class="fa-solid fa-list-check"></i> Submitted Round 2 Runs</h3>
           <div class="table-responsive">
             <table class="data-table sm">
               <thead>
@@ -787,10 +786,10 @@
     <section id="view-round3" class="tab-view">
       <div class="section-header">
         <div>
-          <h2>Round 3 ΓÇö 8-Team Bracket + Play-in (9 ΓåÆ Top 3)</h2>
+          <h2>Round 3 — 8-Team Bracket + Play-in (9 → Top 3)</h2>
           <p>Pure Knockout. Head-to-Head Heats. Winner decided by judge decision/first to finish.</p>
         </div>
-        <button id="btn-sync-bracket-seeds" class="btn btn-outline">≡ƒöä Sync Seeds from Round 2 Rankings</button>
+        <button id="btn-sync-bracket-seeds" class="btn btn-outline"><i class="fa-solid fa-rotate"></i> Sync Seeds from Round 2 Rankings</button>
       </div>
 
       <div class="bracket-wrapper">
@@ -803,14 +802,14 @@
     <!-- LEADERBOARDS VIEW -->
     <section id="view-leaderboard" class="tab-view">
       <div class="sub-nav-bar">
-        <button class="sub-tab-btn active" data-sub="r1-lead">Round 1 Standings (58 ΓåÆ 25)</button>
-        <button class="sub-tab-btn" data-sub="r2-lead">Round 2 Standings (25 ΓåÆ 9)</button>
+        <button class="sub-tab-btn active" data-sub="r1-lead">Round 1 Standings (58 → 25)</button>
+        <button class="sub-tab-btn" data-sub="r2-lead">Round 2 Standings (25 → 9)</button>
         <button class="sub-tab-btn" data-sub="r3-lead">Round 3 Final Winners</button>
       </div>
 
       <div id="sub-r1-lead" class="sub-view active">
         <div class="glass-card full-width">
-          <h3>≡ƒÅå Round 1 Rankings (Top 25 Highlighted in Green)</h3>
+          <h3><i class="fa-solid fa-ranking-star"></i> Round 1 Rankings (Top 25 Highlighted in Green)</h3>
           <div class="table-responsive">
             <table class="data-table" id="r1-leaderboard-table">
               <thead>
@@ -833,7 +832,7 @@
 
       <div id="sub-r2-lead" class="sub-view">
         <div class="glass-card full-width">
-          <h3>ΓÜí Round 2 Rankings (Top 9 Highlighted in Gold for Round 3 Seeding)</h3>
+          <h3><i class="fa-solid fa-ranking-star"></i> Round 2 Rankings (Top 9 Highlighted in Gold for Round 3 Seeding)</h3>
           <div class="table-responsive">
             <table class="data-table" id="r2-leaderboard-table">
               <thead>
@@ -855,7 +854,7 @@
 
       <div id="sub-r3-lead" class="sub-view">
         <div class="glass-card full-width">
-          <h3>≡ƒÑç RoboFest 2.0 Obstacle Race Final Champions</h3>
+          <h3><i class="fa-solid fa-trophy"></i> RoboFest 2.0 Obstacle Race Final Champions</h3>
           <div class="podium-display" id="r3-podium">
             <!-- Dynamic Podium Cards -->
           </div>
@@ -871,7 +870,7 @@
   <div id="modal-judge-auth" class="modal-overlay hidden" style="display:none;">
     <div class="modal-card" style="max-width:420px;">
       <div class="modal-header" style="border:none;padding-bottom:0;justify-content:center;flex-direction:column;align-items:center;text-align:center;">
-        <div class="judge-auth-icon" style="font-size:48px;margin-bottom:8px;">🏁</div>
+        <div class="judge-auth-icon" style="font-size:48px;margin-bottom:8px;color:var(--primary);"><i class="fa-solid fa-shield-halved"></i></div>
         <h3 style="margin:0;">Official Arena Console</h3>
         <p class="text-muted" style="font-size:12px;margin-top:4px;">RoboFest 2.0 — Authorised Personnel Only</p>
       </div>
@@ -887,7 +886,7 @@
             <input type="password" id="inp-judge-password" class="form-input lg" required autocomplete="current-password" placeholder="Enter password" style="width:100%;">
           </div>
           <div class="modal-footer mt-4" style="padding:0;">
-            <button type="submit" class="btn btn-primary lg" style="width:100%;">🔓 Access Judging Console</button>
+            <button type="submit" class="btn btn-primary lg" style="width:100%;"><i class="fa-solid fa-unlock"></i> Access Judging Console</button>
           </div>
         </form>
       </div>
