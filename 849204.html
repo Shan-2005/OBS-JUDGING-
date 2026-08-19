@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RoboFest 2.0 — Official Judge Console</title>
+  <title>RoboFest 2.0 — Official Arena Console</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@500;700;800&family=Rajdhani:wght@600;700;800&display=swap" rel="stylesheet">
@@ -11,13 +11,13 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
-  <!-- TOP NAVIGATION HEADER FOR JUDGES -->
-  <header class="app-header">
+  <!-- TOP NAVIGATION HEADER FOR JUDGES (Hidden until login) -->
+  <header class="app-header" style="display: none;">
     <div class="header-brand">
       <div class="logo-icon">⚡</div>
       <div class="brand-text">
         <h1>ROBOFEST 2.0</h1>
-        <span>OFFICIAL JUDGE CONSOLE</span>
+        <span>OFFICIAL ARENA CONSOLE</span>
       </div>
       <span id="cloud-sync-status-badge" class="badge badge-success ml-2">☁️ Supabase Real-time Active</span>
       <div id="judge-session-badge" class="ml-3">
@@ -71,8 +71,8 @@
     </div>
   </header>
 
-  <!-- MAIN CONTENT CONTAINER -->
-  <main class="app-main">
+  <!-- MAIN CONTENT CONTAINER (Hidden until login) -->
+  <main class="app-main" style="display: none;">
     
     <!-- DASHBOARD VIEW -->
     <section id="view-dashboard" class="tab-view active">
@@ -656,15 +656,15 @@
   </main>
 
   <!-- JUDGE AUTH LOGIN MODAL -->
-  <div id="modal-judge-auth" class="modal-overlay hidden">
+  <div id="modal-judge-auth" class="modal-overlay">
     <div class="modal-card">
       <div class="modal-header">
-        <h3>🔒 Judge Console Security Login</h3>
+        <h3>🔒 Official Arena Security Login</h3>
       </div>
       <div class="modal-body">
         <div class="judge-auth-branding">
           <div class="judge-auth-icon">🏁</div>
-          <p class="text-muted" style="font-size:13px;margin-top:8px;">RoboFest 2.0 — Official Judging Console</p>
+          <p class="text-muted" style="font-size:13px;margin-top:8px;">RoboFest 2.0 — Official Officiating Console</p>
         </div>
         <form id="form-judge-auth">
           <div id="auth-error-msg" class="alert alert-danger hidden mb-3"></div>
@@ -674,10 +674,10 @@
           </div>
           <div class="form-group">
             <label>Password</label>
-            <input type="password" id="inp-judge-password" class="form-input lg" required autocomplete="current-password" placeholder="Enter judge password" style="width:100%">
+            <input type="password" id="inp-judge-password" class="form-input lg" required autocomplete="current-password" placeholder="Enter password" style="width:100%">
           </div>
           <div class="modal-footer mt-4">
-            <button type="submit" class="btn btn-primary lg" style="width:100%">🔓 Access Judging Console</button>
+            <button type="submit" class="btn btn-primary lg" style="width:100%">🔓 Access Officiating Console</button>
           </div>
         </form>
       </div>
@@ -733,7 +733,7 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      // Require judge login on judge.html
+      // Strictly enforce login check & hide UI if unauthenticated
       if (typeof checkJudgeAuth === 'function') {
         checkJudgeAuth();
       }

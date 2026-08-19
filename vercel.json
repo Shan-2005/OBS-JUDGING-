@@ -2,7 +2,7 @@
   "version": 2,
   "cleanUrls": true,
   "rewrites": [
-    { "source": "/judge", "destination": "/judge.html" },
+    { "source": "/849204", "destination": "/849204.html" },
     { "source": "/participant", "destination": "/participant.html" }
   ]
 }

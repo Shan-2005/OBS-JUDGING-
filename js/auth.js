@@ -1,14 +1,11 @@
 /* ==========================================================================
-   ROBOFEST 2.0 - JUDGE CREDENTIAL AUTH & PARTICIPANT TEAM GATE
+   ROBOFEST 2.0 - JUDGE CREDENTIAL AUTH & ACCESS GUARD
    ========================================================================== */
 
-// ─── JUDGE CREDENTIALS ─────────────────────────────────────────────────────
-// Add more judge accounts as needed
 const JUDGE_ACCOUNTS = [
   { username: "obsrace26", password: "motoroil", name: "Officiating Judge", arena: "All" }
 ];
 
-// ─── AUTH STATE ─────────────────────────────────────────────────────────────
 function isJudgeAuthenticated() {
   return sessionStorage.getItem('judge_authenticated') === 'true';
 }
@@ -19,7 +16,23 @@ function getActiveJudgeArena() {
   return sessionStorage.getItem('active_judge_arena') || "All";
 }
 
-// ─── JUDGE LOGIN MODAL ──────────────────────────────────────────────────────
+function checkJudgeAuth() {
+  const header = document.querySelector('.app-header');
+  const main = document.querySelector('.app-main');
+
+  if (!isJudgeAuthenticated()) {
+    if (header) header.style.display = 'none';
+    if (main) main.style.display = 'none';
+    showJudgeAuthModal();
+    return false;
+  } else {
+    if (header) header.style.display = '';
+    if (main) main.style.display = '';
+    updateJudgeHeaderBadge();
+    return true;
+  }
+}
+
 function showJudgeAuthModal(requestedTab = 'dashboard') {
   const modal = document.getElementById('modal-judge-auth');
   if (!modal) return;
@@ -43,7 +56,7 @@ function handleJudgeLoginSubmit(e) {
   );
 
   if (!account) {
-    errorMsg.textContent = "❌ Invalid username or password. Contact the organiser if locked out.";
+    errorMsg.textContent = "❌ Invalid username or password. Please re-enter.";
     errorMsg.classList.remove('hidden');
     document.getElementById('inp-judge-password').value = '';
     return;
@@ -55,6 +68,13 @@ function handleJudgeLoginSubmit(e) {
   sessionStorage.setItem('active_judge_arena', account.arena);
 
   document.getElementById('modal-judge-auth').classList.add('hidden');
+
+  // Reveal interface
+  const header = document.querySelector('.app-header');
+  const main = document.querySelector('.app-main');
+  if (header) header.style.display = '';
+  if (main) main.style.display = '';
+
   updateJudgeHeaderBadge();
   enforceJudgeNavVisibility();
 
@@ -63,22 +83,19 @@ function handleJudgeLoginSubmit(e) {
 }
 
 function logoutJudge() {
-  if (confirm(`Log out ${getActiveJudgeName()} and return to Participant View?`)) {
+  if (confirm(`Log out ${getActiveJudgeName()}?`)) {
     sessionStorage.removeItem('judge_authenticated');
     sessionStorage.removeItem('active_judge_name');
     sessionStorage.removeItem('active_judge_arena');
-    updateJudgeHeaderBadge();
-    enforceJudgeNavVisibility();
-    if (typeof switchTab === 'function') switchTab('participants');
+    location.reload();
   }
 }
 
-// ─── NAV GUARD ──────────────────────────────────────────────────────────────
 function enforceJudgeNavVisibility() {
   const isAuth = isJudgeAuthenticated();
   document.querySelectorAll('.nav-btn[data-tab]').forEach(btn => {
     const tab = btn.getAttribute('data-tab');
-    if (tab === 'participants') return; // Always visible
+    if (tab === 'participants') return;
     if (isAuth) {
       btn.classList.remove('judge-locked-btn');
       btn.title = '';
@@ -89,7 +106,6 @@ function enforceJudgeNavVisibility() {
   });
 }
 
-// ─── HEADER BADGE ───────────────────────────────────────────────────────────
 function updateJudgeHeaderBadge() {
   const badge = document.getElementById('judge-session-badge');
   if (!badge) return;
@@ -98,11 +114,6 @@ function updateJudgeHeaderBadge() {
     badge.innerHTML = `
       <span class="badge badge-success">👨‍⚖️ ${getActiveJudgeName()}${arena !== 'All' ? ` · Arena ${arena}` : ''}</span>
       <button onclick="logoutJudge()" class="btn btn-danger-ghost sm ml-2">🔒 Logout</button>
-    `;
-  } else {
-    badge.innerHTML = `
-      <span class="badge badge-secondary mr-2">👁️ Participant View</span>
-      <button onclick="showJudgeAuthModal('dashboard')" class="btn btn-warning sm">🔑 Judge Login</button>
     `;
   }
 }
@@ -133,22 +144,19 @@ function handleParticipantGateSubmit(e) {
     return;
   }
 
-  // Search for matching team
   const team = typeof searchParticipantTeam === 'function' ? searchParticipantTeam(teamName) : null;
 
   if (!team) {
-    errorEl.textContent = `⚠️ No team found for "${teamName}". Check your Bot ID or Team Name with the organiser desk.`;
+    errorEl.textContent = `⚠️ No team found for "${teamName}". Check your Bot ID or Team Name from the list below.`;
     errorEl.classList.remove('hidden');
     return;
   }
 
-  // Save to session
   sessionStorage.setItem('participant_team_name', team.name);
   sessionStorage.setItem('participant_team_id', team.id);
 
   document.getElementById('modal-participant-gate').classList.add('hidden');
 
-  // Show personalized dashboard
   if (typeof renderPersonalizedTeamDashboard === 'function') {
     renderPersonalizedTeamDashboard(team.id);
   }
@@ -160,9 +168,7 @@ function changeParticipantTeam() {
   showParticipantTeamGate();
 }
 
-// Called when Participants tab is activated
 function initParticipantsView() {
-  // Always populate both rosters first
   if (typeof renderTeamRosterGrid === 'function') {
     renderTeamRosterGrid('page-team-roster');
     renderTeamRosterGrid('gate-team-roster');
@@ -178,7 +184,6 @@ function initParticipantsView() {
   }
 }
 
-// ─── INIT ────────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   const judgeForm = document.getElementById('form-judge-auth');
   if (judgeForm) judgeForm.addEventListener('submit', handleJudgeLoginSubmit);
@@ -187,5 +192,4 @@ document.addEventListener('DOMContentLoaded', () => {
   if (partForm) partForm.addEventListener('submit', handleParticipantGateSubmit);
 
   updateJudgeHeaderBadge();
-  enforceJudgeNavVisibility();
 });
