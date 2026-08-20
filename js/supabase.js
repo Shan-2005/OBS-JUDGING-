@@ -55,7 +55,7 @@ function setupRealtimeSubscriptions() {
           return;
         }
 
-        if (payload.new && payload.new.state_data) {
+        if (payload.new && payload.new.state_data && Array.isArray(payload.new.state_data.teams) && payload.new.state_data.teams.length >= 58) {
           const cloudStr = JSON.stringify(payload.new.state_data);
           const localStr = JSON.stringify(storeState);
 
@@ -76,13 +76,13 @@ function setupRealtimeSubscriptions() {
 async function fetchInitialState() {
   if (!supabaseClient || !isCloudOnline) return;
   try {
-    const { data } = await supabaseClient
+    const { data, error } = await supabaseClient
       .from('judging_portal_state')
       .select('state_data')
       .eq('id', 'robofest_master_state')
       .single();
 
-    if (data && data.state_data) {
+    if (data && data.state_data && Array.isArray(data.state_data.teams) && data.state_data.teams.length >= 58) {
       const cloudStr = JSON.stringify(data.state_data);
       const localStr = JSON.stringify(storeState);
       if (cloudStr !== localStr) {
@@ -92,6 +92,9 @@ async function fetchInitialState() {
         if (typeof refreshAllViews === 'function') refreshAllViews();
         console.log("✅ Successfully initialized local store from Supabase master state!");
       }
+    } else {
+      console.log("Cloud state incomplete or empty, syncing local 58 official teams to cloud...");
+      syncDataToCloud();
     }
   } catch (err) {
     console.warn("Failed to load initial state from Supabase, using local storage:", err);
@@ -174,7 +177,7 @@ async function pollStateFromCloud() {
       .eq('id', 'robofest_master_state')
       .single();
 
-    if (data && data.state_data) {
+    if (data && data.state_data && Array.isArray(data.state_data.teams) && data.state_data.teams.length >= 58) {
       const cloudStr = JSON.stringify(data.state_data);
       const localStr = JSON.stringify(storeState);
       if (cloudStr !== localStr) {

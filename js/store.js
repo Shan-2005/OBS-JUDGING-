@@ -31,70 +31,7 @@ const defaultState = {
 
 let storeState = JSON.parse(JSON.stringify(defaultState));
 
-function loadStore() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) {
-      storeState = JSON.parse(raw);
-      if (!storeState.judges) storeState.judges = defaultState.judges;
-      if (!storeState.attendance) storeState.attendance = {};
-      if (!storeState.round1) storeState.round1 = {};
-      if (!storeState.round2) storeState.round2 = {};
-      if (!storeState.round3) storeState.round3 = JSON.parse(JSON.stringify(defaultState.round3));
-      if (!storeState.round3.matches) storeState.round3.matches = JSON.parse(JSON.stringify(defaultState.round3.matches));
-      if (!storeState.teams || storeState.teams.length === 0) {
-        seedDefaultTeams();
-      } else {
-        storeState.teams.forEach((t, idx) => {
-          const csvMeta = officialCsvList[idx];
-          if (csvMeta) {
-            t.rosterSize = csvMeta.rosterSize || t.rosterSize || 1;
-            if (csvMeta.leader) t.leader = csvMeta.leader;
-            if (csvMeta.email) t.email = csvMeta.email;
-            if (csvMeta.phone) t.phone = csvMeta.phone;
-          }
-          if (!storeState.attendance[t.id]) {
-            storeState.attendance[t.id] = {
-              status: 'Absent',
-              checkInTime: null,
-              membersPresent: t.rosterSize || 1,
-              maxMembers: t.rosterSize || 1,
-              notes: ''
-            };
-          } else {
-            storeState.attendance[t.id].maxMembers = t.rosterSize || 1;
-          }
-        });
-      }
-    } else {
-      seedDefaultTeams();
-    }
-  } catch (e) {
-    console.error("Failed to load store:", e);
-    storeState = JSON.parse(JSON.stringify(defaultState));
-  }
-}
-
-function saveStore() {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(storeState));
-    if (typeof syncDataToCloud === 'function') {
-      syncDataToCloud();
-    }
-  } catch (e) {
-    console.error("Failed to save store:", e);
-  }
-}
-
-function resetStore() {
-  localStorage.removeItem(STORAGE_KEY);
-  storeState = JSON.parse(JSON.stringify(defaultState));
-  seedDefaultTeams();
-  saveStore();
-}
-
-function seedDefaultTeams() {
-  const officialCsvList = [
+const officialCsvList = [
   {
     "name": "SRM School TEAM13",
     "inst": "SRM School",
@@ -561,13 +498,81 @@ function seedDefaultTeams() {
   }
 ];
 
-  storeState.teams = [];
-  storeState.attendance = {};
+function loadStore() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      storeState = JSON.parse(raw);
+      if (!storeState.judges) storeState.judges = defaultState.judges;
+      if (!storeState.attendance) storeState.attendance = {};
+      if (!storeState.round1) storeState.round1 = {};
+      if (!storeState.round2) storeState.round2 = {};
+      if (!storeState.round3) storeState.round3 = JSON.parse(JSON.stringify(defaultState.round3));
+      if (!storeState.round3.matches) storeState.round3.matches = JSON.parse(JSON.stringify(defaultState.round3.matches));
+      if (!storeState.teams || storeState.teams.length < officialCsvList.length) {
+        seedDefaultTeams();
+      } else {
+        storeState.teams.forEach((t, idx) => {
+          const csvMeta = officialCsvList[idx];
+          if (csvMeta) {
+            t.rosterSize = csvMeta.rosterSize || t.rosterSize || 1;
+            if (csvMeta.leader) t.leader = csvMeta.leader;
+            if (csvMeta.email) t.email = csvMeta.email;
+            if (csvMeta.phone) t.phone = csvMeta.phone;
+          }
+          if (!storeState.attendance[t.id]) {
+            storeState.attendance[t.id] = {
+              status: 'Absent',
+              checkInTime: null,
+              membersPresent: t.rosterSize || 1,
+              maxMembers: t.rosterSize || 1,
+              notes: ''
+            };
+          } else {
+            storeState.attendance[t.id].maxMembers = t.rosterSize || 1;
+          }
+        });
+      }
+    } else {
+      seedDefaultTeams();
+    }
+  } catch (e) {
+    console.error("Failed to load store:", e);
+    storeState = JSON.parse(JSON.stringify(defaultState));
+    seedDefaultTeams();
+  }
+}
+
+function saveStore() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(storeState));
+    if (typeof syncDataToCloud === 'function') {
+      syncDataToCloud();
+    }
+  } catch (e) {
+    console.error("Failed to save store:", e);
+  }
+}
+
+function resetStore() {
+  localStorage.removeItem(STORAGE_KEY);
+  storeState = JSON.parse(JSON.stringify(defaultState));
+  seedDefaultTeams();
+  saveStore();
+}
+
+function seedDefaultTeams() {
+  if (!storeState.teams || storeState.teams.length === 0) {
+    storeState.teams = [];
+  }
+  if (!storeState.attendance) storeState.attendance = {};
 
   officialCsvList.forEach((item, idx) => {
     const num = String(idx + 1).padStart(3, '0');
     const botId = `BOT-${num}`;
     
+    let existingTeam = storeState.teams.find(t => t.id === botId);
+
     const emptyEligibility = {
       dimensions: false,
       weight: false,
@@ -591,29 +596,40 @@ function seedDefaultTeams() {
       memberList.push(`Member ${m}`);
     }
 
-    storeState.teams.push({
-      id: botId,
-      name: item.name,
-      institution: item.inst,
-      leader: leadName,
-      email: item.email || '',
-      phone: item.phone || '',
-      rosterSize: rSize,
-      members: memberList,
-      arena: idx % 2 === 0 ? 'A' : 'B',
-      eligibility_r1: JSON.parse(JSON.stringify(emptyEligibility)),
-      eligibility_r2: JSON.parse(JSON.stringify(emptyEligibility)),
-      eligibility_r3: JSON.parse(JSON.stringify(emptyEligibility)),
-      eligibility: JSON.parse(JSON.stringify(emptyEligibility))
-    });
+    if (!existingTeam) {
+      storeState.teams.push({
+        id: botId,
+        name: item.name,
+        institution: item.inst,
+        leader: leadName,
+        email: item.email || '',
+        phone: item.phone || '',
+        rosterSize: rSize,
+        members: memberList,
+        arena: idx % 2 === 0 ? 'A' : 'B',
+        eligibility_r1: JSON.parse(JSON.stringify(emptyEligibility)),
+        eligibility_r2: JSON.parse(JSON.stringify(emptyEligibility)),
+        eligibility_r3: JSON.parse(JSON.stringify(emptyEligibility)),
+        eligibility: JSON.parse(JSON.stringify(emptyEligibility))
+      });
+    } else {
+      existingTeam.name = item.name;
+      existingTeam.institution = item.inst;
+      existingTeam.rosterSize = rSize;
+      if (item.leader) existingTeam.leader = item.leader;
+      if (item.email) existingTeam.email = item.email;
+      if (item.phone) existingTeam.phone = item.phone;
+    }
 
-    storeState.attendance[botId] = {
-      status: 'Absent',
-      checkInTime: null,
-      membersPresent: rSize,
-      maxMembers: rSize,
-      notes: ''
-    };
+    if (!storeState.attendance[botId]) {
+      storeState.attendance[botId] = {
+        status: 'Absent',
+        checkInTime: null,
+        membersPresent: rSize,
+        maxMembers: rSize,
+        notes: ''
+      };
+    }
   });
 
   saveStore();
@@ -621,3 +637,4 @@ function seedDefaultTeams() {
 
 // Initial load
 loadStore();
+
