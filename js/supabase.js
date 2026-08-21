@@ -1,48 +1,112 @@
 /* ==========================================================================
-   ROBOFEST 2.0 - SUPABASE CLOUD DATABASE SYNC & PARTICIPANTS PUSH
+   ROBOFEST 2.0 - SUPABASE CLOUD DATABASE SYNC & NETWORK GUARDIAN
    ========================================================================== */
 
 const SUPABASE_URL = "https://kcpgzjkhsirypbldukuc.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_Fv6dmWZanAAxluu0w7A58Q_zgthZFGX";
 
 let supabaseClient = null;
-let isCloudOnline = false;
+let isCloudOnline = navigator.onLine;
 let realTimeChannel = null;
+let hasPendingOfflineChanges = false;
+let pendingOfflineEditsCount = 0;
+let lastSyncedLocalState = "";
+let lastLocalSaveTimestamp = 0;
+let syncDebounceTimer = null;
 
 function initSupabase() {
+  setupNetworkListeners();
+
   if (typeof supabase !== 'undefined') {
     try {
       supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
       isCloudOnline = true;
-      console.log("Supabase Client connected successfully!");
-      updateCloudSyncBadge(true);
+      console.log("✅ Supabase Online Client connected successfully!");
+      updateNetworkStatus(true);
       setupRealtimeSubscriptions();
       fetchInitialState();
     } catch (err) {
-      console.warn("Supabase init error:", err);
-      updateCloudSyncBadge(false);
+      console.warn("Supabase connection warning:", err);
+      updateNetworkStatus(false);
     }
   } else {
-    updateCloudSyncBadge(false);
+    updateNetworkStatus(false);
   }
 }
 
-function updateCloudSyncBadge(online) {
-  const badge = document.getElementById('cloud-sync-status-badge');
-  if (badge) {
-    if (online) {
-      badge.className = "badge badge-success";
-      badge.innerHTML = "☁️ Supabase Real-time Active";
+function setupNetworkListeners() {
+  if (typeof window !== 'undefined') {
+    window.addEventListener('online', () => {
+      console.log("🌐 Internet connection restored!");
+      updateNetworkStatus(true);
+    });
+
+    window.addEventListener('offline', () => {
+      console.warn("⚠️ Internet connection lost!");
+      updateNetworkStatus(false);
+    });
+  }
+}
+
+function updateNetworkStatus(isOnline) {
+  isCloudOnline = isOnline && navigator.onLine;
+  const banner = document.getElementById('network-offline-banner');
+  const bannerText = document.getElementById('offline-banner-text');
+  const pendingBadge = document.getElementById('offline-pending-badge');
+  const syncBadge = document.getElementById('cloud-sync-status-badge');
+
+  if (isCloudOnline) {
+    if (hasPendingOfflineChanges) {
+      if (banner) {
+        banner.style.background = "linear-gradient(90deg, #059669, #10b981)";
+        if (bannerText) bannerText.innerHTML = "✅ NETWORK RESTORED — Auto-syncing queued offline updates to cloud...";
+        if (pendingBadge) pendingBadge.style.display = "none";
+        banner.style.display = "block";
+        banner.classList.remove('hidden');
+      }
+
+      // Flush queue to cloud immediately
+      syncDataToCloud().then(() => {
+        hasPendingOfflineChanges = false;
+        pendingOfflineEditsCount = 0;
+        if (bannerText) bannerText.innerHTML = "✅ ALL OFFLINE EDITS SYNCED TO CLOUD SUCCESSFULLY!";
+        setTimeout(() => {
+          if (banner) {
+            banner.style.display = "none";
+            banner.classList.add('hidden');
+          }
+        }, 3500);
+      });
     } else {
-      badge.className = "badge badge-warning";
-      badge.innerHTML = "💾 LocalStorage Offline Mode";
+      if (banner) {
+        banner.style.display = "none";
+        banner.classList.add('hidden');
+      }
+    }
+
+    if (syncBadge) {
+      syncBadge.className = "badge badge-success";
+      syncBadge.innerHTML = `<i class="fa-solid fa-cloud"></i> Online (Supabase Live)`;
+    }
+  } else {
+    // Network Offline
+    if (banner) {
+      banner.style.background = "linear-gradient(90deg, #dc2626, #b91c1c)";
+      if (bannerText) bannerText.innerHTML = "⚠️ NETWORK CONNECTION LOST — You are working offline. Edits will auto-sync to cloud when internet is back!";
+      if (pendingBadge) {
+        pendingBadge.style.display = "inline-block";
+        pendingBadge.textContent = `${pendingOfflineEditsCount} Pending Sync`;
+      }
+      banner.style.display = "block";
+      banner.classList.remove('hidden');
+    }
+
+    if (syncBadge) {
+      syncBadge.className = "badge badge-danger";
+      syncBadge.innerHTML = `<i class="fa-solid fa-wifi"></i> Offline (${pendingOfflineEditsCount} Queued)`;
     }
   }
 }
-
-let lastSyncedLocalState = "";
-let lastLocalSaveTimestamp = 0;
-let syncDebounceTimer = null;
 
 function setupRealtimeSubscriptions() {
   if (!supabaseClient) return;
@@ -50,7 +114,6 @@ function setupRealtimeSubscriptions() {
   try {
     realTimeChannel = supabaseClient.channel('public:obs_state')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'judging_portal_state' }, payload => {
-        // Ignore real-time echoes for 2.5 seconds after local edit to prevent Supabase round-trip loop glitching
         if (Date.now() - lastLocalSaveTimestamp < 2500) {
           return;
         }
@@ -74,7 +137,7 @@ function setupRealtimeSubscriptions() {
 }
 
 async function fetchInitialState() {
-  if (!supabaseClient || !isCloudOnline) return;
+  if (!supabaseClient || !navigator.onLine) return;
   try {
     const { data, error } = await supabaseClient
       .from('judging_portal_state')
@@ -90,48 +153,68 @@ async function fetchInitialState() {
         lastSyncedLocalState = cloudStr;
         saveStoreLocallyOnly();
         if (typeof refreshAllViews === 'function') refreshAllViews();
-        console.log("✅ Successfully initialized local store from Supabase master state!");
+        console.log("✅ Successfully loaded online master state from Supabase!");
       }
     } else {
-      console.log("Cloud state incomplete or empty, syncing local 58 official teams to cloud...");
+      console.log("Cloud master state empty or initializing, uploading local master state...");
       syncDataToCloud();
     }
   } catch (err) {
-    console.warn("Failed to load initial state from Supabase, using local storage:", err);
+    console.warn("Failed to fetch initial state from Supabase:", err);
+    updateNetworkStatus(false);
   }
 }
 
 function syncDataToCloud() {
-  lastLocalSaveTimestamp = Date.now();
-  if (syncDebounceTimer) clearTimeout(syncDebounceTimer);
+  return new Promise((resolve) => {
+    lastLocalSaveTimestamp = Date.now();
+    if (syncDebounceTimer) clearTimeout(syncDebounceTimer);
 
-  syncDebounceTimer = setTimeout(async () => {
-    if (!supabaseClient || !isCloudOnline) return;
+    syncDebounceTimer = setTimeout(async () => {
+      if (!supabaseClient || !navigator.onLine) {
+        hasPendingOfflineChanges = true;
+        pendingOfflineEditsCount++;
+        updateNetworkStatus(false);
+        resolve(false);
+        return;
+      }
 
-    try {
-      lastSyncedLocalState = JSON.stringify(storeState);
+      try {
+        lastSyncedLocalState = JSON.stringify(storeState);
 
-      // 1. Sync full master state
-      const masterPayload = {
-        id: 'robofest_master_state',
-        state_data: storeState,
-        updated_at: new Date().toISOString()
-      };
+        // 1. Sync full master state
+        const masterPayload = {
+          id: 'robofest_master_state',
+          state_data: storeState,
+          updated_at: new Date().toISOString()
+        };
 
-      await supabaseClient
-        .from('judging_portal_state')
-        .upsert(masterPayload);
+        const { error: masterErr } = await supabaseClient
+          .from('judging_portal_state')
+          .upsert(masterPayload);
 
-      // 2. Push participants & teams details to Supabase teams table
-      await pushParticipantsToSupabase();
-    } catch (err) {
-      console.warn("Cloud sync network error:", err);
-    }
-  }, 500);
+        if (masterErr) throw masterErr;
+
+        // 2. Push participants & teams details to Supabase teams table
+        await pushParticipantsToSupabase();
+
+        hasPendingOfflineChanges = false;
+        pendingOfflineEditsCount = 0;
+        updateNetworkStatus(true);
+        resolve(true);
+      } catch (err) {
+        console.warn("Cloud sync network error:", err);
+        hasPendingOfflineChanges = true;
+        pendingOfflineEditsCount++;
+        updateNetworkStatus(false);
+        resolve(false);
+      }
+    }, 300);
+  });
 }
 
 async function pushParticipantsToSupabase() {
-  if (!supabaseClient || !isCloudOnline) return;
+  if (!supabaseClient || !navigator.onLine) return;
 
   try {
     const teamsList = storeState.teams.map(t => {
@@ -159,8 +242,6 @@ async function pushParticipantsToSupabase() {
 
     if (error) {
       console.warn("Supabase teams table upsert note:", error.message);
-    } else {
-      console.log("Pushed 58 participant records to Supabase cloud table!");
     }
   } catch (err) {
     console.warn("Push participants error:", err);
@@ -168,7 +249,7 @@ async function pushParticipantsToSupabase() {
 }
 
 async function pollStateFromCloud() {
-  if (!supabaseClient || !isCloudOnline) return;
+  if (!supabaseClient || !navigator.onLine) return;
 
   try {
     const { data } = await supabaseClient
@@ -187,7 +268,7 @@ async function pollStateFromCloud() {
       }
     }
   } catch (err) {
-    // Failover to local storage
+    // Failover
   }
 }
 
@@ -200,6 +281,9 @@ function saveStoreLocallyOnly() {
 }
 
 // Initialize on load
-window.addEventListener('load', () => {
-  initSupabase();
-});
+if (typeof window !== 'undefined') {
+  window.addEventListener('load', () => {
+    initSupabase();
+  });
+}
+

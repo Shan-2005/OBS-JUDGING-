@@ -17,6 +17,13 @@
 </head>
 <body class="participant-portal-body">
 
+  <!-- STICKY NETWORK LOSS & RECOVERY BANNER -->
+  <div id="network-offline-banner" class="hidden" style="display:none; background: linear-gradient(90deg, #dc2626, #b91c1c); color: #fff; text-align: center; padding: 10px 16px; font-weight: 600; font-size: 13px; position: sticky; top: 0; z-index: 10000; box-shadow: 0 4px 12px rgba(220,38,38,0.4); border-bottom: 1px solid rgba(255,255,255,0.2); transition: all 0.3s ease;">
+    <i class="fa-solid fa-wifi" style="margin-right: 6px;"></i>
+    <span id="offline-banner-text">⚠️ NETWORK CONNECTION LOST — You are working offline. Edits will auto-sync to cloud when internet is back!</span>
+    <span id="offline-pending-badge" class="badge" style="background: rgba(255,255,255,0.2); margin-left: 8px; padding: 3px 8px; border-radius: 12px; font-size: 11px;">0 Pending</span>
+  </div>
+
   <!-- CLEAN PARTICIPANT HEADER (No Judge buttons, no admin buttons, no judge tabs) -->
   <header class="app-header" style="justify-content: space-between;">
     <div class="header-brand">
