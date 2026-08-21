@@ -657,6 +657,104 @@ function resetStore() {
   }
 }
 
+/* ==========================================================================
+   SMART NON-DESTRUCTIVE STATE MERGER (PRESERVES DATA ON DEPLOY / PUSH)
+   ========================================================================== */
+function mergeMasterStates(target, incoming) {
+  if (!incoming || typeof incoming !== 'object') return target;
+  if (!target || typeof target !== 'object') return incoming;
+
+  const merged = JSON.parse(JSON.stringify(target));
+
+  // 1. Merge Teams
+  if (Array.isArray(incoming.teams) && incoming.teams.length > 0) {
+    if (!merged.teams || merged.teams.length === 0) {
+      merged.teams = JSON.parse(JSON.stringify(incoming.teams));
+    } else {
+      incoming.teams.forEach(inTeam => {
+        let existing = merged.teams.find(t => t.id === inTeam.id);
+        if (!existing) {
+          merged.teams.push(JSON.parse(JSON.stringify(inTeam)));
+        } else {
+          if (inTeam.eligibility) {
+            existing.eligibility = Object.assign({}, existing.eligibility || {}, inTeam.eligibility);
+            if (inTeam.eligibility.passed) existing.eligibility.passed = true;
+          }
+          if (inTeam.eligibility_r1) existing.eligibility_r1 = Object.assign({}, existing.eligibility_r1 || {}, inTeam.eligibility_r1);
+          if (inTeam.eligibility_r2) existing.eligibility_r2 = Object.assign({}, existing.eligibility_r2 || {}, inTeam.eligibility_r2);
+          if (inTeam.name) existing.name = inTeam.name;
+          if (inTeam.institution) existing.institution = inTeam.institution;
+          if (inTeam.members) existing.members = inTeam.members;
+        }
+      });
+    }
+  }
+
+  // 2. Merge Attendance
+  if (incoming.attendance && typeof incoming.attendance === 'object') {
+    if (!merged.attendance) merged.attendance = {};
+    Object.keys(incoming.attendance).forEach(botId => {
+      const inAtt = incoming.attendance[botId];
+      const curAtt = merged.attendance[botId];
+      if (!curAtt) {
+        merged.attendance[botId] = JSON.parse(JSON.stringify(inAtt));
+      } else if (inAtt && (inAtt.status === 'Present' || inAtt.status === 'Late')) {
+        merged.attendance[botId] = JSON.parse(JSON.stringify(inAtt));
+      }
+    });
+  }
+
+  // 3. Merge Round 1 Scored Runs
+  if (incoming.round1 && typeof incoming.round1 === 'object') {
+    if (!merged.round1) merged.round1 = {};
+    Object.keys(incoming.round1).forEach(botId => {
+      const inRun = incoming.round1[botId];
+      const curRun = merged.round1[botId];
+      if (!curRun) {
+        merged.round1[botId] = JSON.parse(JSON.stringify(inRun));
+      } else if (inRun && inRun.finalTimeMs) {
+        if (!curRun.finalTimeMs || inRun.finalTimeMs < curRun.finalTimeMs) {
+          merged.round1[botId] = JSON.parse(JSON.stringify(inRun));
+        }
+      }
+    });
+  }
+
+  // 4. Merge Round 2 Scored Runs
+  if (incoming.round2 && typeof incoming.round2 === 'object') {
+    if (!merged.round2) merged.round2 = {};
+    Object.keys(incoming.round2).forEach(botId => {
+      const inRun = incoming.round2[botId];
+      const curRun = merged.round2[botId];
+      if (!curRun) {
+        merged.round2[botId] = JSON.parse(JSON.stringify(inRun));
+      } else if (inRun && inRun.finalTimeMs) {
+        if (!curRun.finalTimeMs || inRun.finalTimeMs < curRun.finalTimeMs) {
+          merged.round2[botId] = JSON.parse(JSON.stringify(inRun));
+        }
+      }
+    });
+  }
+
+  // 5. Merge Round 3 Knockout Matches
+  if (incoming.round3 && incoming.round3.matches) {
+    if (!merged.round3) merged.round3 = { matches: {} };
+    if (!merged.round3.matches) merged.round3.matches = {};
+    Object.keys(incoming.round3.matches).forEach(mId => {
+      const inMatch = incoming.round3.matches[mId];
+      const curMatch = merged.round3.matches[mId];
+      if (!curMatch) {
+        merged.round3.matches[mId] = JSON.parse(JSON.stringify(inMatch));
+      } else if (inMatch && inMatch.winner) {
+        merged.round3.matches[mId].winner = inMatch.winner;
+        if (inMatch.reason) merged.round3.matches[mId].reason = inMatch.reason;
+      }
+    });
+  }
+
+  return merged;
+}
+
 function seedDefaultTeams() {
   if (!storeState.teams || storeState.teams.length === 0) {
     storeState.teams = [];

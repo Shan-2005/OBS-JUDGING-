@@ -123,8 +123,8 @@ function setupRealtimeSubscriptions() {
           const localStr = JSON.stringify(storeState);
 
           if (cloudStr !== localStr && cloudStr !== lastSyncedLocalState) {
-            storeState = payload.new.state_data;
-            lastSyncedLocalState = cloudStr;
+            storeState = typeof mergeMasterStates === 'function' ? mergeMasterStates(storeState, payload.new.state_data) : payload.new.state_data;
+            lastSyncedLocalState = JSON.stringify(storeState);
             saveStoreLocallyOnly();
             if (typeof refreshAllViews === 'function') refreshAllViews();
           }
@@ -149,11 +149,11 @@ async function fetchInitialState() {
       const cloudStr = JSON.stringify(data.state_data);
       const localStr = JSON.stringify(storeState);
       if (cloudStr !== localStr) {
-        storeState = data.state_data;
-        lastSyncedLocalState = cloudStr;
+        storeState = typeof mergeMasterStates === 'function' ? mergeMasterStates(storeState, data.state_data) : data.state_data;
+        lastSyncedLocalState = JSON.stringify(storeState);
         saveStoreLocallyOnly();
         if (typeof refreshAllViews === 'function') refreshAllViews();
-        console.log("✅ Successfully loaded online master state from Supabase!");
+        console.log("✅ Non-destructive merged online master state from Supabase!");
       }
     } else {
       console.log("Cloud master state empty or initializing, uploading local master state...");
