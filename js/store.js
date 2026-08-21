@@ -498,43 +498,127 @@ const officialCsvList = [
   }
 ];
 
+const BACKUP_KEY = 'robofest_obs_judging_backup_latest';
+const SNAPSHOTS_KEY = 'robofest_obs_judging_snapshots';
+let dbInstance = null;
+
+// Initialize IndexedDB database vault asynchronously
+function initIndexedDB() {
+  if (typeof window === 'undefined' || !window.indexedDB) return;
+  try {
+    const request = indexedDB.open('RoboFestVaultDB', 1);
+    request.onupgradeneeded = (e) => {
+      const db = e.target.result;
+      if (!db.objectStoreNames.contains('store')) {
+        db.createObjectStore('store', { keyPath: 'id' });
+      }
+    };
+    request.onsuccess = (e) => {
+      dbInstance = e.target.result;
+      saveToIndexedDB();
+    };
+    request.onerror = (err) => {
+      console.warn("IndexedDB init warning:", err);
+    };
+  } catch (err) {
+    console.warn("IndexedDB error:", err);
+  }
+}
+
+function saveToIndexedDB() {
+  if (!dbInstance) return;
+  try {
+    const tx = dbInstance.transaction('store', 'readwrite');
+    const store = tx.objectStore('store');
+    store.put({ id: 'master_state', data: storeState, updatedAt: Date.now() });
+  } catch (e) {
+    console.warn("IndexedDB save error:", e);
+  }
+}
+
+function saveStoreSnapshots() {
+  try {
+    const rawSnapshots = localStorage.getItem(SNAPSHOTS_KEY);
+    let snapshots = rawSnapshots ? JSON.parse(rawSnapshots) : [];
+    
+    // Create snapshot entry
+    const newSnapshot = {
+      timestamp: Date.now(),
+      dateStr: new Date().toLocaleTimeString(),
+      teamsCount: storeState.teams ? storeState.teams.length : 0,
+      r1RunsCount: storeState.round1 ? Object.keys(storeState.round1).length : 0,
+      r2RunsCount: storeState.round2 ? Object.keys(storeState.round2).length : 0,
+      state: storeState
+    };
+    
+    // Keep top 10 rolling snapshots
+    snapshots.unshift(newSnapshot);
+    if (snapshots.length > 10) snapshots = snapshots.slice(0, 10);
+    
+    localStorage.setItem(SNAPSHOTS_KEY, JSON.stringify(snapshots));
+  } catch (e) {
+    console.warn("Snapshot creation warning:", e);
+  }
+}
+
 function loadStore() {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    let raw = localStorage.getItem(STORAGE_KEY);
+    
+    // Fallback layer 1: Check backup key if primary is empty
+    if (!raw) {
+      console.warn("Primary local storage key missing, checking backup key...");
+      raw = localStorage.getItem(BACKUP_KEY);
+    }
+    
     if (raw) {
       storeState = JSON.parse(raw);
-      if (!storeState.judges) storeState.judges = defaultState.judges;
-      if (!storeState.attendance) storeState.attendance = {};
-      if (!storeState.round1) storeState.round1 = {};
-      if (!storeState.round2) storeState.round2 = {};
-      if (!storeState.round3) storeState.round3 = JSON.parse(JSON.stringify(defaultState.round3));
-      if (!storeState.round3.matches) storeState.round3.matches = JSON.parse(JSON.stringify(defaultState.round3.matches));
-      if (!storeState.teams || storeState.teams.length < officialCsvList.length) {
-        seedDefaultTeams();
-      } else {
-        storeState.teams.forEach((t, idx) => {
-          const csvMeta = officialCsvList[idx];
-          if (csvMeta) {
-            t.rosterSize = csvMeta.rosterSize || t.rosterSize || 1;
-            if (csvMeta.leader) t.leader = csvMeta.leader;
-            if (csvMeta.email) t.email = csvMeta.email;
-            if (csvMeta.phone) t.phone = csvMeta.phone;
-          }
-          if (!storeState.attendance[t.id]) {
-            storeState.attendance[t.id] = {
-              status: 'Absent',
-              checkInTime: null,
-              membersPresent: t.rosterSize || 1,
-              maxMembers: t.rosterSize || 1,
-              notes: ''
-            };
-          } else {
-            storeState.attendance[t.id].maxMembers = t.rosterSize || 1;
-          }
-        });
-      }
     } else {
+      // Fallback layer 2: Check rolling snapshots
+      const rawSnapshots = localStorage.getItem(SNAPSHOTS_KEY);
+      if (rawSnapshots) {
+        const snapshots = JSON.parse(rawSnapshots);
+        if (snapshots && snapshots.length > 0 && snapshots[0].state) {
+          console.warn("Restoring from latest automatic snapshot...");
+          storeState = snapshots[0].state;
+        }
+      }
+    }
+    
+    // Validate state structure
+    if (!storeState || typeof storeState !== 'object') {
+      storeState = JSON.parse(JSON.stringify(defaultState));
+    }
+    if (!storeState.judges) storeState.judges = defaultState.judges;
+    if (!storeState.attendance) storeState.attendance = {};
+    if (!storeState.round1) storeState.round1 = {};
+    if (!storeState.round2) storeState.round2 = {};
+    if (!storeState.round3) storeState.round3 = JSON.parse(JSON.stringify(defaultState.round3));
+    if (!storeState.round3.matches) storeState.round3.matches = JSON.parse(JSON.stringify(defaultState.round3.matches));
+
+    if (!storeState.teams || storeState.teams.length < officialCsvList.length) {
       seedDefaultTeams();
+    } else {
+      storeState.teams.forEach((t, idx) => {
+        const csvMeta = officialCsvList[idx];
+        if (csvMeta) {
+          t.rosterSize = csvMeta.rosterSize || t.rosterSize || 1;
+          if (csvMeta.leader) t.leader = csvMeta.leader;
+          if (csvMeta.email) t.email = csvMeta.email;
+          if (csvMeta.phone) t.phone = csvMeta.phone;
+        }
+        if (!storeState.attendance[t.id]) {
+          storeState.attendance[t.id] = {
+            status: 'Absent',
+            checkInTime: null,
+            membersPresent: t.rosterSize || 1,
+            maxMembers: t.rosterSize || 1,
+            notes: ''
+          };
+        } else {
+          storeState.attendance[t.id].maxMembers = t.rosterSize || 1;
+        }
+      });
     }
   } catch (e) {
     console.error("Failed to load store:", e);
@@ -545,7 +629,16 @@ function loadStore() {
 
 function saveStore() {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(storeState));
+    const jsonString = JSON.stringify(storeState);
+    localStorage.setItem(STORAGE_KEY, jsonString);
+    localStorage.setItem(BACKUP_KEY, jsonString);
+    saveToIndexedDB();
+    saveStoreSnapshots();
+
+    if (typeof updateStorageHealthBadge === 'function') {
+      updateStorageHealthBadge();
+    }
+
     if (typeof syncDataToCloud === 'function') {
       syncDataToCloud();
     }
@@ -555,10 +648,13 @@ function saveStore() {
 }
 
 function resetStore() {
-  localStorage.removeItem(STORAGE_KEY);
-  storeState = JSON.parse(JSON.stringify(defaultState));
-  seedDefaultTeams();
-  saveStore();
+  if (confirm("Are you sure you want to reset all local scores and data? (A backup snapshot will be saved first)")) {
+    saveStoreSnapshots();
+    localStorage.removeItem(STORAGE_KEY);
+    storeState = JSON.parse(JSON.stringify(defaultState));
+    seedDefaultTeams();
+    saveStore();
+  }
 }
 
 function seedDefaultTeams() {

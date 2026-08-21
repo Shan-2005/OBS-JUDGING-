@@ -161,3 +161,79 @@ function preparePrintSheets(targetRound = 'all') {
 
   window.print();
 }
+
+/* ==========================================================================
+   DATA VAULT BACKUP & RESTORE PROTECTION
+   ========================================================================== */
+
+function downloadFullBackupJSON() {
+  const dataStr = JSON.stringify(storeState, null, 2);
+  const blob = new Blob([dataStr], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const dateStr = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
+  
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = `RoboFest_2.0_Full_Vault_Backup_${dateStr}.json`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+
+  alert("📥 Instant JSON Vault Backup downloaded safely to your device!");
+}
+
+function restoreStateFromFile(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const importedData = JSON.parse(e.target.result);
+      if (importedData && importedData.teams && Array.isArray(importedData.teams)) {
+        if (confirm(`Restore dataset with ${importedData.teams.length} teams and scores? Existing data will be backed up first.`)) {
+          if (typeof saveStoreSnapshots === 'function') saveStoreSnapshots();
+          storeState = importedData;
+          saveStore();
+          if (typeof refreshAllViews === 'function') refreshAllViews();
+          alert("✅ Data successfully restored! All teams and scored runs are active.");
+        }
+      } else {
+        alert("❌ Invalid backup file. File must be a valid RoboFest state JSON.");
+      }
+    } catch (err) {
+      alert("❌ Failed to parse backup file: " + err.message);
+    }
+  };
+  reader.readAsText(file);
+}
+
+function restoreSnapshotByIndex(index) {
+  try {
+    const raw = localStorage.getItem('robofest_obs_judging_snapshots');
+    if (!raw) return;
+    const snapshots = JSON.parse(raw);
+    if (snapshots && snapshots[index] && snapshots[index].state) {
+      const s = snapshots[index];
+      if (confirm(`Restore snapshot from ${s.dateStr} (${s.r1RunsCount} R1 runs)?`)) {
+        storeState = s.state;
+        saveStore();
+        if (typeof refreshAllViews === 'function') refreshAllViews();
+        alert("✅ Snapshot restored successfully!");
+      }
+    }
+  } catch (e) {
+    alert("Failed to restore snapshot: " + e.message);
+  }
+}
+
+function updateStorageHealthBadge() {
+  const badge = document.getElementById('vault-health-badge');
+  if (badge) {
+    const r1Count = storeState.round1 ? Object.keys(storeState.round1).length : 0;
+    const r2Count = storeState.round2 ? Object.keys(storeState.round2).length : 0;
+    badge.innerHTML = `<i class="fa-solid fa-shield-halved"></i> Vault Protected (${r1Count + r2Count} runs safe)`;
+  }
+}
+

@@ -6,6 +6,10 @@ let r1Timer = null;
 let r2Timer = null;
 
 document.addEventListener('DOMContentLoaded', () => {
+  if (typeof initIndexedDB === 'function') {
+    initIndexedDB();
+  }
+
   // Initialize Timers
   if (typeof PrecisionTimer === 'function') {
     r1Timer = new PrecisionTimer('r1-timer-display');
@@ -1212,3 +1216,50 @@ function handleMatchDecisionSubmit(e) {
   renderParticipantsView();
   document.getElementById('modal-match-judge').classList.add('hidden');
 }
+
+/* ==========================================================================
+   DATA VAULT MODAL CONTROL ENGINE
+   ========================================================================== */
+function openBackupVaultModal() {
+  const modal = document.getElementById('modal-backup-vault');
+  if (!modal) return;
+
+  const snapshotsContainer = document.getElementById('vault-snapshots-list');
+  if (snapshotsContainer) {
+    try {
+      const raw = localStorage.getItem('robofest_obs_judging_snapshots');
+      const snapshots = raw ? JSON.parse(raw) : [];
+      if (snapshots.length === 0) {
+        snapshotsContainer.innerHTML = `<p class="text-muted" style="font-size:12px; margin:4px 0;">No previous snapshots recorded yet. Auto-snapshots are captured on every edit.</p>`;
+      } else {
+        snapshotsContainer.innerHTML = snapshots.map((s, idx) => `
+          <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.04); padding:8px 12px; border-radius:6px; margin-bottom:6px;">
+            <div>
+              <strong style="color:var(--accent-cyan); font-size:13px;">Snapshot #${idx + 1} (${s.dateStr})</strong>
+              <div style="font-size:11px; color:#aaa;">${s.teamsCount} Teams · ${s.r1RunsCount} R1 Runs · ${s.r2RunsCount} R2 Runs</div>
+            </div>
+            <button class="btn btn-outline sm" onclick="restoreSnapshotByIndex(${idx})">↺ Restore</button>
+          </div>
+        `).join('');
+      }
+    } catch (e) {
+      snapshotsContainer.innerHTML = `<p class="text-muted" style="font-size:12px;">Unable to list snapshots.</p>`;
+    }
+  }
+
+  if (typeof updateStorageHealthBadge === 'function') {
+    updateStorageHealthBadge();
+  }
+
+  modal.classList.remove('hidden');
+  modal.style.display = 'flex';
+}
+
+function closeBackupVaultModal() {
+  const modal = document.getElementById('modal-backup-vault');
+  if (modal) {
+    modal.classList.add('hidden');
+    modal.style.display = 'none';
+  }
+}
+
